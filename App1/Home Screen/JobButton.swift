@@ -18,17 +18,21 @@ class JobButton: UIView {
 //        return imgV
 //    }()
     
+    
     let button: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .systemBlue
+//        button.setTitle("Loading...", for: .normal)
+        button.backgroundColor = .systemGray
         button.layer.cornerRadius = 0.25
-        button.addTarget(JobButton.self, action: #selector(didTapButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        
         return button
     }()
     
     // MARK: - Life Cycle
     init(title: String) {
         super.init(frame: .zero)
+        button.setTitle(title, for: .normal)
         setupUI()
     }
     
@@ -38,13 +42,18 @@ class JobButton: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
+        self.backgroundColor = .systemBlue
+        self.layer.cornerRadius = 4
+        
         self.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
-            button.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 5),
-            button.widthAnchor.constraint(equalToConstant: 140), // I dont know how to set it exactly = to height
+            button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            button.heightAnchor.constraint(equalTo: self.heightAnchor),
+            button.widthAnchor.constraint(equalToConstant: 100),
+            button.centerYAnchor.constraint (equalTo: self.centerYAnchor, constant: 0)
         ])
     }
     

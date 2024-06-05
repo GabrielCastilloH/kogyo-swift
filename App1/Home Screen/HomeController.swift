@@ -24,18 +24,19 @@ class HomeController: UIViewController {
     // MARK: - UI Setup
     
     private func setupUI() {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
         self.view.addSubview(homeCategoryView)
         homeCategoryView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            homeCategoryView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
+            homeCategoryView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             homeCategoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             homeCategoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             
-            //            homeCategoryView.topAnchor.constraint(equalTo: view.topAnchor)
-            
-            
         ])
+        
+//        self.view.bringSubviewToFront(homeCategoryView)
     }
     
     

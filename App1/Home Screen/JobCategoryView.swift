@@ -20,40 +20,18 @@ class JobCategoryView: UIView {
         return header
     }()
     
-    private let scrollView: UIScrollView = {
+    lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = .systemRed
         return scrollView
     }()
     
-    private let stackView: UIStackView = {
+    lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 0
-        stackView.backgroundColor = .purple
+        stackView.spacing = 8
         return stackView
     }()
     
-    private let dummyView1: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemPink
-        return view
-        
-    }()
-    
-    private let dummyView2: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray
-        return view
-        
-    }()
-    
-    private let dummyView3: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemMint
-        return view
-        
-    }()
     
     // MARK: - Life Cycle
     init(title: String) {
@@ -71,45 +49,34 @@ class JobCategoryView: UIView {
         self.addSubview(header)
         header.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+        self.addSubview(scrollView)
         
+        let view1 = JobButton(title: "dud you suck")
+        let view2 = JobButton(title: "dud")
+        let view3 = JobButton(title: "you")
+        let view4 = JobButton(title: "really suck")
         
-        stackView.addArrangedSubview(dummyView1)
-        dummyView1.translatesAutoresizingMaskIntoConstraints = false
-        
-        stackView.addArrangedSubview(dummyView2)
-        dummyView2.translatesAutoresizingMaskIntoConstraints = false
-
-        stackView.addArrangedSubview(dummyView3)
-        dummyView3.translatesAutoresizingMaskIntoConstraints = false
-        
+        stackView.addArrangedSubview(view1)
+        stackView.addArrangedSubview(view2)
+        stackView.addArrangedSubview(view3)
+        stackView.addArrangedSubview(view4)
         
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: self.topAnchor, constant: 35),
             header.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             
             scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
-            scrollView.heightAnchor.constraint(equalToConstant: 160),
-            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
+            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
             
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-//            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            
-            dummyView1.widthAnchor.constraint(equalToConstant: 150),
-            dummyView2.widthAnchor.constraint(equalToConstant: 150),
-            dummyView3.widthAnchor.constraint(equalToConstant: 150),
-            
-            
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
         ])
     }
-
-    
-
 }
