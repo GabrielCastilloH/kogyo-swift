@@ -7,7 +7,7 @@
 
 import UIKit
 
-class JobCategoryButton: UIView {
+class JobButton: UIView {
     
     
     // MARK: - UI Components
