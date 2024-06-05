@@ -1,5 +1,5 @@
 //
-//  JobCategoryButton.swift
+//  JobButton.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/4/24.
@@ -11,11 +11,19 @@ class JobButton: UIView {
     
     
     // MARK: - UI Components
-    let imageView: UIImageView = {
-        let imgV = UIImageView()
-        imgV.image = UIImage(named: "Electrical") // remove this line, add it later.
-        imgV.layer.cornerRadius = 0.25
-        return imgV
+//    let imageView: UIImageView = {
+//        let imgV = UIImageView()
+//        imgV.image = UIImage(named: "Electrical") // remove this line, add it later.
+//        imgV.layer.cornerRadius = 0.25
+//        return imgV
+//    }()
+    
+    let button: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 0.25
+        button.addTarget(JobButton.self, action: #selector(didTapButton), for: .touchUpInside)
+        return button
     }()
     
     // MARK: - Life Cycle
@@ -30,18 +38,19 @@ class JobButton: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.addSubview(imageView)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
-            imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 5),
-            imageView.widthAnchor.constraint(equalToConstant: 140), // I dont know how to set it exactly = to height
+            button.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+            button.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 5),
+            button.widthAnchor.constraint(equalToConstant: 140), // I dont know how to set it exactly = to height
         ])
     }
     
     // MARK: - Selectors
-    
-    
+    @objc func didTapButton() {
+        print("hey i got touched up inside.")
+    }
 
 }

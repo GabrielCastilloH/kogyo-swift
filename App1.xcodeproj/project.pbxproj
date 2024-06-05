@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		D09C5ED22C0F3F8E002C6F89 /* Vars.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED12C0F3F8E002C6F89 /* Vars.swift */; };
 		D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */; };
-		D09C5ED72C0F564D002C6F89 /* JobCategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED62C0F564D002C6F89 /* JobCategoryButton.swift */; };
+		D09C5ED72C0F564D002C6F89 /* JobButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED62C0F564D002C6F89 /* JobButton.swift */; };
 		D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923D92C0E8D250070977A /* AppDelegate.swift */; };
 		D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DB2C0E8D250070977A /* SceneDelegate.swift */; };
 		D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DD2C0E8D250070977A /* HomeController.swift */; };
@@ -23,7 +23,7 @@
 /* Begin PBXFileReference section */
 		D09C5ED12C0F3F8E002C6F89 /* Vars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vars.swift; sourceTree = "<group>"; };
 		D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCategoryView.swift; sourceTree = "<group>"; };
-		D09C5ED62C0F564D002C6F89 /* JobCategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCategoryButton.swift; sourceTree = "<group>"; };
+		D09C5ED62C0F564D002C6F89 /* JobButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobButton.swift; sourceTree = "<group>"; };
 		D0E923D62C0E8D250070977A /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0E923D92C0E8D250070977A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0E923DB2C0E8D250070977A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 			children = (
 				D0E923DD2C0E8D250070977A /* HomeController.swift */,
 				D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */,
-				D09C5ED62C0F564D002C6F89 /* JobCategoryButton.swift */,
+				D09C5ED62C0F564D002C6F89 /* JobButton.swift */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";
@@ -176,7 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D09C5ED72C0F564D002C6F89 /* JobCategoryButton.swift in Sources */,
+				D09C5ED72C0F564D002C6F89 /* JobButton.swift in Sources */,
 				D0E923F12C0E98670070977A /* ProfileController.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,

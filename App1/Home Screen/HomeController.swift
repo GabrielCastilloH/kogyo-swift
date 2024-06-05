@@ -32,6 +32,8 @@ class HomeController: UIViewController {
             homeCategoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             homeCategoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             
+            //            homeCategoryView.topAnchor.constraint(equalTo: view.topAnchor)
+            
             
         ])
     }
