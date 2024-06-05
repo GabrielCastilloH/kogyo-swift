@@ -18,12 +18,10 @@ class JobButton: UIView {
 //        return imgV
 //    }()
     
-    
     let button: UIButton = {
         let button = UIButton()
-//        button.setTitle("Loading...", for: .normal)
-        button.backgroundColor = .systemGray
-        button.layer.cornerRadius = 0.25
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 25
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         
         return button
@@ -42,8 +40,8 @@ class JobButton: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.backgroundColor = .systemBlue
-        self.layer.cornerRadius = 4
+        self.backgroundColor = .white
+//        self.layer.cornerRadius = 25
         
         self.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -51,9 +49,8 @@ class JobButton: UIView {
         NSLayoutConstraint.activate([
             button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
             button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
-            button.heightAnchor.constraint(equalTo: self.heightAnchor),
-            button.widthAnchor.constraint(equalToConstant: 100),
-            button.centerYAnchor.constraint (equalTo: self.centerYAnchor, constant: 0)
+            button.topAnchor.constraint(equalTo: self.topAnchor),
+            button.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
     }
     

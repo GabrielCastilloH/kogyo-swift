@@ -9,34 +9,61 @@ import UIKit
 
 class HomeController: UIViewController {
     
-    
+    // MARK: - Variables
+    // All jobs go here:
+    let allCategories = [
+        JobCategoryView(title: "Home", jobButtons: [
+            JobButton(title: "dud you suck"),
+            JobButton(title: "dud"),
+            JobButton(title: "you"),
+            JobButton(title: "really suck")
+        ]),
+        JobCategoryView(title: "Personal", jobButtons: [
+            JobButton(title: "anyways"),
+            JobButton(title: "this"),
+            JobButton(title: "is"),
+            JobButton(title: "seriously"),
+            JobButton(title: "super scalable"),
+        
+        ])
+    ]
     // MARK: - UI Components
-    let homeCategoryView = JobCategoryView(title: "Home")
+    
     
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.setupUI()
+        setupUI()
+        setupJobCategories()
     }
     
     // MARK: - UI Setup
-    
+
     private func setupUI() {
         navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        self.view.addSubview(homeCategoryView)
-        homeCategoryView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            homeCategoryView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            homeCategoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            homeCategoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+    }
+    
+    private func setupJobCategories() {
+        for (index, category) in allCategories.enumerated() {
+            self.view.addSubview(category)
+            category.translatesAutoresizingMaskIntoConstraints = false
             
-        ])
-        
-//        self.view.bringSubviewToFront(homeCategoryView)
+            NSLayoutConstraint.activate([
+                category.heightAnchor.constraint(equalToConstant: 200),
+                category.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+                category.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            ])
+            
+            if index == 0 {
+                category.topAnchor.constraint(equalTo: view.topAnchor, constant: 100)
+                    .isActive = true
+            } else {
+                category.topAnchor.constraint(equalTo: allCategories[index - 1].bottomAnchor, constant: 20)
+                    .isActive = true
+            }
+        }
     }
     
     

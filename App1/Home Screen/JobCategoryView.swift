@@ -8,7 +8,10 @@
 import UIKit
 
 class JobCategoryView: UIView {
-
+    
+    // MARK: - Variables
+    let jobs: [JobButton]
+    
     // MARK: - UI Components
     private let header: UILabel = {
         let header = UILabel()
@@ -34,10 +37,14 @@ class JobCategoryView: UIView {
     
     
     // MARK: - Life Cycle
-    init(title: String) {
+    init(title: String, jobButtons: [JobButton]) {
+        self.jobs = jobButtons
+        
         super.init(frame: .zero)
+        
         header.text = title
-        self.setupUI()
+        setupUI()
+        setupJobViews()
     }
     
     required init?(coder: NSCoder) {
@@ -54,29 +61,35 @@ class JobCategoryView: UIView {
         scrollView.addSubview(stackView)
         self.addSubview(scrollView)
         
-        let view1 = JobButton(title: "dud you suck")
-        let view2 = JobButton(title: "dud")
-        let view3 = JobButton(title: "you")
-        let view4 = JobButton(title: "really suck")
-        
-        stackView.addArrangedSubview(view1)
-        stackView.addArrangedSubview(view2)
-        stackView.addArrangedSubview(view3)
-        stackView.addArrangedSubview(view4)
         
         NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: self.topAnchor, constant: 35),
+            header.topAnchor.constraint(equalTo: self.topAnchor),
             header.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             
-            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 5),
-            scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
-            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
         ])
+        
+        setupJobViews()
+    }
+    
+    func setupJobViews() {
+        for job in jobs {
+            
+            stackView.addArrangedSubview(job)
+            
+            NSLayoutConstraint.activate([
+                job.topAnchor.constraint(equalTo: stackView.topAnchor),
+                job.widthAnchor.constraint(equalToConstant: 150),
+                job.heightAnchor.constraint(equalToConstant: 150),
+            ])
+        }
     }
 }
