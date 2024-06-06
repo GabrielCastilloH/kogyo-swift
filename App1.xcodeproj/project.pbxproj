@@ -11,6 +11,8 @@
 		D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */; };
 		D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */; };
 		D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */; };
+		D0D3A9982C117C29000DFFB8 /* SearchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */; };
+		D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9992C11A868000DFFB8 /* Extensions.swift */; };
 		D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923D92C0E8D250070977A /* AppDelegate.swift */; };
 		D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DB2C0E8D250070977A /* SceneDelegate.swift */; };
 		D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DD2C0E8D250070977A /* HomeController.swift */; };
@@ -26,6 +28,8 @@
 		D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCategoryView.swift; sourceTree = "<group>"; };
 		D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobButtonView.swift; sourceTree = "<group>"; };
 		D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
+		D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableCell.swift; sourceTree = "<group>"; };
+		D0D3A9992C11A868000DFFB8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D0E923D62C0E8D250070977A /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0E923D92C0E8D250070977A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0E923DB2C0E8D250070977A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				D09C5ED12C0F3F8E002C6F89 /* Constants.swift */,
+				D0D3A9992C11A868000DFFB8 /* Extensions.swift */,
 			);
 			path = "Extensions and Vars";
 			sourceTree = "<group>";
@@ -64,6 +69,7 @@
 				D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */,
 				D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */,
 				D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */,
+				D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";
@@ -180,11 +186,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,
+				D0D3A9982C117C29000DFFB8 /* SearchTableCell.swift in Sources */,
 				D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */,
 				D0E923F12C0E98670070977A /* ProfileController.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,
 				D09C5ED22C0F3F8E002C6F89 /* Constants.swift in Sources */,
+				D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */,
 				D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */,
 				D0E923EF2C0E98420070977A /* AllJobsController.swift in Sources */,
 				D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */,

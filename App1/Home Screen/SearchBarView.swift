@@ -22,9 +22,18 @@ class SearchBarView: UIView {
         return textField
     }()
     
-    private let icon: UIImageView = {
+    private let searchIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "magnifyingglass")
+        imageView.backgroundColor = .clear
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = Constants().darkGrayColor
+        return imageView
+    }()
+    
+    let cancelIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "x.circle")
         imageView.backgroundColor = .clear
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = Constants().darkGrayColor
@@ -35,6 +44,7 @@ class SearchBarView: UIView {
     // MARK: - Life Cycle
     init() {
         super.init(frame: .zero)
+        self.cancelIcon.showHideView(0)
         setupUI()
     }
     
@@ -48,8 +58,11 @@ class SearchBarView: UIView {
         self.addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(icon)
-        icon.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(searchIcon)
+        searchIcon.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(cancelIcon)
+        cancelIcon.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             textField.topAnchor.constraint(equalTo: self.topAnchor),
@@ -57,10 +70,15 @@ class SearchBarView: UIView {
             textField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             textField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            icon.topAnchor.constraint(equalTo: self.topAnchor, constant: -1),
-            icon.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            icon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            icon.widthAnchor.constraint(equalToConstant: 30),
+            searchIcon.topAnchor.constraint(equalTo: self.topAnchor, constant: -1),
+            searchIcon.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            searchIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            searchIcon.widthAnchor.constraint(equalToConstant: 30),
+            
+            cancelIcon.topAnchor.constraint(equalTo: self.topAnchor),
+            cancelIcon.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            cancelIcon.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
+            cancelIcon.widthAnchor.constraint(equalToConstant: 25),
             
         ])
     }

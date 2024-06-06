@@ -11,8 +11,9 @@ class JobButtonView: UIView {
     // The buttons with the name of the different jobs available. (under the home category heading.
     
     // MARK: - UI Components
-    private let imageView: UIImageView = {
+    public let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "questionmark")
         imageView.layer.cornerRadius = 25
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -28,7 +29,7 @@ class JobButtonView: UIView {
         return imageView
     }()
     
-    private let jobLabel: UILabel = {
+    public let jobLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
