@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol CustomSearchBarDelegate {
+    func didClickCancel()
+}
+
 class SearchBarView: UIView {
+    
+    var delegate: CustomSearchBarDelegate?
     
     // MARK: - UI Components
     let textField: UITextField = {
@@ -31,20 +37,21 @@ class SearchBarView: UIView {
         return imageView
     }()
     
-    let cancelIcon: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "x.circle")
-        imageView.backgroundColor = .clear
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = Constants().darkGrayColor
-        return imageView
+    let cancelButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "x.circle"), for: .normal)
+        button.addTarget(self, action: #selector(cancelButtonClicked), for: .touchUpInside)
+        button.backgroundColor = .clear
+        button.contentMode = .scaleAspectFit
+        button.tintColor = Constants().darkGrayColor
+        return button
     }()
     
     
     // MARK: - Life Cycle
     init() {
         super.init(frame: .zero)
-        self.cancelIcon.showHideView(0)
+        self.cancelButton.showHideView(0)
         setupUI()
     }
     
@@ -61,8 +68,8 @@ class SearchBarView: UIView {
         self.addSubview(searchIcon)
         searchIcon.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(cancelIcon)
-        cancelIcon.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(cancelButton)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             textField.topAnchor.constraint(equalTo: self.topAnchor),
@@ -75,12 +82,17 @@ class SearchBarView: UIView {
             searchIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             searchIcon.widthAnchor.constraint(equalToConstant: 30),
             
-            cancelIcon.topAnchor.constraint(equalTo: self.topAnchor),
-            cancelIcon.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            cancelIcon.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
-            cancelIcon.widthAnchor.constraint(equalToConstant: 25),
+            cancelButton.topAnchor.constraint(equalTo: self.topAnchor),
+            cancelButton.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            cancelButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
+            cancelButton.widthAnchor.constraint(equalToConstant: 25),
             
         ])
+    }
+    
+    // MARK: - Selectors
+    @objc func cancelButtonClicked() {
+        delegate?.didClickCancel()
     }
 }
 

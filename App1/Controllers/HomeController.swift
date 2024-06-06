@@ -73,6 +73,8 @@ class HomeController: UIViewController {
         searchTableView.delegate = self
         searchTableView.dataSource = self
         
+        searchBar.delegate = self
+        
     }
     
     // MARK: - UI Setup
@@ -142,16 +144,17 @@ extension HomeController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.searchTableView.showHideView(0)
-        self.searchBar.cancelIcon.showHideView(0)
+        self.searchBar.cancelButton.showHideView(0)
         self.searchBar.textField.text = ""
-        self.jobSearch = self.allJobs
         self.view.endEditing(true) // do this
+        self.jobSearch = self.allJobs
+        self.searchTableView.reloadData()
         return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.searchTableView.showHideView(1)
-        self.searchBar.cancelIcon.showHideView(1)
+        self.searchBar.cancelButton.showHideView(1)
     }
 }
 
@@ -176,6 +179,16 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
-    
-    
+}
+
+extension HomeController: CustomSearchBarDelegate {
+    func didClickCancel() {
+        // Do the same as if the textfield should return.
+        self.searchTableView.showHideView(0)
+        self.searchBar.cancelButton.showHideView(0)
+        self.searchBar.textField.text = ""
+        self.view.endEditing(true)
+        self.jobSearch = self.allJobs
+        self.searchTableView.reloadData()
+    }
 }
