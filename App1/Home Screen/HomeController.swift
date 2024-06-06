@@ -13,23 +13,24 @@ class HomeController: UIViewController {
     // All jobs go here:
     let allCategories = [
         JobCategoryView(title: "Home", jobButtons: [
-            JobButton(title: "dud you suck"),
-            JobButton(title: "dud"),
-            JobButton(title: "you"),
-            JobButton(title: "really suck")
+            JobButtonView(title: "Minor Repairs"),
+            JobButtonView(title: "Cleaning"),
+            JobButtonView(title: "Painting"),
         ]),
         JobCategoryView(title: "Personal", jobButtons: [
-            JobButton(title: "anyways"),
-            JobButton(title: "this"),
-            JobButton(title: "is"),
-            JobButton(title: "seriously"),
-            JobButton(title: "super scalable"),
-        
-        ])
+            JobButtonView(title: "Baby Sitting"),
+            JobButtonView(title: "Dog Walking"),
+            JobButtonView(title: "Massages"),
+        ]),
+        JobCategoryView(title: "Technology", jobButtons: [
+            JobButtonView(title: "IT Support"),
+            JobButtonView(title: "Electrical Work"),
+            JobButtonView(title: "Wi-Fi Help"),
+        ]),
     ]
+    
     // MARK: - UI Components
-    
-    
+    let searchBar = SearchBarView()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -43,6 +44,21 @@ class HomeController: UIViewController {
 
     private func setupUI() {
         navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        // Setting the Home Screen ViewController as the delegate of the text field.
+        searchBar.textField.delegate = self
+        searchBar.textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
+
+        self.view.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            searchBar.heightAnchor.constraint(equalToConstant: 50),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+        ])
+        
     }
     
     private func setupJobCategories() {
@@ -57,18 +73,26 @@ class HomeController: UIViewController {
             ])
             
             if index == 0 {
-                category.topAnchor.constraint(equalTo: view.topAnchor, constant: 100)
+                category.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20)
                     .isActive = true
             } else {
-                category.topAnchor.constraint(equalTo: allCategories[index - 1].bottomAnchor, constant: 20)
+                category.topAnchor.constraint(equalTo: allCategories[index - 1].bottomAnchor, constant: 5)
                     .isActive = true
             }
         }
     }
     
-    
     // MARK: - Selectors
-    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+//        print(searchBar.textField.text ?? "")
+    }
+}
 
+// MARK: - Update Content
+extension HomeController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true) // do this
+        return true
+    }
 }
 

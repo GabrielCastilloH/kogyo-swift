@@ -20,9 +20,9 @@ class TabController: UITabBarController {
     // setupTabs and createNav is just to simplify process.
     private func setupTabs() {
         
-        self.tabBar.backgroundColor = Vars().darkWhiteColor
-        self.tabBar.tintColor = Vars().darkGrayColor
-        self.tabBar.unselectedItemTintColor = Vars().darkGrayColor.withAlphaComponent(0.5)
+        self.tabBar.backgroundColor = Constants().darkWhiteColor
+        self.tabBar.tintColor = Constants().darkGrayColor
+        self.tabBar.unselectedItemTintColor = Constants().darkGrayColor.withAlphaComponent(0.5)
         
         let home = self.createNav(with: "Home", and: UIImage(systemName: "house"), vc: HomeController())
         let allJobs = self.createNav(with: "Jobs", and: UIImage(systemName: "clock"), vc: AllJobsController())

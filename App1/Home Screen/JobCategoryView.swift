@@ -10,7 +10,7 @@ import UIKit
 class JobCategoryView: UIView {
     
     // MARK: - Variables
-    let jobs: [JobButton]
+    let jobs: [JobButtonView]
     
     // MARK: - UI Components
     private let header: UILabel = {
@@ -25,6 +25,7 @@ class JobCategoryView: UIView {
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
     
@@ -37,7 +38,7 @@ class JobCategoryView: UIView {
     
     
     // MARK: - Life Cycle
-    init(title: String, jobButtons: [JobButton]) {
+    init(title: String, jobButtons: [JobButtonView]) {
         self.jobs = jobButtons
         
         super.init(frame: .zero)
@@ -66,7 +67,7 @@ class JobCategoryView: UIView {
             header.topAnchor.constraint(equalTo: self.topAnchor),
             header.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             
-            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: -5),
             scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
@@ -87,8 +88,8 @@ class JobCategoryView: UIView {
             
             NSLayoutConstraint.activate([
                 job.topAnchor.constraint(equalTo: stackView.topAnchor),
-                job.widthAnchor.constraint(equalToConstant: 150),
-                job.heightAnchor.constraint(equalToConstant: 150),
+                job.widthAnchor.constraint(equalToConstant: 160),
+                job.heightAnchor.constraint(equalToConstant: 160),
             ])
         }
     }

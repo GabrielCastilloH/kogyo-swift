@@ -10,11 +10,15 @@ import UIKit
 class SearchBarView: UIView {
     
     // MARK: - UI Components
-    private let textField: UITextField = {
+    let textField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "What would you like to get done today?"
-        textField.layer.cornerRadius = 25
-        textField.backgroundColor = Constants().lightGrayColor
+        textField.placeholder = "What would you like done today?"
+        textField.layer.cornerRadius = 10
+        textField.backgroundColor = Constants().darkWhiteColor
+        textField.leftViewMode = .always
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: textField.frame.size.height))
+        textField.autocorrectionType = .no
+        textField.returnKeyType = .done
         return textField
     }()
     
@@ -23,6 +27,7 @@ class SearchBarView: UIView {
         imageView.image = UIImage(systemName: "magnifyingglass")
         imageView.backgroundColor = .clear
         imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = Constants().darkGrayColor
         return imageView
     }()
     
@@ -40,22 +45,22 @@ class SearchBarView: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.addSubview(icon)
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        
         self.addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         
+        self.addSubview(icon)
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            icon.topAnchor.constraint(equalTo: self.topAnchor),
-            icon.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            icon.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            icon.widthAnchor.constraint(equalToConstant: 50),
-            
             textField.topAnchor.constraint(equalTo: self.topAnchor),
             textField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             textField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             textField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            
+            icon.topAnchor.constraint(equalTo: self.topAnchor, constant: -1),
+            icon.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            icon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            icon.widthAnchor.constraint(equalToConstant: 30),
             
         ])
     }

@@ -78,7 +78,7 @@ class JobButtonView: UIView {
         NSLayoutConstraint.activate([
             jobLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             jobLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 5),
-            jobLabel.widthAnchor.constraint(equalToConstant: 130),
+            jobLabel.widthAnchor.constraint(equalToConstant: 120),
             
             imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
