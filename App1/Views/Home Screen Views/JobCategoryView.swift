@@ -7,10 +7,15 @@
 
 import UIKit
 
+protocol CategoryViewDelegate {
+    func clickedButtonInCategory(kind: String)
+}
+
 class JobCategoryView: UIView {
     
     // MARK: - Variables
     let jobs: [JobButtonView]
+    var delegate: CategoryViewDelegate?
     
     // MARK: - UI Components
     private let header: UILabel = {
@@ -84,6 +89,7 @@ class JobCategoryView: UIView {
     func setupJobViews() {
         for job in jobs {
             
+            job.delegate = self
             stackView.addArrangedSubview(job)
             
             NSLayoutConstraint.activate([
@@ -92,5 +98,13 @@ class JobCategoryView: UIView {
                 job.heightAnchor.constraint(equalToConstant: 160),
             ])
         }
+    }
+}
+
+// MARK: - Job Button Delegate
+// We're going two levels deep baby.
+extension JobCategoryView: JobButtonDelegate {
+    func clickedJobButton(kind: String) {
+        self.delegate?.clickedButtonInCategory(kind: kind)
     }
 }

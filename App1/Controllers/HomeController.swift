@@ -58,22 +58,26 @@ class HomeController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        self.jobSearch = allJobs
+//        self.jobSearch = allJobs
+//        
+//        setupSearchBar()
+//        setupJobCategories()
+//        setupSearchTableView()
+//        
+//        self.searchTableView.showHideView(0)
+//
+//        
+//        // Setting the Home Screen ViewController as the delegate of the text field & table view.
+//        searchBar.textField.delegate = self
+//        searchBar.textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
+//        searchTableView.delegate = self
+//        searchTableView.dataSource = self
+//        
+//        searchBar.delegate = self
         
-        setupSearchBar()
-        setupJobCategories()
-        setupSearchTableView()
+        self.presentCreateJobController(for: "Cleaning")
         
-        self.searchTableView.showHideView(0)
-
         
-        // Setting the Home Screen ViewController as the delegate of the text field & table view.
-        searchBar.textField.delegate = self
-        searchBar.textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
-        searchTableView.delegate = self
-        searchTableView.dataSource = self
-        
-        searchBar.delegate = self
         
     }
     
@@ -94,6 +98,9 @@ class HomeController: UIViewController {
     
     private func setupJobCategories() {
         for (index, category) in allCategories.enumerated() {
+            
+            category.delegate = self
+            
             self.view.addSubview(category)
             category.translatesAutoresizingMaskIntoConstraints = false
             
@@ -129,13 +136,20 @@ class HomeController: UIViewController {
     }
     
     
-    // MARK: - Selectors
+    // MARK: - Selectors & Functions
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let searchText = textField.text {
             self.jobSearch = searchText.isEmpty ? allJobs :
                 self.allJobs.filter{$0.jobLabel.text!.lowercased().contains(searchText.lowercased())}
             searchTableView.reloadData()
         }
+    }
+    
+    private func presentCreateJobController(for jobKind: String) {
+        let createJobController = CreateJobController(kind: jobKind)
+        createJobController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(createJobController, animated: true)
+        print(jobKind)
     }
 }
 
@@ -158,7 +172,7 @@ extension HomeController: UITextFieldDelegate {
     }
 }
 
-// MARK: - Search Bar Delegate
+// MARK: - Search Table Delegate
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
@@ -181,6 +195,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - Search Bar Delegate
 extension HomeController: CustomSearchBarDelegate {
     func didClickCancel() {
         // Do the same as if the textfield should return.
@@ -192,3 +207,11 @@ extension HomeController: CustomSearchBarDelegate {
         self.searchTableView.reloadData()
     }
 }
+
+// MARK: - Job Button Delegate
+extension HomeController: CategoryViewDelegate {
+    func clickedButtonInCategory(kind: String) {
+        self.presentCreateJobController(for: kind)
+    }
+}
+

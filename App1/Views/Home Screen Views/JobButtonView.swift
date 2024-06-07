@@ -7,8 +7,15 @@
 
 import UIKit
 
+protocol JobButtonDelegate {
+    func clickedJobButton(kind: String)
+}
+
 class JobButtonView: UIView {
     // The buttons with the name of the different jobs available. (under the home category heading.
+    
+    // MARK: - Variables
+    var delegate: JobButtonDelegate?
     
     // MARK: - UI Components
     public let imageView: UIImageView = {
@@ -100,7 +107,7 @@ class JobButtonView: UIView {
     
     // MARK: - Selectors
     @objc func didTapButton(sender: UIButton) {
-        print(sender.titleLabel?.text ?? "damn i just got touched up inside real hard.")
+        self.delegate?.clickedJobButton(kind: self.jobLabel.text!)
     }
 
 }
