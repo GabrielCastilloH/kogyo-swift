@@ -46,7 +46,7 @@ class JobButtonView: UIView {
         return label
     }()
     
-    private let button: UIButton = {
+    private lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(white: 1, alpha: 0.0)
         button.layer.cornerRadius = 25

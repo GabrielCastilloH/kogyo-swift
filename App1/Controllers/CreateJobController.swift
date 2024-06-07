@@ -13,16 +13,8 @@ class CreateJobController: UIViewController {
     // MARK: - Variables
     var jobKind: String
     
-    
     // MARK: - UI Components
-    private func createFormLabel(for title: String) -> UILabel {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.text = title
-        return label
-    }
+    
     
     // MARK: - Life Cycle
     init(kind: String) {
@@ -47,30 +39,20 @@ class CreateJobController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        let kindLabel = createFormLabel(for: "Kind:")
-        let descriptionLabel = createFormLabel(for: "Description:")
-        let imagesLabel = createFormLabel(for: "Images & Videos:")
-        let hoursLabel = createFormLabel(for: "Expected Hours:")
-        let additionalEquipment = createFormLabel(for: "Additional Equipment:")
+        let jobKindView = JobKindView(kind: jobKind)
         
-        
-        self.view.addSubview(kindLabel)
-        kindLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(descriptionLabel)
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(jobKindView)
+        jobKindView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator1 = UIView()
-        createSeparatorView(with: separator1, under: kindLabel)
+        createSeparatorView(with: separator1, under: jobKindView)
         
         NSLayoutConstraint.activate([
-            kindLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
-            kindLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
-            
-            descriptionLabel.topAnchor.constraint(equalTo: separator1.bottomAnchor, constant: 15),
-            descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
+            jobKindView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            jobKindView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            jobKindView.heightAnchor.constraint(equalToConstant: 30),
         ])
-        
     }
     
     
@@ -81,7 +63,7 @@ class CreateJobController: UIViewController {
         separator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            separator.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 15),
+            separator.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20),
             separator.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             separator.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             separator.heightAnchor.constraint(equalToConstant: 1),
@@ -89,5 +71,4 @@ class CreateJobController: UIViewController {
     }
     
     // MARK: - Selectors
-
 }

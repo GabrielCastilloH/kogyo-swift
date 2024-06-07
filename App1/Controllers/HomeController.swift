@@ -10,34 +10,7 @@ import UIKit
 class HomeController: UIViewController {
     
     // MARK: - Variables
-    let allCategories = [
-        JobCategoryView(title: "Home", jobButtons: [
-            JobButtonView(title: "Minor Repairs"),
-            JobButtonView(title: "Cleaning"),
-            JobButtonView(title: "Painting"),
-        ]),
-        JobCategoryView(title: "Personal", jobButtons: [
-            JobButtonView(title: "Baby Sitting"),
-            JobButtonView(title: "Dog Walking"),
-            JobButtonView(title: "Massages"),
-        ]),
-        JobCategoryView(title: "Technology", jobButtons: [
-            JobButtonView(title: "IT Support"),
-            JobButtonView(title: "Electrical Work"),
-            JobButtonView(title: "Wi-Fi Help"),
-        ]),
-    ]
-    
-    var allJobs: [JobButtonView] {
-        // Creating all jobs
-        var jobs: [JobButtonView] = []
-        for category in allCategories {
-            for job in category.jobs {
-                jobs.append(job)
-            }
-        }
-        return jobs
-    }
+    var jobListing = JobListing()
     
     var jobSearch: [JobButtonView] = []
     
@@ -55,10 +28,10 @@ class HomeController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.backgroundColor = .white
-        
-//        self.jobSearch = allJobs
+//        super.viewDidLoad()
+//        self.view.backgroundColor = .white
+//        
+//        self.jobSearch = jobListing.allJobs
 //        
 //        setupSearchBar()
 //        setupJobCategories()
@@ -75,15 +48,16 @@ class HomeController: UIViewController {
 //        
 //        searchBar.delegate = self
         
-        self.presentCreateJobController(for: "Cleaning")
-        
-        
-        
+        self.presentCreateJobController(for: "Cleaning") // Delete this line
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     // MARK: - UI Setup
     private func setupSearchBar() {
-        navigationController?.setNavigationBarHidden(true, animated: false)
 
         self.view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -97,7 +71,7 @@ class HomeController: UIViewController {
     }
     
     private func setupJobCategories() {
-        for (index, category) in allCategories.enumerated() {
+        for (index, category) in jobListing.allCategories.enumerated() {
             
             category.delegate = self
             
@@ -114,7 +88,8 @@ class HomeController: UIViewController {
                 category.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20)
                     .isActive = true
             } else {
-                category.topAnchor.constraint(equalTo: allCategories[index - 1].bottomAnchor, constant: 5)
+                category.topAnchor.constraint(equalTo: jobListing.allCategories[index - 1]
+                    .bottomAnchor, constant: 5)
                     .isActive = true
             }
         }
@@ -139,8 +114,8 @@ class HomeController: UIViewController {
     // MARK: - Selectors & Functions
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let searchText = textField.text {
-            self.jobSearch = searchText.isEmpty ? allJobs :
-                self.allJobs.filter{$0.jobLabel.text!.lowercased().contains(searchText.lowercased())}
+            self.jobSearch = searchText.isEmpty ? jobListing.allJobs :
+                self.jobListing.allJobs.filter{$0.jobLabel.text!.lowercased().contains(searchText.lowercased())}
             searchTableView.reloadData()
         }
     }
@@ -161,7 +136,7 @@ extension HomeController: UITextFieldDelegate {
         self.searchBar.cancelButton.showHideView(0)
         self.searchBar.textField.text = ""
         self.view.endEditing(true) // do this
-        self.jobSearch = self.allJobs
+        self.jobSearch = self.jobListing.allJobs
         self.searchTableView.reloadData()
         return true
     }
@@ -203,7 +178,7 @@ extension HomeController: CustomSearchBarDelegate {
         self.searchBar.cancelButton.showHideView(0)
         self.searchBar.textField.text = ""
         self.view.endEditing(true)
-        self.jobSearch = self.allJobs
+        self.jobSearch = self.jobListing.allJobs
         self.searchTableView.reloadData()
     }
 }

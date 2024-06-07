@@ -16,3 +16,53 @@ struct Constants {
     
 }
 
+struct JobListing {
+    
+    let allCategories = [
+        JobCategoryView(title: "Home", jobButtons: [
+            JobButtonView(title: "Minor Repairs"),
+            JobButtonView(title: "Cleaning"),
+            JobButtonView(title: "Painting"),
+        ]),
+        JobCategoryView(title: "Personal", jobButtons: [
+            JobButtonView(title: "Baby Sitting"),
+            JobButtonView(title: "Dog Walking"),
+            JobButtonView(title: "Massages"),
+        ]),
+        JobCategoryView(title: "Technology", jobButtons: [
+            JobButtonView(title: "IT Support"),
+            JobButtonView(title: "Electrical Work"),
+            JobButtonView(title: "Wi-Fi Help"),
+        ]),
+    ]
+    
+    var allJobs: [JobButtonView] {
+        // Creating all jobs
+        var jobs: [JobButtonView] = []
+        for category in allCategories {
+            for job in category.jobs {
+                jobs.append(job)
+            }
+        }
+        return jobs
+    }
+}
+
+struct CustomFunctions {
+    func createPlaceholder(for text: String) -> NSAttributedString {
+        return NSAttributedString(
+            string: text,
+            attributes: [NSAttributedString.Key.foregroundColor: Constants().lightGrayColor.withAlphaComponent(0.5)]
+        )
+    }
+    
+    func createFormLabel(for title: String) -> UILabel {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.text = title
+        return label
+    }
+}
+
