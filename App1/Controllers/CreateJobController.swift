@@ -40,6 +40,7 @@ class CreateJobController: UIViewController {
     // MARK: - UI Setup
     private func setupUI() {
         let jobKindView = JobKindView(kind: jobKind)
+        let descriptionFormView = DescriptionFormView()
         
         self.view.addSubview(jobKindView)
         jobKindView.translatesAutoresizingMaskIntoConstraints = false
@@ -47,11 +48,19 @@ class CreateJobController: UIViewController {
         let separator1 = UIView()
         createSeparatorView(with: separator1, under: jobKindView)
         
+        self.view.addSubview(descriptionFormView)
+        descriptionFormView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
             jobKindView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobKindView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             jobKindView.heightAnchor.constraint(equalToConstant: 30),
+            
+            descriptionFormView.topAnchor.constraint(equalTo: separator1.bottomAnchor, constant: 15),
+            descriptionFormView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            descriptionFormView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            descriptionFormView.heightAnchor.constraint(equalToConstant: 80),
         ])
     }
     

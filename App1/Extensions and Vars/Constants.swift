@@ -66,3 +66,8 @@ struct CustomFunctions {
     }
 }
 
+extension UITextView {
+    func leftSpace() {
+        self.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 4, right: 4)
+    }
+}

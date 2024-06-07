@@ -58,10 +58,10 @@ class JobKindView: UIView {
     )
     
     private lazy var flexButton = UIBarButtonItem(
-        barButtonSystemItem: .flexibleSpace,
-        target: self,
-        action: nil
-    )
+            barButtonSystemItem: .flexibleSpace,
+            target: self,
+            action: nil
+        )
     
     // MARK: - Life Cycle
     init(kind: String) {
