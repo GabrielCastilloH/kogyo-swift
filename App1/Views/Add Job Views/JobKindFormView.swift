@@ -1,5 +1,5 @@
 //
-//  JobKindView.swift
+//  JobKindFormView.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/7/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class JobKindView: UIView {
+class JobKindFormView: UIView {
 
     // MARK: - Variables
     var jobKind: String
@@ -120,7 +120,7 @@ class JobKindView: UIView {
 }
 
 // MARK: - Picker View
-extension JobKindView: UIPickerViewDelegate, UIPickerViewDataSource {
+extension JobKindFormView: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
