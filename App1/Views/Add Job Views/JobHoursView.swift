@@ -1,22 +1,26 @@
 //
-//  JobKindView.swift
+//  JobHoursView.swift
 //  App1
 //
-//  Created by Gabriel Castillo on 6/7/24.
+//  Created by Gabriel Castillo on 6/8/24.
 //
 
 import UIKit
 
-class JobKindView: UIView {
-
+class JobHoursView: UIView {
     // MARK: - Variables
-    var jobKind: String
-    let allJobs: [JobButtonView]
     let cf = CustomFunctions()
+    var possibleHours: [String] = {
+        var list = ["< 1"]
+        for i in 1...15 {
+            list.append(String(i))
+        } 
+        list.append(">15")
+        return list
+    }()
     
     
     // MARK: - UI Components
-    
     private let pickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.sizeToFit()
@@ -27,29 +31,19 @@ class JobKindView: UIView {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
         textField.attributedPlaceholder = CustomFunctions()
-            .createPlaceholder(for: "Select job kind...")
+            .createPlaceholder(for: "?")
         textField.layer.cornerRadius = 10
         textField.font = .systemFont(ofSize: 20, weight: .regular)
-        textField.leftViewMode = .always
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.size.height))
+        textField.textAlignment = .center
         return textField
     }()
     
     private let pickerToolbar: UIToolbar = {
-        let toolbar = UIToolbar()
-        toolbar.barStyle = UIBarStyle.default
-        toolbar.tintColor = .systemBlue
-        return toolbar
-    }()
-    
-    private let pickerImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "chevron.down")
-        imageView.tintColor = Constants().darkGrayColor
-        imageView.contentMode = .scaleAspectFill
-        imageView.isUserInteractionEnabled = false
-        return imageView
-    }()
+            let toolbar = UIToolbar()
+            toolbar.barStyle = UIBarStyle.default
+            toolbar.tintColor = .systemBlue
+            return toolbar
+        }()
     
     private lazy var pickerToolbarDone = UIBarButtonItem(
         barButtonSystemItem: .done,
@@ -63,11 +57,19 @@ class JobKindView: UIView {
             action: nil
         )
     
+    
+    private let hoursLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .left
+        label.font = .systemFont(ofSize: 20, weight: .regular)
+        label.text = "hours"
+        return label
+    }()
+    
+    
     // MARK: - Life Cycle
-    init(kind: String) {
-        self.jobKind = kind
-        self.allJobs = JobListing().allJobs
-        self.pickerTextField.text = jobKind
+    init() {
         super.init(frame: .zero)
         
         self.pickerView.delegate = self
@@ -83,33 +85,33 @@ class JobKindView: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        let kindLabel = cf.createFormLabel(for: "Kind:")
+        let hoursTitle = cf.createFormLabel(for: "Expected Hours:")
         
-        self.addSubview(kindLabel)
-        kindLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(hoursTitle)
+        hoursTitle.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(pickerTextField)
         pickerTextField.translatesAutoresizingMaskIntoConstraints = false
         pickerTextField.inputAccessoryView = pickerToolbar
         pickerToolbar.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: 40)
         self.pickerToolbar.setItems([flexButton, flexButton, flexButton, pickerToolbarDone], animated: true)
+
         
-        self.addSubview(pickerImage)
-        pickerImage.translatesAutoresizingMaskIntoConstraints = false
-       
+        self.addSubview(hoursLabel)
+        hoursLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        
         
         NSLayoutConstraint.activate([
-            kindLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-            kindLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
+            hoursTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
+            hoursTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             
-            pickerTextField.centerYAnchor.constraint(equalTo: kindLabel.centerYAnchor),
-            pickerTextField.leadingAnchor.constraint(equalTo: kindLabel.trailingAnchor, constant: 10),
-            pickerTextField.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.7),
-            pickerTextField.heightAnchor.constraint(equalToConstant: 35),
+            pickerTextField.leadingAnchor.constraint(equalTo: hoursTitle.trailingAnchor, constant: 10),
+            pickerTextField.widthAnchor.constraint(equalToConstant: 50),
             
-            pickerImage.centerYAnchor.constraint(equalTo: kindLabel.centerYAnchor),
-            pickerImage.trailingAnchor.constraint(equalTo: pickerTextField.trailingAnchor, constant: -15),
-            pickerImage.heightAnchor.constraint(equalToConstant: 25),
+            hoursLabel.bottomAnchor.constraint(equalTo: hoursTitle.bottomAnchor),
+            hoursLabel.leadingAnchor.constraint(equalTo: pickerTextField.trailingAnchor, constant: 5),
+            
         ])
     }
 
@@ -120,20 +122,20 @@ class JobKindView: UIView {
 }
 
 // MARK: - Picker View
-extension JobKindView: UIPickerViewDelegate, UIPickerViewDataSource {
+extension JobHoursView: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.allJobs.count
+        return self.possibleHours.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.allJobs[row].jobLabel.text
+        return self.possibleHours[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        pickerTextField.text = self.allJobs[row].jobLabel.text
+        pickerTextField.text = self.possibleHours[row]
     }
 }
