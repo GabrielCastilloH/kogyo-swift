@@ -37,7 +37,7 @@ class SearchBarView: UIView {
         return imageView
     }()
     
-    let cancelButton: UIButton = {
+    lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "x.circle"), for: .normal)
         button.addTarget(self, action: #selector(cancelButtonClicked), for: .touchUpInside)

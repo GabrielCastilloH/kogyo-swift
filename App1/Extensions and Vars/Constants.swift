@@ -59,7 +59,7 @@ struct CustomFunctions {
     func createFormLabel(for title: String) -> UILabel {
         let label = UILabel()
         label.textColor = .label
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = .systemFont(ofSize: 20, weight: .medium)
         label.text = title
         return label

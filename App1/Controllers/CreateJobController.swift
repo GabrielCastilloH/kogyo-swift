@@ -12,8 +12,20 @@ class CreateJobController: UIViewController {
     
     // MARK: - Variables
     var jobKind: String
+    var keyboardHeight: CGFloat = 200
+    var cf = CustomFunctions()
     
     // MARK: - UI Components
+    private lazy var submitJobBtn: UIButton = {
+        let button = UIButton()
+        button.tintColor = .white
+        button.setTitle("Submit Job", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
+        button.layer.cornerRadius = 15
+        button.backgroundColor = Constants().lightBlueColor
+        button.addTarget(self, action: #selector(didTapSubmitJob), for: .touchUpInside)
+        return button
+    }()
     
     
     // MARK: - Life Cycle
@@ -30,21 +42,31 @@ class CreateJobController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.navigationBar.backgroundColor = .white
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-
+        
         self.navigationItem.title = "Create a New Job"
         self.setupUI()
+        self.view.backgroundColor = .white
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        let jobKindView = JobKindView(kind: jobKind)
+        let jobKindView = JobKindFormView(kind: jobKind)
         let descriptionFormView = DescriptionFormView()
         let mediaFormView = MediaFormView()
         let jobDateTimeView = JobDateTimeView()
         let jobHoursView = JobHoursView()
         let addEquipmentFormView = AddEquipmentFormView()
+        let jobPaymentView = JobPaymentView()
         
         self.view.addSubview(jobKindView)
         jobKindView.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +94,23 @@ class CreateJobController: UIViewController {
         
         self.view.addSubview(addEquipmentFormView)
         addEquipmentFormView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let separator4 = UIView()
+        createSeparatorView(with: separator4, under: addEquipmentFormView)
+        
+        self.view.addSubview(jobPaymentView)
+        jobPaymentView.translatesAutoresizingMaskIntoConstraints = false
+        jobPaymentView.delegate = self
+        
+        let separator5 = UIView()
+        createSeparatorView(with: separator5, under: jobPaymentView)
+        
+        let paymentTitle = cf.createFormLabel(for: "Payment:")
+        self.view.addSubview(paymentTitle)
+        paymentTitle.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(submitJobBtn)
+        submitJobBtn.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
@@ -102,7 +141,23 @@ class CreateJobController: UIViewController {
             addEquipmentFormView.topAnchor.constraint(equalTo: jobHoursView.bottomAnchor, constant: 5),
             addEquipmentFormView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             addEquipmentFormView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            addEquipmentFormView.heightAnchor.constraint(equalToConstant: 20),
+            addEquipmentFormView.heightAnchor.constraint(equalToConstant: 15),
+            
+            jobPaymentView.topAnchor.constraint(equalTo: separator4.bottomAnchor, constant: 15),
+            jobPaymentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            jobPaymentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            jobPaymentView.heightAnchor.constraint(equalToConstant: 45),
+            
+            paymentTitle.topAnchor.constraint(equalTo: separator5.bottomAnchor, constant: 0),
+            paymentTitle.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            paymentTitle.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            paymentTitle.heightAnchor.constraint(equalToConstant: 50),
+            
+            submitJobBtn.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
+            submitJobBtn.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            submitJobBtn.heightAnchor.constraint(equalToConstant: 50),
+            submitJobBtn.widthAnchor.constraint(equalToConstant: 180),
+            
             
         ])
     }
@@ -123,4 +178,39 @@ class CreateJobController: UIViewController {
     }
     
     // MARK: - Selectors
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                let keyboardRectangle = keyboardFrame.cgRectValue
+                self.keyboardHeight = keyboardRectangle.height
+            }
+    }
+    
+    @objc func didTapSubmitJob() {
+        print("yay you did it!")
+    }
+}
+
+extension CreateJobController: JobPaymentViewDelegate {
+    func paymentTextFieldPressed() {
+        
+        DispatchQueue.main.async {
+            UIView.transition(
+                with: self.view, duration: 0.4,
+                options: .curveLinear,
+                animations: {
+                    self.view.frame.origin.y = -self.keyboardHeight + 40
+            })
+        }
+    }
+    
+    func paymentTextFieldDismissed() {
+        DispatchQueue.main.async {
+            UIView.transition(
+                with: self.view, duration: 0.1,
+                options: .curveLinear,
+                animations: {
+                    self.view.frame.origin.y = 0
+            })
+        }
+    }
 }

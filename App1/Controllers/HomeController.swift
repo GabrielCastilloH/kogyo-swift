@@ -19,7 +19,7 @@ class HomeController: UIViewController {
     
     private let searchTableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .systemRed
         tableView.keyboardDismissMode = .onDrag
         tableView.allowsSelection = true
         tableView.register(SearchTableCell.self, forCellReuseIdentifier: SearchTableCell.identifier)
@@ -28,27 +28,27 @@ class HomeController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
-//        super.viewDidLoad()
-//        self.view.backgroundColor = .white
-//        
-//        self.jobSearch = jobListing.allJobs
-//        
-//        setupSearchBar()
-//        setupJobCategories()
-//        setupSearchTableView()
-//        
-//        self.searchTableView.showHideView(0)
-//
-//        
-//        // Setting the Home Screen ViewController as the delegate of the text field & table view.
-//        searchBar.textField.delegate = self
-//        searchBar.textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
-//        searchTableView.delegate = self
-//        searchTableView.dataSource = self
-//        
-//        searchBar.delegate = self
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
         
-        self.presentCreateJobController(for: "Cleaning") // Delete this line
+        self.jobSearch = jobListing.allJobs
+        
+        setupSearchBar()
+        setupJobCategories()
+        setupSearchTableView()
+        
+        self.searchTableView.showHideView(0)
+
+        
+        // Setting the Home Screen ViewController as the delegate of the text field & table view.
+        searchBar.textField.delegate = self
+        searchBar.textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
+        searchTableView.delegate = self
+        searchTableView.dataSource = self
+        
+        searchBar.delegate = self
+        
+//        self.presentCreateJobController(for: "Cleaning") // Delete this line
     }
     
     
@@ -124,7 +124,6 @@ class HomeController: UIViewController {
         let createJobController = CreateJobController(kind: jobKind)
         createJobController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(createJobController, animated: true)
-        print(jobKind)
     }
 }
 
