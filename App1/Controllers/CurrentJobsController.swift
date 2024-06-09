@@ -26,11 +26,15 @@ class CurrentJobsController: UIViewController {
     override func viewDidLoad() {
         currentJobs.allJobs.append(
             Job(kind: "Cleaning",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper",
+                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat.",
                 dateTime: Date(),
                 expectedHours: 5,
+                location: "Your moms house",
+                payment: 69420,
                 helperName: "John D.",
-                profileImage: UIImage(named: "Cleaning"))
+                profileImage: UIImage(named: "Cleaning"),
+                helperDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat."
+               )
         )
         
         super.viewDidLoad()
@@ -86,12 +90,7 @@ extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
         
         let currentJob = self.currentJobs.allJobs[indexPath.row]
 
-        cell.configureCell(
-            jobKind: currentJob.kind,
-            jobDescription: currentJob.description,
-            helperName: currentJob.helperName,
-            profileImg: currentJob.profileImage
-        )
+        cell.configureCell(for: currentJob)
         
         return cell
     }
@@ -101,6 +100,9 @@ extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("touched me up inside")
+        let jobInfoController = JobInfoController(for: self.currentJobs.allJobs[indexPath.row])
+        
+        jobInfoController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(jobInfoController, animated: true)
     }
 }

@@ -45,9 +45,12 @@ struct Job {
     let description: String
     let dateTime: Date
     let expectedHours: Int
+    let location: String // change later
+    let payment: Int
     // Change this later to a helper object
     let helperName: String
     let profileImage: UIImage?
+    let helperDescription: String
 }
 
 struct CurrentJobs {

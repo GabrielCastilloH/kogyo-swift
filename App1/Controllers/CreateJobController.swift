@@ -83,7 +83,7 @@ class CreateJobController: UIViewController {
         jobKindView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator1 = UIView()
-        createSeparatorView(with: separator1, under: jobKindView)
+        cf.createSeparatorView(for: self, with: separator1, under: jobKindView)
         
         self.view.addSubview(descriptionFormView)
         descriptionFormView.translatesAutoresizingMaskIntoConstraints = false
@@ -92,13 +92,13 @@ class CreateJobController: UIViewController {
         mediaFormView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator2 = UIView()
-        createSeparatorView(with: separator2, under: mediaFormView)
+        cf.createSeparatorView(for: self, with: separator2, under: mediaFormView)
         
         self.view.addSubview(jobDateTimeView)
         jobDateTimeView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator3 = UIView()
-        createSeparatorView(with: separator3, under: jobDateTimeView)
+        cf.createSeparatorView(for: self, with: separator3, under: jobDateTimeView)
         
         self.view.addSubview(jobHoursView)
         jobHoursView.translatesAutoresizingMaskIntoConstraints = false
@@ -107,14 +107,14 @@ class CreateJobController: UIViewController {
         addEquipmentFormView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator4 = UIView()
-        createSeparatorView(with: separator4, under: addEquipmentFormView)
+        cf.createSeparatorView(for: self, with: separator4, under: addEquipmentFormView)
         
         self.view.addSubview(jobPaymentView)
         jobPaymentView.translatesAutoresizingMaskIntoConstraints = false
         jobPaymentView.delegate = self
         
         let separator5 = UIView()
-        createSeparatorView(with: separator5, under: jobPaymentView)
+        cf.createSeparatorView(for: self, with: separator5, under: jobPaymentView)
         
         let paymentTitle = cf.createFormLabel(for: "Payment:")
         self.view.addSubview(paymentTitle)
@@ -173,27 +173,10 @@ class CreateJobController: UIViewController {
             submitJobBtn.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             submitJobBtn.heightAnchor.constraint(equalToConstant: 50),
             submitJobBtn.widthAnchor.constraint(equalToConstant: 180),
-            
-            
         ])
         
         view.bringSubviewToFront(navbarBackgroundView)
         navbarBackgroundView.isHidden = true
-    }
-    
-    
-    private func createSeparatorView(with separator: UIView, under view: UIView) {
-        separator.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.3)
-        
-        self.view.addSubview(separator)
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            separator.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 20),
-            separator.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            separator.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            separator.heightAnchor.constraint(equalToConstant: 1),
-        ])
     }
     
     // MARK: - Selectors & Functions

@@ -80,11 +80,11 @@ class CurrentJobsCell: UITableViewCell {
     }
     
      // MARK: - UI Setup
-    public func configureCell(jobKind: String, jobDescription: String, helperName: String, profileImg: UIImage?) {
-        self.kindTitleLabel.text = jobKind
-        self.jobDescriptionLabel.text = jobDescription
-        self.helperNameTitle.text = helperName
-        self.profileImageView.image = profileImg
+    public func configureCell(for job: Job) {
+        self.kindTitleLabel.text = job.kind
+        self.jobDescriptionLabel.text = job.description
+        self.helperNameTitle.text = "John D." // TODO: create helper object and add it to job
+        self.profileImageView.image = UIImage(named: "Cleaning") // this should be part of helper object.
     }
     
     
@@ -126,7 +126,7 @@ class CurrentJobsCell: UITableViewCell {
             profileImageView.widthAnchor.constraint(equalToConstant: 80),
             profileImageView.heightAnchor.constraint(equalToConstant: 80),
             
-            helperNameTitle.bottomAnchor.constraint(equalTo: self.jobDescriptionLabel.bottomAnchor, constant: 0),
+            helperNameTitle.bottomAnchor.constraint(equalTo: self.jobDescriptionLabel.bottomAnchor, constant: -15),
             helperNameTitle.widthAnchor.constraint(equalToConstant: 100),
             
             doneByLabel.bottomAnchor.constraint(equalTo: self.helperNameTitle.topAnchor, constant: -3),
