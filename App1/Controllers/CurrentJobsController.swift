@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AllJobsController: UIViewController {
+class CurrentJobsController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
