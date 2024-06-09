@@ -25,7 +25,7 @@ class TabController: UITabBarController {
         self.tabBar.unselectedItemTintColor = Constants().darkGrayColor.withAlphaComponent(0.5)
         
         let home = self.createNav(with: "Home", and: UIImage(systemName: "house"), vc: HomeController())
-        let allJobs = self.createNav(with: "Jobs", and: UIImage(systemName: "clock"), vc: AllJobsController())
+        let allJobs = self.createNav(with: "Jobs", and: UIImage(systemName: "clock"), vc: CurrentJobsController())
         let profile = self.createNav(with: "Profile", and: UIImage(systemName: "person"), vc: ProfileController())
         
         self.setViewControllers([home, allJobs, profile], animated: true)

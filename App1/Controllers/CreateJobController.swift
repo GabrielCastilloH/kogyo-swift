@@ -12,7 +12,7 @@ class CreateJobController: UIViewController {
     
     // MARK: - Variables
     var jobKind: String
-    var keyboardHeight: CGFloat = 200
+    var keyboardHeight: CGFloat = 300
     var cf = CustomFunctions()
     
     // MARK: - UI Components
@@ -39,10 +39,10 @@ class CreateJobController: UIViewController {
     }
     
     override func viewDidLoad() {
+//        UIApplication.shared.windows.first?.backgroundColor = UIColor.white
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.navigationBar.backgroundColor = .white
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         
@@ -177,7 +177,13 @@ class CreateJobController: UIViewController {
         ])
     }
     
-    // MARK: - Selectors
+    // MARK: - Selectors & Functions
+    private func presentLoadingScreen() {
+        let loadingScreenController = LoadingScreenController()
+        self.navigationController?.pushViewController(loadingScreenController, animated: true)
+    }
+    
+    
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
                 let keyboardRectangle = keyboardFrame.cgRectValue
@@ -186,7 +192,7 @@ class CreateJobController: UIViewController {
     }
     
     @objc func didTapSubmitJob() {
-        print("yay you did it!")
+        self.presentLoadingScreen()
     }
 }
 
@@ -199,8 +205,10 @@ extension CreateJobController: JobPaymentViewDelegate {
                 options: .curveLinear,
                 animations: {
                     self.view.frame.origin.y = -self.keyboardHeight + 40
+//                    self.navigationController?.setNavigationBarHidden(true, animated: false)
             })
         }
+        
     }
     
     func paymentTextFieldDismissed() {
@@ -210,6 +218,8 @@ extension CreateJobController: JobPaymentViewDelegate {
                 options: .curveLinear,
                 animations: {
                     self.view.frame.origin.y = 0
+                    // This shit is bugged my bro.
+//                    self.navigationController?.setNavigationBarHidden(false, animated: false)
             })
         }
     }

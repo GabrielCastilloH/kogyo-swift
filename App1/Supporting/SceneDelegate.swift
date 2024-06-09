@@ -16,7 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            // Accessing the windows property on the relevant window scene
+            windowScene.windows.first?.backgroundColor = UIColor.white
+        }
         
         window.rootViewController = TabController()
         self.window = window

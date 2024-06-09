@@ -11,7 +11,6 @@ class HomeController: UIViewController {
     
     // MARK: - Variables
     var jobListing = JobListing()
-    
     var jobSearch: [JobButtonView] = []
     
     // MARK: - UI Components
@@ -19,7 +18,7 @@ class HomeController: UIViewController {
     
     private let searchTableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = .systemRed
+        tableView.backgroundColor = .white
         tableView.keyboardDismissMode = .onDrag
         tableView.allowsSelection = true
         tableView.register(SearchTableCell.self, forCellReuseIdentifier: SearchTableCell.identifier)
@@ -166,6 +165,10 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.presentCreateJobController(for: self.jobSearch[indexPath.row].jobLabel.text!)
     }
 }
 
