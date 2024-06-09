@@ -27,6 +27,13 @@ class CreateJobController: UIViewController {
         return button
     }()
     
+    private let navbarBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    
     
     // MARK: - Life Cycle
     init(kind: String) {
@@ -45,6 +52,7 @@ class CreateJobController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.navigationController?.navigationBar.backgroundColor = .white
         
         self.navigationItem.title = "Create a New Job"
         self.setupUI()
@@ -60,6 +68,9 @@ class CreateJobController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        self.view.addSubview(navbarBackgroundView)
+        navbarBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
         let jobKindView = JobKindFormView(kind: jobKind)
         let descriptionFormView = DescriptionFormView()
         let mediaFormView = MediaFormView()
@@ -113,6 +124,11 @@ class CreateJobController: UIViewController {
         submitJobBtn.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            navbarBackgroundView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: keyboardHeight - 200),
+            navbarBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            navbarBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            navbarBackgroundView.heightAnchor.constraint(equalToConstant: 250),
+            
             jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
             jobKindView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobKindView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -160,6 +176,9 @@ class CreateJobController: UIViewController {
             
             
         ])
+        
+        view.bringSubviewToFront(navbarBackgroundView)
+        navbarBackgroundView.isHidden = true
     }
     
     
@@ -204,8 +223,14 @@ extension CreateJobController: JobPaymentViewDelegate {
                 with: self.view, duration: 0.4,
                 options: .curveLinear,
                 animations: {
-                    self.view.frame.origin.y = -self.keyboardHeight + 40
-//                    self.navigationController?.setNavigationBarHidden(true, animated: false)
+                    self.view.frame.origin.y = -self.keyboardHeight + 50
+            })
+            
+            UIView.transition(
+                with: self.view, duration: 0.4,
+                options: .transitionCrossDissolve,
+                animations: {
+                    self.navbarBackgroundView.isHidden = false
             })
         }
         
@@ -218,6 +243,7 @@ extension CreateJobController: JobPaymentViewDelegate {
                 options: .curveLinear,
                 animations: {
                     self.view.frame.origin.y = 0
+                    self.navbarBackgroundView.isHidden = true
                     // This shit is bugged my bro.
 //                    self.navigationController?.setNavigationBarHidden(false, animated: false)
             })
