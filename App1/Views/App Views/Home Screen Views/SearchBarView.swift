@@ -12,13 +12,12 @@ protocol CustomSearchBarDelegate {
 }
 
 class SearchBarView: UIView {
-    
     var delegate: CustomSearchBarDelegate?
     
     // MARK: - UI Components
     let textField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "What would you like done today?"
+        textField.attributedPlaceholder = CustomFunctions().createPlaceholder(for: "What do you need done?")
         textField.layer.cornerRadius = 10
         textField.backgroundColor = Constants().darkWhiteColor
         textField.leftViewMode = .always

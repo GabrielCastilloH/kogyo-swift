@@ -72,7 +72,7 @@ class JobCategoryView: UIView {
             header.topAnchor.constraint(equalTo: self.topAnchor),
             header.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             
-            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: -5),
+            scrollView.topAnchor.constraint(equalTo: header.bottomAnchor, constant: -10),
             scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor),

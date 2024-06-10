@@ -25,11 +25,24 @@ class HomeController: UIViewController {
         return tableView
     }()
     
+    private let categoriesTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        tableView.register(CategoriesTableCell.self, forCellReuseIdentifier: CategoriesTableCell.identifier)
+        return tableView
+    }()
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.barTintColor = .systemPink
+        self.navigationController?.navigationBar.backgroundColor = .systemPink
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(didTapLogout))
         
         AuthService.shared.fetchUser { [weak self] user, error in
             guard let self = self else { return }
@@ -43,8 +56,7 @@ class HomeController: UIViewController {
         
         self.jobSearch = jobListing.allJobs
         
-        setupSearchBar()
-        setupJobCategories()
+        setupUI()
         setupSearchTableView()
         
         self.searchTableView.showHideView(0)
@@ -55,57 +67,39 @@ class HomeController: UIViewController {
         searchBar.textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
         searchTableView.delegate = self
         searchTableView.dataSource = self
+        categoriesTableView.delegate = self
+        categoriesTableView.dataSource = self
         
         searchBar.delegate = self
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: false) // TODO: Change to true later
     }
     
     // MARK: - UI Setup
-    private func setupSearchBar() {
+    private func setupUI() {
 
         self.view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(categoriesTableView)
+        categoriesTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
             searchBar.heightAnchor.constraint(equalToConstant: 50),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            categoriesTableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 5),
+            categoriesTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+            categoriesTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
+            categoriesTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
         ])
-    }
-    
-    private func setupJobCategories() {
-        for (index, category) in jobListing.allCategories.enumerated() {
-            
-            category.delegate = self
-            
-            self.view.addSubview(category)
-            category.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                category.heightAnchor.constraint(equalToConstant: 200),
-                category.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-                category.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-            ])
-            
-            if index == 0 {
-                category.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 20)
-                    .isActive = true
-            } else {
-                category.topAnchor.constraint(equalTo: jobListing.allCategories[index - 1]
-                    .bottomAnchor, constant: 5)
-                    .isActive = true
-            }
-        }
     }
         
     private func setupSearchTableView() {
-        
-        navigationController?.setNavigationBarHidden(true, animated: false)
         
         self.view.addSubview(searchTableView)
         searchTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -173,26 +167,47 @@ extension HomeController: UITextFieldDelegate {
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
-        return self.jobSearch.count
+        if tableView == self.searchTableView {
+            return self.jobSearch.count
+        } else {
+            return self.jobListing.allCategories.count
+        }
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableCell.identifier, for: indexPath) as? SearchTableCell else {
-            fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
-        }
+        if tableView == self.searchTableView {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableCell.identifier, for: indexPath) as? SearchTableCell else {
+                fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.") }
 
-        cell.configureCell(with: self.jobSearch[indexPath.row].imageView.image!,
-                           and: self.jobSearch[indexPath.row].jobLabel.text!)
-        
-        return cell
+            cell.configureCell(with: self.jobSearch[indexPath.row].imageView.image!,
+                               and: self.jobSearch[indexPath.row].jobLabel.text!)
+            return cell
+            
+        } else {
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoriesTableCell.identifier, for: indexPath) as? CategoriesTableCell else {
+                fatalError("The SearchTableView could not dequeue a CategoriesTableCell in HomeController.") }
+            
+            let category = self.jobListing.allCategories[indexPath.row]
+            category.delegate = self
+            
+            cell.configureCell(with: category)
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        if tableView == self.searchTableView {
+            return 80
+        } else {
+            return 200
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.presentCreateJobController(for: self.jobSearch[indexPath.row].jobLabel.text!)
+        if tableView == self.searchTableView {
+            self.presentCreateJobController(for: self.jobSearch[indexPath.row].jobLabel.text!)
+        }
     }
 }
 

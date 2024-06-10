@@ -25,10 +25,20 @@ struct JobListing {
             JobButtonView(title: "Electrical Work"),
             JobButtonView(title: "Wi-Fi Help"),
         ]),
+        JobCategoryView(title: "Technology", jobButtons: [
+            JobButtonView(title: "IT Support"),
+            JobButtonView(title: "Electrical Work"),
+            JobButtonView(title: "Wi-Fi Help"),
+        ]),
+        JobCategoryView(title: "Technology", jobButtons: [
+            JobButtonView(title: "IT Support"),
+            JobButtonView(title: "Electrical Work"),
+            JobButtonView(title: "Wi-Fi Help"),
+        ]),
     ]
     
     var allJobs: [JobButtonView] {
-        // Creating all jobs
+        // Fetching all the jobs
         var jobs: [JobButtonView] = []
         for category in allCategories {
             for job in category.jobs {

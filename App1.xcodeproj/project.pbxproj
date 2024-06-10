@@ -57,6 +57,7 @@
 		FFF372F22C16CB9800F8D362 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FFF372F12C16CB9800F8D362 /* FirebaseAuth */; };
 		FFF372F42C16CB9800F8D362 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FFF372F32C16CB9800F8D362 /* FirebaseFirestore */; };
 		FFF372F62C16CB9800F8D362 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FFF372F52C16CB9800F8D362 /* FirebaseStorage */; };
+		FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372F72C16F2B800F8D362 /* CategoriesTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +109,7 @@
 		FFF372E82C16C8B800F8D362 /* ForgotPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordController.swift; sourceTree = "<group>"; };
 		FFF372EA2C16C94500F8D362 /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
 		FFF372EC2C16CB0D00F8D362 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FFF372F72C16F2B800F8D362 /* CategoriesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 		D09C5ECE2C0F3F64002C6F89 /* Models & Other */ = {
 			isa = PBXGroup;
 			children = (
+				FFD8A99A2C157908009F5C8C /* JobListing.swift */,
 				FFF372CD2C16C44100F8D362 /* Models */,
 				FFF372CC2C16C43300F8D362 /* Constants+Extensions */,
 			);
@@ -141,6 +144,7 @@
 				D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */,
 				D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */,
 				D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */,
+				FFF372F72C16F2B800F8D362 /* CategoriesTableCell.swift */,
 			);
 			path = "Home Screen Views";
 			sourceTree = "<group>";
@@ -297,7 +301,6 @@
 			isa = PBXGroup;
 			children = (
 				FFF372DA2C16C7BE00F8D362 /* Auth Models */,
-				FFD8A99A2C157908009F5C8C /* JobListing.swift */,
 				FFF372CE2C16C45A00F8D362 /* Job.swift */,
 			);
 			path = Models;
@@ -417,6 +420,7 @@
 				FFF372D92C16C78900F8D362 /* RegisterController.swift in Sources */,
 				FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */,
 				D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */,
+				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
 				D0E923F12C0E98670070977A /* ProfileController.swift in Sources */,
 				FFD8A9A02C157A6E009F5C8C /* CurrentJobsCell.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
