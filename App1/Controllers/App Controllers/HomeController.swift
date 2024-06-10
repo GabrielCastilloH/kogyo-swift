@@ -36,10 +36,6 @@ class HomeController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.barTintColor = .systemPink
-        self.navigationController?.navigationBar.backgroundColor = .systemPink
-        self.navigationController?.navigationBar.prefersLargeTitles = false
 
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -75,6 +71,7 @@ class HomeController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     // MARK: - UI Setup
