@@ -224,7 +224,12 @@ extension HomeController: CustomSearchBarDelegate {
 // MARK: - Job Button Delegate
 extension HomeController: CategoryViewDelegate {
     func clickedButtonInCategory(kind: String) {
-        self.presentCreateJobController(for: kind)
+        print(kind)
+        if kind == "IT Support" {
+            self.didTapLogout()
+        } else {
+            self.presentCreateJobController(for: kind)
+        }
     }
 }
 
