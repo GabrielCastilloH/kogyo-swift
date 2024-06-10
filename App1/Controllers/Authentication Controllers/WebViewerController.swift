@@ -6,24 +6,51 @@
 //
 
 import UIKit
+import WebKit
 
 class WebViewerController: UIViewController {
+    
+    private let webView = WKWebView()
+    private let urlString: String
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    init(with urlString: String) {
+        self.urlString = urlString
+        super.init(nibName: nil, bundle: nil)
+        
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-    */
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.setupUI()
+        
+        guard let url = URL(string: urlString) else {
+            self.dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        self.webView.load(URLRequest(url: url))
+    }
 
+    private func setupUI() {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDone))
+        self.navigationController?.navigationBar.backgroundColor = .secondarySystemBackground
+        self.view.addSubview(webView)
+        self.webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            self.webView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        ])
+    }
+    
+    @objc private func didTapDone() {
+        self.dismiss(animated: true, completion: nil)
+    }
 }

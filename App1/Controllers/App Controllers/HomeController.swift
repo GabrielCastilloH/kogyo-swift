@@ -29,6 +29,17 @@ class HomeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(didTapLogout))
+        
+        AuthService.shared.fetchUser { [weak self] user, error in
+            guard let self = self else { return }
+            if let error = error {
+                AlertManager.showFetchingUserError(on: self, with: error)
+                return
+            } else if let user = user {
+                print("signed in: \(user.name)\n\(user.email)")
+            }
+        }
         
         self.jobSearch = jobListing.allJobs
         
@@ -46,13 +57,11 @@ class HomeController: UIViewController {
         searchTableView.dataSource = self
         
         searchBar.delegate = self
-        
-//        self.presentCreateJobController(for: "Cleaning") // Delete this line
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false) // TODO: Change to true later
     }
     
     // MARK: - UI Setup
@@ -111,6 +120,19 @@ class HomeController: UIViewController {
     
     
     // MARK: - Selectors & Functions
+    @objc private func didTapLogout() {
+        AuthService.shared.signOut { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                AlertManager.showLogOutErrorAlert(on: self, with: error)
+                return
+            }
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.checkAuthentication()
+            }
+        }
+    }
+    
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let searchText = textField.text {
             self.jobSearch = searchText.isEmpty ? jobListing.allJobs :
@@ -124,6 +146,8 @@ class HomeController: UIViewController {
         createJobController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(createJobController, animated: true)
     }
+    
+    
 }
 
 // MARK: - Search Bar Delegate
