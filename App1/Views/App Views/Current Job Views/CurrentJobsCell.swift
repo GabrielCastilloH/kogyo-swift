@@ -126,7 +126,7 @@ class CurrentJobsCell: UITableViewCell {
             profileImageView.widthAnchor.constraint(equalToConstant: 80),
             profileImageView.heightAnchor.constraint(equalToConstant: 80),
             
-            helperNameTitle.bottomAnchor.constraint(equalTo: self.jobDescriptionLabel.bottomAnchor, constant: -15),
+            helperNameTitle.bottomAnchor.constraint(equalTo: self.jobDescriptionLabel.bottomAnchor, constant: -5),
             helperNameTitle.widthAnchor.constraint(equalToConstant: 100),
             
             doneByLabel.bottomAnchor.constraint(equalTo: self.helperNameTitle.topAnchor, constant: -3),

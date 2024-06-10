@@ -89,7 +89,7 @@ class JobInfoController: UIViewController {
             jobPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
             jobHelperInfoView.topAnchor.constraint(equalTo: separator2.bottomAnchor, constant: 5),
-            jobHelperInfoView.heightAnchor.constraint(equalToConstant: 160),
+            jobHelperInfoView.heightAnchor.constraint(equalToConstant: 250),
             jobHelperInfoView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobHelperInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
