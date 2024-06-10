@@ -60,11 +60,9 @@ class LoginController: UIViewController {
                 AlertManager.showSignInErrorAlert(on: self, with: error)
                 return
             } else {
-                AlertManager.showSignInErrorAlert(on: self)
-            }
-        
-            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.checkAuthentication()
+                if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.checkAuthentication()
+                }
             }
         }
     }
