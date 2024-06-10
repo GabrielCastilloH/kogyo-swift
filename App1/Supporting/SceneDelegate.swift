@@ -95,7 +95,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         } else {
             // Go to home screen
-            self.window?.rootViewController = TabController()
+            // Remove this duplicate code when you feel like it broski.
+            DispatchQueue.main.async { [weak self] in
+                UIView.animate(withDuration: 0.25) {
+                    self?.window?.layer.opacity = 0
+                } completion: { [weak self] _ in
+                    
+                    self?.window?.rootViewController = TabController()
+                    
+                    UIView.animate(withDuration: 0.25) {
+                        self?.window?.layer.opacity = 1
+                    }
+                }
+            }
         }
     }
     
