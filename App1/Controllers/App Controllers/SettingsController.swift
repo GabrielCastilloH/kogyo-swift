@@ -11,20 +11,16 @@ class SettingsController: UIViewController {
     // MARK: - Variables
     var settingsOption : [SettingsOption] = [
         SettingsOption(title: "Personal Information",
-                      icon: UIImage(systemName: "person"),
-                      iconBackgroundColor: .systemBlue
+                      icon: UIImage(systemName: "person")
                      ),
         SettingsOption(title: "Notifications",
-                      icon: UIImage(systemName: "bell"),
-                      iconBackgroundColor: .systemPink
+                      icon: UIImage(systemName: "bell")
                      ),
         SettingsOption(title: "Payment Methods",
-                      icon: UIImage(systemName: "person.text.rectangle"),
-                      iconBackgroundColor: .systemBlue
+                      icon: UIImage(systemName: "person.text.rectangle")
                      ),
         SettingsOption(title: "Support",
-                      icon: UIImage(systemName: "questionmark.circle"),
-                      iconBackgroundColor: .systemBlue
+                      icon: UIImage(systemName: "questionmark.circle")
                      ),
     ]
     
@@ -107,8 +103,8 @@ class SettingsController: UIViewController {
         var viewController: UIViewController
         
         switch settingOption {
-        case "Profile Information":
-            viewController = HomeController()
+        case "Personal Information":
+            viewController = PersonalInfoController()
         case "Your MOms gay":
             viewController = HomeController()
         default:

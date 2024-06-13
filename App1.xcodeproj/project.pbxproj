@@ -33,6 +33,8 @@
 		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
 		FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */; };
 		FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A482C1B2CBF00922513 /* SettingsOption.swift */; };
+		FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */; };
+		FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A4E2C1BA62700922513 /* FirstLastNameForm.swift */; };
 		FFC07FDC2C141B190040EF03 /* JobDateTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */; };
 		FFD8A9992C15588D009F5C8C /* LoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */; };
 		FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* JobListing.swift */; };
@@ -91,6 +93,8 @@
 		FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEquipmentFormView.swift; sourceTree = "<group>"; };
 		FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableCell.swift; sourceTree = "<group>"; };
 		FF879A482C1B2CBF00922513 /* SettingsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
+		FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
+		FF879A4E2C1BA62700922513 /* FirstLastNameForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLastNameForm.swift; sourceTree = "<group>"; };
 		FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDateTimeView.swift; sourceTree = "<group>"; };
 		FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenController.swift; sourceTree = "<group>"; };
 		FFD8A99A2C157908009F5C8C /* JobListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobListing.swift; sourceTree = "<group>"; };
@@ -228,16 +232,26 @@
 		FF879A452C1B2C1000922513 /* Profile Views */ = {
 			isa = PBXGroup;
 			children = (
+				FF879A4D2C1BA5AD00922513 /* Personal Information View */,
 				FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */,
 			);
 			path = "Profile Views";
 			sourceTree = "<group>";
 		};
-		FF879A4A2C1B2F3D00922513 /* Profile View Controllers */ = {
+		FF879A4A2C1B2F3D00922513 /* Settings View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */,
 			);
-			path = "Profile View Controllers";
+			path = "Settings View Controllers";
+			sourceTree = "<group>";
+		};
+		FF879A4D2C1BA5AD00922513 /* Personal Information View */ = {
+			isa = PBXGroup;
+			children = (
+				FF879A4E2C1BA62700922513 /* FirstLastNameForm.swift */,
+			);
+			path = "Personal Information View";
 			sourceTree = "<group>";
 		};
 		FFD8A99E2C157A4B009F5C8C /* Current Job Views */ = {
@@ -269,7 +283,7 @@
 				FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */,
 				FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */,
 				D0E923F02C0E98670070977A /* SettingsController.swift */,
-				FF879A4A2C1B2F3D00922513 /* Profile View Controllers */,
+				FF879A4A2C1B2F3D00922513 /* Settings View Controllers */,
 			);
 			path = "App Controllers";
 			sourceTree = "<group>";
@@ -447,6 +461,7 @@
 				D0E923F12C0E98670070977A /* SettingsController.swift in Sources */,
 				FFD8A9A02C157A6E009F5C8C /* CurrentJobsCell.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
+				FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,
 				FF45E4B52C1613BA000F1BE7 /* JobPhotosVideosView.swift in Sources */,
 				FFF372E02C16C7EC00F8D362 /* User.swift in Sources */,
@@ -473,6 +488,7 @@
 				FFF372DE2C16C7E000F8D362 /* LoginUserRequest.swift in Sources */,
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
 				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
+				FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */,
 				FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
