@@ -24,9 +24,9 @@ class TabController: UITabBarController {
         
         let home = self.createNav(with: "Home", and: UIImage(systemName: "house"), vc: HomeController())
         let allJobs = self.createNav(with: "Jobs", and: UIImage(systemName: "clock"), vc: CurrentJobsController())
-        let profile = self.createNav(with: "Profile", and: UIImage(systemName: "person"), vc: ProfileController())
+        let settings = self.createNav(with: "Settings", and: UIImage(systemName: "gearshape"), vc: SettingsController())
         
-        self.setViewControllers([home, allJobs, profile], animated: true)
+        self.setViewControllers([home, allJobs, settings], animated: true)
     }
     
     private func createNav(with title: String, and image: UIImage?, vc: UIViewController) -> UINavigationController {

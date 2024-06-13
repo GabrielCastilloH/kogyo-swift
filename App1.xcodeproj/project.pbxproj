@@ -23,7 +23,7 @@
 		D0E923E32C0E8D270070977A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0E923E22C0E8D270070977A /* Assets.xcassets */; };
 		D0E923E62C0E8D270070977A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = D0E923E52C0E8D270070977A /* Base */; };
 		D0E923EF2C0E98420070977A /* CurrentJobsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923EE2C0E98420070977A /* CurrentJobsController.swift */; };
-		D0E923F12C0E98670070977A /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F02C0E98670070977A /* ProfileController.swift */; };
+		D0E923F12C0E98670070977A /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F02C0E98670070977A /* SettingsController.swift */; };
 		D0E923F32C0E98C90070977A /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F22C0E98C90070977A /* TabController.swift */; };
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
 		FF45E4B32C161047000F1BE7 /* JobDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */; };
@@ -31,6 +31,8 @@
 		FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */; };
 		FF6527832C1424460077E630 /* JobHoursView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527822C1424460077E630 /* JobHoursView.swift */; };
 		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
+		FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */; };
+		FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A482C1B2CBF00922513 /* SettingsOption.swift */; };
 		FFC07FDC2C141B190040EF03 /* JobDateTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */; };
 		FFD8A9992C15588D009F5C8C /* LoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */; };
 		FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* JobListing.swift */; };
@@ -79,7 +81,7 @@
 		D0E923E52C0E8D270070977A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D0E923E72C0E8D270070977A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0E923EE2C0E98420070977A /* CurrentJobsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentJobsController.swift; sourceTree = "<group>"; };
-		D0E923F02C0E98670070977A /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		D0E923F02C0E98670070977A /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		D0E923F22C0E98C90070977A /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
 		FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDescriptionView.swift; sourceTree = "<group>"; };
@@ -87,6 +89,8 @@
 		FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHelperInfoView.swift; sourceTree = "<group>"; };
 		FF6527822C1424460077E630 /* JobHoursView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHoursView.swift; sourceTree = "<group>"; };
 		FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEquipmentFormView.swift; sourceTree = "<group>"; };
+		FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableCell.swift; sourceTree = "<group>"; };
+		FF879A482C1B2CBF00922513 /* SettingsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDateTimeView.swift; sourceTree = "<group>"; };
 		FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenController.swift; sourceTree = "<group>"; };
 		FFD8A99A2C157908009F5C8C /* JobListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobListing.swift; sourceTree = "<group>"; };
@@ -221,6 +225,21 @@
 			path = Supporting;
 			sourceTree = "<group>";
 		};
+		FF879A452C1B2C1000922513 /* Profile Views */ = {
+			isa = PBXGroup;
+			children = (
+				FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */,
+			);
+			path = "Profile Views";
+			sourceTree = "<group>";
+		};
+		FF879A4A2C1B2F3D00922513 /* Profile View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Profile View Controllers";
+			sourceTree = "<group>";
+		};
 		FFD8A99E2C157A4B009F5C8C /* Current Job Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,13 +262,14 @@
 		FFF372C82C16C3C200F8D362 /* App Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D0E923F22C0E98C90070977A /* TabController.swift */,
 				D0E923DD2C0E8D250070977A /* HomeController.swift */,
 				D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */,
-				D0E923F22C0E98C90070977A /* TabController.swift */,
 				D0E923EE2C0E98420070977A /* CurrentJobsController.swift */,
-				D0E923F02C0E98670070977A /* ProfileController.swift */,
 				FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */,
 				FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */,
+				D0E923F02C0E98670070977A /* SettingsController.swift */,
+				FF879A4A2C1B2F3D00922513 /* Profile View Controllers */,
 			);
 			path = "App Controllers";
 			sourceTree = "<group>";
@@ -268,6 +288,7 @@
 		FFF372CA2C16C3EE00F8D362 /* App Views */ = {
 			isa = PBXGroup;
 			children = (
+				FF879A452C1B2C1000922513 /* Profile Views */,
 				FFD8A9A32C15B9B8009F5C8C /* Job Info Views */,
 				FFD8A99E2C157A4B009F5C8C /* Current Job Views */,
 				D0D3A99D2C11B951000DFFB8 /* Add Job Views */,
@@ -302,6 +323,7 @@
 			children = (
 				FFF372DA2C16C7BE00F8D362 /* Auth Models */,
 				FFF372CE2C16C45A00F8D362 /* Job.swift */,
+				FF879A482C1B2CBF00922513 /* SettingsOption.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -410,6 +432,7 @@
 				FF6527832C1424460077E630 /* JobHoursView.swift in Sources */,
 				D0C5CED42C12EEBA002582D4 /* JobKindFormView.swift in Sources */,
 				FFD8A99D2C157924009F5C8C /* CustomFunctions.swift in Sources */,
+				FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */,
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
 				FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
@@ -421,7 +444,7 @@
 				FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */,
 				D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */,
 				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
-				D0E923F12C0E98670070977A /* ProfileController.swift in Sources */,
+				D0E923F12C0E98670070977A /* SettingsController.swift in Sources */,
 				FFD8A9A02C157A6E009F5C8C /* CurrentJobsCell.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,
@@ -449,6 +472,7 @@
 				FFF372EB2C16C94500F8D362 /* WebViewerController.swift in Sources */,
 				FFF372DE2C16C7E000F8D362 /* LoginUserRequest.swift in Sources */,
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
+				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
 				FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

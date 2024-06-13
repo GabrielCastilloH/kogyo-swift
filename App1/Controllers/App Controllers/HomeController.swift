@@ -160,7 +160,7 @@ extension HomeController: UITextFieldDelegate {
     }
 }
 
-// MARK: - Search Table Delegate
+// MARK: - Search Table & Job Table Delegate
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {

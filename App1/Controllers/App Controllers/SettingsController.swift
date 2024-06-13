@@ -9,20 +9,20 @@ import UIKit
 
 class SettingsController: UIViewController {
     // MARK: - Variables
-    var profileOptions : [ProfileOption] = [
-        ProfileOption(title: "Personal Information",
+    var settingsOption : [SettingsOption] = [
+        SettingsOption(title: "Personal Information",
                       icon: UIImage(systemName: "person"),
                       iconBackgroundColor: .systemBlue
                      ),
-        ProfileOption(title: "Notifications",
+        SettingsOption(title: "Notifications",
                       icon: UIImage(systemName: "bell"),
                       iconBackgroundColor: .systemPink
                      ),
-        ProfileOption(title: "Payment Methods",
+        SettingsOption(title: "Payment Methods",
                       icon: UIImage(systemName: "person.text.rectangle"),
                       iconBackgroundColor: .systemBlue
                      ),
-        ProfileOption(title: "Support",
+        SettingsOption(title: "Support",
                       icon: UIImage(systemName: "questionmark.circle"),
                       iconBackgroundColor: .systemBlue
                      ),
@@ -34,7 +34,7 @@ class SettingsController: UIViewController {
         tableView.backgroundColor = .white
         tableView.keyboardDismissMode = .onDrag
         tableView.allowsSelection = true
-        tableView.register(ProfileTableCell.self, forCellReuseIdentifier: ProfileTableCell.identifier)
+        tableView.register(SettingsTableCell.self, forCellReuseIdentifier: SettingsTableCell.identifier)
         return tableView
     }()
     
@@ -42,9 +42,26 @@ class SettingsController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.textColor = Constants().lightGrayColor
-        label.text = #"Made with ❤️ by Gabriel Castillo\nⓒ 2024 Gabriel Castillo"#
+        label.numberOfLines = 0
+        
+        // Create paragraph style with custom line spacing
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 8 // Adjust line spacing here
+        paragraphStyle.alignment = .center
+        
+        // Create attributed string with the paragraph style
+        let attributedText = NSMutableAttributedString(
+            string: "Made with ❤️ by Gabriel Castillo \n ⓒ 2024 Gabriel Castillo",
+            attributes: [
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.systemFont(ofSize: 16, weight: .regular), // Ensure the font is applied
+                .foregroundColor: Constants().lightGrayColor.withAlphaComponent(0.7) // Ensure the color is applied
+            ]
+        )
+        
+        // Set the attributed text to the label
+        label.attributedText = attributedText
+        
         return label
     }()
     
@@ -61,6 +78,7 @@ class SettingsController: UIViewController {
     
     // MARK: - UI Setup
     private func setupNavBar() {
+        navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.navigationItem.title = "Settings"
@@ -71,23 +89,24 @@ class SettingsController: UIViewController {
         settingsTable.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(aboutLabel)
-        aboutLabel.translatesAutoresizingMaskIntoConstraints = true
+        aboutLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            settingsTable.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
+            settingsTable.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
             settingsTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
             settingsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-            settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -500),
             
-            aboutLabel.topAnchor.constraint(equalTo: settingsTable.bottomAnchor)
+            aboutLabel.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor, constant: 50),
+            aboutLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
     }
     
     // MARK: - Selectors & Functions
-    func presentSettingsController(with profileTitle: String ) {
+    func presentSettingsController(with settingOption: String ) {
         var viewController: UIViewController
         
-        switch profileTitle {
+        switch settingOption {
         case "Profile Information":
             viewController = HomeController()
         case "Your MOms gay":
@@ -104,19 +123,19 @@ class SettingsController: UIViewController {
 // MARK: -  Settings Table Delegate
 extension SettingsController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
-        return profileOptions.count
+        return settingsOption.count
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableCell.identifier, for: indexPath) as? ProfileTableCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableCell.identifier, for: indexPath) as? SettingsTableCell else {
             fatalError("The SearchTableView could not dequeue a ProfileTableCell in ProfileController.") }
 
-        cell.configureCell(with: profileOptions[indexPath.row])
+        cell.configureCell(with: settingsOption[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.presentSettingsController(with: profileOptions[indexPath.row].title)
+        self.presentSettingsController(with: settingsOption[indexPath.row].title)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

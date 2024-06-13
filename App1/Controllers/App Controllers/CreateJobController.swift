@@ -52,7 +52,6 @@ class CreateJobController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationController?.navigationBar.backgroundColor = .white
         
         self.navigationItem.title = "Create a New Job"
         self.setupUI()
@@ -200,7 +199,7 @@ class CreateJobController: UIViewController {
 
 extension CreateJobController: JobPaymentViewDelegate {
     func paymentTextFieldPressed() {
-        
+        self.navigationController?.navigationBar.backgroundColor = .white
         DispatchQueue.main.async {
             UIView.transition(
                 with: self.view, duration: 0.4,
@@ -216,10 +215,10 @@ extension CreateJobController: JobPaymentViewDelegate {
                     self.navbarBackgroundView.isHidden = false
             })
         }
-        
     }
     
     func paymentTextFieldDismissed() {
+        self.navigationController?.navigationBar.backgroundColor = .clear
         DispatchQueue.main.async {
             UIView.transition(
                 with: self.view, duration: 0.1,
@@ -227,8 +226,6 @@ extension CreateJobController: JobPaymentViewDelegate {
                 animations: {
                     self.view.frame.origin.y = 0
                     self.navbarBackgroundView.isHidden = true
-                    // This shit is bugged my bro.
-//                    self.navigationController?.setNavigationBarHidden(false, animated: false)
             })
         }
     }

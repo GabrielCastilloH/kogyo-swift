@@ -9,7 +9,7 @@ import UIKit
 
 class SettingsTableCell: UITableViewCell {
     
-    static let identifier = "ProfileCell"
+    static let identifier = "SettingsCell"
 
     // MARK: - UI Components
     private let myImageView: UIImageView = {
