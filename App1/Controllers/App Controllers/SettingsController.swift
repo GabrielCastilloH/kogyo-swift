@@ -16,7 +16,7 @@ class SettingsController: UIViewController {
         SettingsOption(title: "Notifications",
                       icon: UIImage(systemName: "bell")
                      ),
-        SettingsOption(title: "Payment Methods",
+        SettingsOption(title: "Payment",
                       icon: UIImage(systemName: "person.text.rectangle")
                      ),
         SettingsOption(title: "Support",
@@ -107,7 +107,7 @@ class SettingsController: UIViewController {
             viewController = PersonalInfoController()
         case "Notifications":
             viewController = NotificationSettingsController()
-        case "Payment Methods":
+        case "Payment":
             viewController = PaymentSettingsController()
         case "Support":
             viewController = SupportController()
