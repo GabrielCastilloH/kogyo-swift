@@ -24,18 +24,22 @@ class CurrentJobsController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
+        let jobHelper = Helper(
+            name: "John D.",
+            profileImage: UIImage(named: "Cleaning"),
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat."
+                           )
+        
         currentJobs.allJobs.append(
-            Job(kind: "Cleaning",
+            Job(
+                kind: "Cleaning",
                 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat.",
                 dateTime: Date(),
                 expectedHours: 5,
                 location: "Your moms house",
                 payment: 69420,
-                helperName: "John D.",
-                profileImage: UIImage(named: "Cleaning"),
-                helperDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat."
-               )
-        )
+                helper: jobHelper
+        ))
         
         super.viewDidLoad()
         self.view.backgroundColor = .white

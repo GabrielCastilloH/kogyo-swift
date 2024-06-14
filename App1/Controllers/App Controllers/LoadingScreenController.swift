@@ -56,7 +56,9 @@ class LoadingScreenController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        self.tabBarController?.tabBar.isHidden = true
+
         self.navigationItem.title = "Looking for a Helper"
     }
     

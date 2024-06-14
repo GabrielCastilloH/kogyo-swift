@@ -18,7 +18,6 @@ class AlertManager {
 }
 
 
-// TODO: give more infromation about invalid password and name.
 // MARK: - Show Validation Errors
 extension AlertManager {
     public static func showInvalidEmailAlert(on vc: UIViewController) {
@@ -94,6 +93,13 @@ extension AlertManager {
     
     public static func showUnkownErrorFetchingUser(on vc: UIViewController) {
         showBasicAlert(on: vc, title: "Unkown Error Fetching User", message: nil)
+    }
+}
+
+// MARK: - Show Validation Errors
+extension AlertManager {
+    public static func showMissingJobInfoAlert(on vc: UIViewController) {
+        showBasicAlert(on: vc, title: "Missing Information", message: "Please fill out all fields.")
     }
 }
 

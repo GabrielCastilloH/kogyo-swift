@@ -215,7 +215,6 @@ extension RegisterController : UITextViewDelegate {
             self.showWebViewController(with: "https://policies.google.com/privacy?hl=en-US")
         }
         
-        
         return true
     }
     

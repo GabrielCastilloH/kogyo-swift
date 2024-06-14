@@ -57,9 +57,9 @@ class JobHelperInfoView: UIView {
     // MARK: - Life Cycle
     
     init(for job: Job) {
-        self.helperNameTitle.text = job.helperName
+        self.helperNameTitle.text = job.helper?.name ?? "No helper yet!"
         self.profileImageView.image = UIImage(named: "Cleaning") // this should be part of helper object.
-        self.helperDescriptionTextField.text = job.helperDescription
+        self.helperDescriptionTextField.text = job.helper?.description ?? "No helper yet mofo!"
         super.init(frame: .zero)
         self.setupUI()
     }

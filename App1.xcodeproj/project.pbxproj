@@ -31,6 +31,8 @@
 		FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */; };
 		FF6527832C1424460077E630 /* JobHoursView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527822C1424460077E630 /* JobHoursView.swift */; };
 		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
+		FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882062C1C787200288618 /* FirestoreHandler.swift */; };
+		FF6882092C1C790700288618 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882082C1C790600288618 /* Helper.swift */; };
 		FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */; };
 		FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A482C1B2CBF00922513 /* SettingsOption.swift */; };
 		FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */; };
@@ -94,6 +96,8 @@
 		FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHelperInfoView.swift; sourceTree = "<group>"; };
 		FF6527822C1424460077E630 /* JobHoursView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHoursView.swift; sourceTree = "<group>"; };
 		FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEquipmentFormView.swift; sourceTree = "<group>"; };
+		FF6882062C1C787200288618 /* FirestoreHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreHandler.swift; sourceTree = "<group>"; };
+		FF6882082C1C790600288618 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableCell.swift; sourceTree = "<group>"; };
 		FF879A482C1B2CBF00922513 /* SettingsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
@@ -247,8 +251,8 @@
 		FF879A4A2C1B2F3D00922513 /* Settings View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				FF879A522C1BB5CD00922513 /* PaymentSettingsController.swift */,
 				FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */,
+				FF879A522C1BB5CD00922513 /* PaymentSettingsController.swift */,
 				FF879A502C1BB50500922513 /* NotificationSettingsController.swift */,
 				FF879A542C1BB5E900922513 /* SupportController.swift */,
 			);
@@ -329,6 +333,7 @@
 				D09C5ED12C0F3F8E002C6F89 /* Constants.swift */,
 				D0D3A9992C11A868000DFFB8 /* Extensions.swift */,
 				FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */,
+				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
 			);
 			path = "Constants+Extensions";
 			sourceTree = "<group>";
@@ -339,6 +344,7 @@
 				FFF372DA2C16C7BE00F8D362 /* Auth Models */,
 				FFF372CE2C16C45A00F8D362 /* Job.swift */,
 				FF879A482C1B2CBF00922513 /* SettingsOption.swift */,
+				FF6882082C1C790600288618 /* Helper.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -449,6 +455,7 @@
 				FFD8A99D2C157924009F5C8C /* CustomFunctions.swift in Sources */,
 				FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */,
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
+				FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */,
 				FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,
@@ -475,6 +482,7 @@
 				FFD8A9A22C15B99F009F5C8C /* JobInfoController.swift in Sources */,
 				D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */,
 				FFF372CF2C16C45A00F8D362 /* Job.swift in Sources */,
+				FF6882092C1C790700288618 /* Helper.swift in Sources */,
 				FF879A532C1BB5CD00922513 /* PaymentSettingsController.swift in Sources */,
 				D0C5CED62C12F3AF002582D4 /* DescriptionFormView.swift in Sources */,
 				D0E923EF2C0E98420070977A /* CurrentJobsController.swift in Sources */,

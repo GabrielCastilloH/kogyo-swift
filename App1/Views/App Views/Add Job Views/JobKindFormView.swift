@@ -23,7 +23,7 @@ class JobKindFormView: UIView {
         return picker
     }()
     
-    private let pickerTextField: UITextField = {
+    public let pickerTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
         textField.attributedPlaceholder = CustomFunctions()
@@ -65,8 +65,8 @@ class JobKindFormView: UIView {
     
     // MARK: - Life Cycle
     init(kind: String) {
-        self.jobKind = kind
         self.allJobs = JobListing().allJobs
+        self.jobKind = kind
         self.pickerTextField.text = jobKind
         super.init(frame: .zero)
         

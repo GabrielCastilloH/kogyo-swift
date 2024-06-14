@@ -20,7 +20,7 @@ class JobPaymentView: UIView {
     
     
     // MARK: - UI Components
-    private let paymentTextField: UITextField = {
+    public let paymentTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
         textField.attributedPlaceholder = CustomFunctions()

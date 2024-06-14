@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class CreateJobController: UIViewController {
 
@@ -16,6 +17,14 @@ class CreateJobController: UIViewController {
     var cf = CustomFunctions()
     
     // MARK: - UI Components
+    let jobKindView: JobKindFormView
+    let descriptionFormView = DescriptionFormView()
+    let mediaFormView = MediaFormView()
+    let jobDateTimeView = JobDateTimeView()
+    let jobHoursView = JobHoursView()
+    let addEquipmentFormView = AddEquipmentFormView()
+    let jobPaymentView = JobPaymentView()
+    
     private lazy var submitJobBtn: UIButton = {
         let button = UIButton()
         button.tintColor = .white
@@ -37,6 +46,7 @@ class CreateJobController: UIViewController {
     
     // MARK: - Life Cycle
     init(kind: String) {
+        self.jobKindView = JobKindFormView(kind: kind)
         self.jobKind = kind
         super.init(nibName: nil, bundle: nil)
     }
@@ -46,14 +56,19 @@ class CreateJobController: UIViewController {
     }
     
     override func viewDidLoad() {
-//        UIApplication.shared.windows.first?.backgroundColor = UIColor.white
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.tabBarController?.tabBar.isHidden = false
+
         
         self.navigationItem.title = "Create a New Job"
+        
+        self.submitJobBtn.isUserInteractionEnabled = true
+        self.submitJobBtn.backgroundColor = Constants().lightBlueColor
+        
         self.setupUI()
         self.view.backgroundColor = .white
         
@@ -65,18 +80,14 @@ class CreateJobController: UIViewController {
         )
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
+    
     // MARK: - UI Setup
     private func setupUI() {
         self.view.addSubview(navbarBackgroundView)
         navbarBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let jobKindView = JobKindFormView(kind: jobKind)
-        let descriptionFormView = DescriptionFormView()
-        let mediaFormView = MediaFormView()
-        let jobDateTimeView = JobDateTimeView()
-        let jobHoursView = JobHoursView()
-        let addEquipmentFormView = AddEquipmentFormView()
-        let jobPaymentView = JobPaymentView()
         
         self.view.addSubview(jobKindView)
         jobKindView.translatesAutoresizingMaskIntoConstraints = false
@@ -193,7 +204,34 @@ class CreateJobController: UIViewController {
     }
     
     @objc func didTapSubmitJob() {
-        self.presentLoadingScreen()
+        let newJob = Job(
+            kind: self.jobKindView.pickerTextField.text ?? "",
+            description: self.descriptionFormView.descriptionTextView.text ?? "",
+            dateTime: self.jobDateTimeView.datePicker.date,
+            expectedHours: Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0,
+            location: "your moms house",
+            payment: Int(self.jobPaymentView.paymentTextField.text ?? "") ?? 0,
+            helper: nil
+        )
+        
+        if newJob.kind == "" || newJob.description == "" || newJob.expectedHours == 0 || newJob.location == "" || newJob.payment == 0 {
+            AlertManager.showMissingJobInfoAlert(on: self)
+            
+        } else {
+            guard let userUID = Auth.auth().currentUser?.uid else { return }
+            
+            FirestoreHandler.shared.addJob(with: newJob, for: userUID) { result in
+                switch result {
+                case .success:
+                    self.presentLoadingScreen()
+                case .failure(let error):
+                    print("Error adding job: \(error.localizedDescription)")
+                }
+            }
+            
+            self.submitJobBtn.isUserInteractionEnabled = false
+            self.submitJobBtn.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
+        }
     }
 }
 

@@ -11,11 +11,10 @@ class JobHoursView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
     var possibleHours: [String] = {
-        var list = ["< 1"]
+        var list = ["0"]
         for i in 1...15 {
             list.append(String(i))
-        } 
-        list.append(">15")
+        }
         return list
     }()
     
@@ -27,7 +26,7 @@ class JobHoursView: UIView {
         return picker
     }()
     
-    private let pickerTextField: UITextField = {
+    public let pickerTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
         textField.attributedPlaceholder = CustomFunctions()

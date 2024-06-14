@@ -111,19 +111,6 @@ class HomeController: UIViewController {
     
     
     // MARK: - Selectors & Functions
-    @objc private func didTapLogout() {
-        AuthService.shared.signOut { [weak self] error in
-            guard let self = self else { return }
-            if let error = error {
-                AlertManager.showLogOutErrorAlert(on: self, with: error)
-                return
-            }
-            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.checkAuthentication()
-            }
-        }
-    }
-    
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let searchText = textField.text {
             self.jobSearch = searchText.isEmpty ? jobListing.allJobs :
@@ -224,9 +211,7 @@ extension HomeController: CustomSearchBarDelegate {
 // MARK: - Job Button Delegate
 extension HomeController: CategoryViewDelegate {
     func clickedButtonInCategory(kind: String) {
-        print(kind)
         if kind == "IT Support" {
-            self.didTapLogout()
         } else {
             self.presentCreateJobController(for: kind)
         }

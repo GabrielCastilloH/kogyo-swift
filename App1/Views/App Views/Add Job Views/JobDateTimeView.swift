@@ -40,7 +40,7 @@ class JobDateTimeView: UIView {
         return label
     }()
     
-    private let datePicker: UIDatePicker = {
+    public let datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .dateAndTime
         datePicker.minimumDate = Date.now

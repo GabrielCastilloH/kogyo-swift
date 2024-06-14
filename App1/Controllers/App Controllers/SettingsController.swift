@@ -34,6 +34,19 @@ class SettingsController: UIViewController {
         return tableView
     }()
     
+    private lazy var logoutButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(Constants().darkGrayColor, for: .normal)
+        button.layer.borderColor = Constants().darkGrayColor.cgColor
+        button.layer.borderWidth = 1
+        button.setTitle("Log Out", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .regular)
+        button.layer.cornerRadius = 15
+        button.backgroundColor = .white
+        button.addTarget(self, action: #selector(didTapLogout), for: .touchUpInside)
+        return button
+    }()
+    
     private let aboutLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
@@ -84,6 +97,9 @@ class SettingsController: UIViewController {
         self.view.addSubview(settingsTable)
         settingsTable.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(logoutButton)
+        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(aboutLabel)
         aboutLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -93,12 +109,30 @@ class SettingsController: UIViewController {
             settingsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
             settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -500),
             
-            aboutLabel.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor, constant: 50),
+            logoutButton.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor, constant: 20),
+            logoutButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            logoutButton.widthAnchor.constraint(equalToConstant: 100),
+            logoutButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            aboutLabel.topAnchor.constraint(equalTo: self.logoutButton.bottomAnchor, constant: 40),
             aboutLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
     }
     
     // MARK: - Selectors & Functions
+    @objc private func didTapLogout() {
+        AuthService.shared.signOut { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                AlertManager.showLogOutErrorAlert(on: self, with: error)
+                return
+            }
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.checkAuthentication()
+            }
+        }
+    }
+    
     func presentSettingsController(with settingOption: String ) {
         var viewController: UIViewController
         

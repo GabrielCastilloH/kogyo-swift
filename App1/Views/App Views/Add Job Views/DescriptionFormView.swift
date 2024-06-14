@@ -13,7 +13,7 @@ class DescriptionFormView: UIView {
     let cf = CustomFunctions()
     
     // MARK: - UI Components
-    private let descriptionTextView: UITextView = {
+    public let descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.text = "Please describe the job in detail..."
         textView.textColor = UIColor.lightGray
