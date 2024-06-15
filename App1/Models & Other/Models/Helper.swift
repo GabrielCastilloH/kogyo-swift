@@ -7,8 +7,14 @@
 
 import UIKit
 
-struct Helper {
+public struct Helper: Codable {
     let name: String
-    let profileImage: UIImage?
+    let profileImageName: String
     let description: String
+
+    enum CodingKeys: String, CodingKey {
+        case name
+        case profileImageName
+        case description
+    }
 }

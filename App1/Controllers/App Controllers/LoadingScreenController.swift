@@ -7,12 +7,17 @@
 
 import UIKit
 import WebKit
+import Firebase
 // There are no good raw swift loading animations. I don't want to install third party plug ins.
 // And gifs are memory intensive. I will try using a webkit view and a raw css animation.
 
 class LoadingScreenController: UIViewController {
 
     // MARK: - Variables
+    var jobId: String
+    var userId: String
+    
+    private var jobListener: ListenerRegistration?
     
     
     // MARK: - UI Components
@@ -49,9 +54,28 @@ class LoadingScreenController: UIViewController {
         self.view.backgroundColor = .white
         self.setupNavBar()
         self.setupUI()
+        
+        // Setup your view here
+        listenForJobUpdates()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            // Remove the listener when the view disappears to avoid memory leaks
+            jobListener?.remove()
+        }
+    
     // MARK: - UI Setup
+    init(jobId: String, userId: String) {
+            self.jobId = jobId
+            self.userId = userId
+            super.init(nibName: nil, bundle: nil)
+        }
+        
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupNavBar() {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
@@ -94,11 +118,41 @@ class LoadingScreenController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
+    private func listenForJobUpdates() {
+        let db = Firestore.firestore()
+        let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
+        
+        jobListener = jobRef.addSnapshotListener { [weak self] documentSnapshot, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error listening for job updates: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let document = documentSnapshot, document.exists else {
+                print("Job document does not exist")
+                return
+            }
+            
+            let data = document.data()
+            let helper = data?["helper"] as? String
+            
+            if helper != nil {
+                self.presentCurrentJobsController()
+            }
+        }
+    }
+    
     func popToCreateJob() {
         if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CreateJobController }).first {
                 self.navigationController?.popToViewController(createJobVC, animated: true)
-            }
         }
+    }
+    
+    func presentCurrentJobsController() {
+        self.navigationController!.popToRootViewController(animated: false)
+        self.tabBarController?.selectedIndex = 1
+    }
     
     @objc func didTapEditJob() {
         self.popToCreateJob()

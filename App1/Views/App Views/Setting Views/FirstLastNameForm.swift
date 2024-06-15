@@ -86,6 +86,7 @@ class FirstLastNameForm: UIView {
         let lastNameTitle = cf.createFormLabel(for: "Last Name:")
         keyboardToolbar.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: 40)
         self.keyboardToolbar.setItems([keyboardToolbarText, flexButton, keyboardToolbarDone], animated: true)
+        keyboardToolbar.translatesAutoresizingMaskIntoConstraints = false
 
         self.addSubview(firstNameTitle)
         firstNameTitle.translatesAutoresizingMaskIntoConstraints = false

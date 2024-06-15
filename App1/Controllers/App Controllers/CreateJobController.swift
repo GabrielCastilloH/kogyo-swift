@@ -190,8 +190,8 @@ class CreateJobController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    private func presentLoadingScreen() {
-        let loadingScreenController = LoadingScreenController()
+    private func presentLoadingScreen(jobId: String, userId: String) {
+        let loadingScreenController = LoadingScreenController(jobId: jobId, userId: userId)
         self.navigationController?.pushViewController(loadingScreenController, animated: true)
     }
     
@@ -222,8 +222,8 @@ class CreateJobController: UIViewController {
             
             FirestoreHandler.shared.addJob(with: newJob, for: userUID) { result in
                 switch result {
-                case .success:
-                    self.presentLoadingScreen()
+                case .success(let jobId):
+                    self.presentLoadingScreen(jobId: jobId, userId: userUID)
                 case .failure(let error):
                     print("Error adding job: \(error.localizedDescription)")
                 }
