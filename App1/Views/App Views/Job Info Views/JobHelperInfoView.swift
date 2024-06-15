@@ -6,11 +6,17 @@
 //
 
 import UIKit
+import FirebaseStorage
+import FirebaseFirestore
 
 class JobHelperInfoView: UIView {
     
     // MARK: - Variables
     let cf = CustomFunctions()
+    var helper: Helper?
+    var profileImage: UIImage?
+    let helperUID: String
+    let storageRef = Storage.storage().reference()
     
     // MARK: - UI Components
     private let profileImageView: UIImageView = {
@@ -57,10 +63,15 @@ class JobHelperInfoView: UIView {
     // MARK: - Life Cycle
     
     init(for job: Job) {
-        self.helperNameTitle.text = job.helper?.name ?? "No helper yet!"
-        self.profileImageView.image = UIImage(named: "Cleaning") // this should be part of helper object.
-        self.helperDescriptionTextField.text = job.helper?.description ?? "No helper yet mofo!"
+        self.helperUID = job.helper!
         super.init(frame: .zero)
+        
+        self.fetchHelperData()
+        
+        self.helperNameTitle.text = self.helper?.name ?? "No helper yet!"
+        self.profileImageView.image = self.profileImage
+        self.helperDescriptionTextField.text = job.helper?.description ?? "No helper yet mofo!"
+
         self.setupUI()
     }
     
@@ -102,5 +113,18 @@ class JobHelperInfoView: UIView {
             helperDescriptionTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
             helperDescriptionTextField.heightAnchor.constraint(equalToConstant: 80),
         ])
+    }
+    
+    // MARK: - Functions
+    private func fetchHelperData() {
+        FirestoreHandler.shared.fetchHelper(for: helperUID) { result in
+            switch result {
+            case .success(let (helper, image)):
+                self.helper = helper
+                self.profileImage = image
+            case .failure(let error):
+                print("Error fetching helper: \(error.localizedDescription)")
+            }
+        }
     }
 }

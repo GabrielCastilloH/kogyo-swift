@@ -15,9 +15,5 @@ struct Job {
     let expectedHours: Int
     let location: String // change later
     let payment: Int
-    let helper: Helper?
-}
-
-struct CurrentJobs {
-    var allJobs: [Job] = []
+    let helper: String?
 }

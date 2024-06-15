@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class CurrentJobsController: UIViewController {
     
     // MARK: - Variables
-    var currentJobs = CurrentJobs()
+    var currentJobs: [Job] = []
     
     // MARK: - UI Components
     private let currentJobsTableView: UITableView = {
@@ -24,25 +25,17 @@ class CurrentJobsController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
-        let jobHelper = Helper(
-            name: "John D.",
-            profileImageName: "Cleaning",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat."
-                           )
-        
-        currentJobs.allJobs.append(
-            Job(
-                kind: "Cleaning",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat.",
-                dateTime: Date(),
-                expectedHours: 5,
-                location: "Your moms house",
-                payment: 69420,
-                helper: jobHelper
-        ))
-        
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        
+        // TODO: move this to the firebase handler.
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            // Handle the case where the user is not authenticated
+            print("User not authenticated")
+            return
+        }
+        
+        self.configureCurrentJobs(for: userUID)
         
         currentJobsTableView.delegate = self
         currentJobsTableView.dataSource = self
@@ -75,16 +68,25 @@ class CurrentJobsController: UIViewController {
         ])
     }
     
-    
     // MARK: - Selectors & Functions
-    
+    private func configureCurrentJobs(for userUID: String) {
+        FirestoreHandler.shared.fetchJobs(for: userUID) { result in
+            switch result {
+            case .success(let jobs):
+                self.currentJobs = jobs
+                self.currentJobsTableView.reloadData()
+            case .failure(let error):
+                print("Error fetching jobs: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 // MARK: - Search Bar Delegate
 extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
-        return self.currentJobs.allJobs.count
+        return self.currentJobs.count
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -92,7 +94,7 @@ extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
             fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
         }
         
-        let currentJob = self.currentJobs.allJobs[indexPath.row]
+        let currentJob = self.currentJobs[indexPath.row]
 
         cell.configureCell(for: currentJob)
         
@@ -104,7 +106,7 @@ extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let jobInfoController = JobInfoController(for: self.currentJobs.allJobs[indexPath.row])
+        let jobInfoController = JobInfoController(for: self.currentJobs[indexPath.row])
         
         jobInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(jobInfoController, animated: true)
