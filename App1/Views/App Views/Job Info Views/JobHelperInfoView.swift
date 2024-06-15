@@ -13,8 +13,6 @@ class JobHelperInfoView: UIView {
     
     // MARK: - Variables
     let cf = CustomFunctions()
-    var helper: Helper?
-    var profileImage: UIImage?
     let helperUID: String
     let storageRef = Storage.storage().reference()
     
@@ -36,7 +34,7 @@ class JobHelperInfoView: UIView {
         label.textColor = .label
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.text = "Lorem I."
+        label.text = ""
         return label
     }()
     
@@ -66,12 +64,22 @@ class JobHelperInfoView: UIView {
         self.helperUID = job.helper!
         super.init(frame: .zero)
         
-        self.fetchHelperData()
+        // Fetching heler data
+        FirestoreHandler.shared.fetchHelper(for: helperUID) { result in
+            switch result {
+            case .success(let (helper, image)):
+                
+                self.profileImageView.image = image
+                let firstName = helper.firstName
+                let lastName = helper.lastName
+                self.helperNameTitle.text = firstName + " " + lastName
+                self.helperDescriptionTextField.text = helper.description
+                
+            case .failure(let error):
+                print("Error fetching helper: \(error.localizedDescription)")
+            }
+        }
         
-        self.helperNameTitle.text = self.helper?.name ?? "No helper yet!"
-        self.profileImageView.image = self.profileImage
-        self.helperDescriptionTextField.text = job.helper?.description ?? "No helper yet mofo!"
-
         self.setupUI()
     }
     
@@ -103,7 +111,7 @@ class JobHelperInfoView: UIView {
             
             helperNameTitle.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 15),
             helperNameTitle.bottomAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: -20),
-            helperNameTitle.widthAnchor.constraint(equalToConstant: 100),
+            helperNameTitle.widthAnchor.constraint(equalToConstant: 150),
             
             helperLabel.leadingAnchor.constraint(equalTo: helperNameTitle.leadingAnchor),
             helperLabel.bottomAnchor.constraint(equalTo: self.helperNameTitle.topAnchor, constant: -3),
@@ -116,15 +124,4 @@ class JobHelperInfoView: UIView {
     }
     
     // MARK: - Functions
-    private func fetchHelperData() {
-        FirestoreHandler.shared.fetchHelper(for: helperUID) { result in
-            switch result {
-            case .success(let (helper, image)):
-                self.helper = helper
-                self.profileImage = image
-            case .failure(let error):
-                print("Error fetching helper: \(error.localizedDescription)")
-            }
-        }
-    }
 }

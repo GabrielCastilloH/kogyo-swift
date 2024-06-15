@@ -145,11 +145,12 @@ class LoadingScreenController: UIViewController {
     
     func popToCreateJob() {
         if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CreateJobController }).first {
-                self.navigationController?.popToViewController(createJobVC, animated: true)
+            self.navigationController?.popToViewController(createJobVC, animated: true)
         }
     }
     
     func presentCurrentJobsController() {
+        // TODO: fix this bug!
         self.navigationController!.popToRootViewController(animated: false)
         self.tabBarController?.selectedIndex = 1
     }

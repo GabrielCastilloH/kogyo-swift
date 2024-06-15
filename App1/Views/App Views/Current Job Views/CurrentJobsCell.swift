@@ -55,7 +55,7 @@ class CurrentJobsCell: UITableViewCell {
         label.textColor = .label
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 21, weight: .semibold)
-        label.text = "Lorem I."
+        label.text = "Loading..."
         return label
     }()
     
@@ -83,8 +83,20 @@ class CurrentJobsCell: UITableViewCell {
     public func configureCell(for job: Job) {
         self.kindTitleLabel.text = job.kind
         self.jobDescriptionLabel.text = job.description
-        self.helperNameTitle.text = "John D." // TODO: create helper object and add it to job
-        self.profileImageView.image = UIImage(named: "Cleaning") // this should be part of helper object.
+        
+        // Fetching heler data
+        FirestoreHandler.shared.fetchHelper(for: job.helper!) { result in // TODO: make sure it only fetches jobs with helpers!
+            switch result {
+            case .success(let (helper, image)):
+                self.profileImageView.image = image
+                let firstName = helper.firstName
+                let lastName = helper.lastName
+                self.helperNameTitle.text = firstName + " " + lastName.capitalized.prefix(1) + "."
+                
+            case .failure(let error):
+                print("Error fetching helper: \(error.localizedDescription)")
+            }
+        }
     }
     
     

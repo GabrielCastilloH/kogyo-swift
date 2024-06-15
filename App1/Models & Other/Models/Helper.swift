@@ -8,6 +8,7 @@
 import UIKit
 
 public struct Helper {
-    let name: String
+    let firstName: String
+    let lastName: String
     let description: String
 }

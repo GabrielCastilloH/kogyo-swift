@@ -109,8 +109,9 @@ class FirestoreHandler {
                 }
                 
                 let helper = Helper(
-                    name: data["name"] as? String ?? "",
-                    description: data["description"] as? String ?? ""
+                    firstName: data["firstName"] as? String ?? "",
+                    lastName: data["lastName"] as? String ?? "",
+                    description: data["helperDescription"] as? String ?? ""
                 )
                 
                 // Fetch profile image from Firebase Storage
@@ -119,6 +120,7 @@ class FirestoreHandler {
                     if let error = error {
                         // If there's an error fetching the image, return the helper info without image
                         completion(.success((helper, nil)))
+                        print("Error fetching image: \(error.localizedDescription)")
                     } else {
                         let image = UIImage(data: data!)
                         completion(.success((helper, image)))
