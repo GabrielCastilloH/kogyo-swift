@@ -60,10 +60,11 @@ class LoadingScreenController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-            super.viewWillDisappear(animated)
-            // Remove the listener when the view disappears to avoid memory leaks
-            jobListener?.remove()
-        }
+        super.viewWillDisappear(animated)
+        // Remove the listener when the view disappears to avoid memory leaks
+        self.tabBarController?.tabBar.isHidden = false
+        jobListener?.remove()
+    }
     
     // MARK: - UI Setup
     init(jobId: String, userId: String) {
@@ -150,9 +151,16 @@ class LoadingScreenController: UIViewController {
     }
     
     func presentCurrentJobsController() {
-        // TODO: fix this bug!
-        self.navigationController!.popToRootViewController(animated: false)
-        self.tabBarController?.selectedIndex = 1
+        print("presenting")
+        if let homeController = self.navigationController?.viewControllers.first(where: { $0 is HomeController }) {
+            // Pop to HomeController if found
+            self.navigationController?.popToViewController(homeController, animated: true)
+        }
+        
+        // Set tabBarController's selected index to 1
+        if let tabBarController = self.tabBarController {
+            tabBarController.selectedIndex = 1
+        }
     }
     
     @objc func didTapEditJob() {

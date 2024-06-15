@@ -33,6 +33,7 @@
 		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
 		FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882062C1C787200288618 /* FirestoreHandler.swift */; };
 		FF6882092C1C790700288618 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882082C1C790600288618 /* Helper.swift */; };
+		FF86A0152C1E52BE00E5F675 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86A0142C1E52BE00E5F675 /* MapController.swift */; };
 		FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */; };
 		FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A482C1B2CBF00922513 /* SettingsOption.swift */; };
 		FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */; };
@@ -98,6 +99,7 @@
 		FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEquipmentFormView.swift; sourceTree = "<group>"; };
 		FF6882062C1C787200288618 /* FirestoreHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreHandler.swift; sourceTree = "<group>"; };
 		FF6882082C1C790600288618 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		FF86A0142C1E52BE00E5F675 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		FF879A462C1B2C2E00922513 /* SettingsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableCell.swift; sourceTree = "<group>"; };
 		FF879A482C1B2CBF00922513 /* SettingsOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOption.swift; sourceTree = "<group>"; };
 		FF879A4B2C1BA2EE00922513 /* PersonalInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 				D0E923F22C0E98C90070977A /* TabController.swift */,
 				D0E923DD2C0E8D250070977A /* HomeController.swift */,
 				D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */,
+				FF86A0142C1E52BE00E5F675 /* MapController.swift */,
 				D0E923EE2C0E98420070977A /* CurrentJobsController.swift */,
 				FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */,
 				FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */,
@@ -473,6 +476,7 @@
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,
+				FF86A0152C1E52BE00E5F675 /* MapController.swift in Sources */,
 				FF45E4B52C1613BA000F1BE7 /* JobPhotosVideosView.swift in Sources */,
 				FFF372E02C16C7EC00F8D362 /* User.swift in Sources */,
 				FFD8A9992C15588D009F5C8C /* LoadingScreenController.swift in Sources */,

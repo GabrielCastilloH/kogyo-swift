@@ -39,14 +39,16 @@ class HomeController: UIViewController {
 
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.setupNavBar()
         
         AuthService.shared.fetchUser { [weak self] user, error in
             guard let self = self else { return }
             if let error = error {
+                print("failed to get user")
                 AlertManager.showFetchingUserError(on: self, with: error)
                 return
             } else if let user = user {
-                print("signed in: \(user.name)\n\(user.email)")
+                self.navigationItem.title = "Welcome, \(user.firstName)"
             }
         }
         
@@ -69,11 +71,6 @@ class HomeController: UIViewController {
         searchBar.delegate = self
     }
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-    
     // MARK: - UI Setup
     private func setupUI() {
 
@@ -84,7 +81,7 @@ class HomeController: UIViewController {
         categoriesTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             searchBar.heightAnchor.constraint(equalToConstant: 50),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -94,6 +91,13 @@ class HomeController: UIViewController {
             categoriesTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
             categoriesTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
         ])
+    }
+    
+    private func setupNavBar() {
+        self.navigationController?.navigationBar.backgroundColor = .white
+        self.navigationController?.navigationBar.titleTextAttributes =
+        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.navigationItem.title = "Welcome."
     }
         
     private func setupSearchTableView() {
@@ -211,10 +215,7 @@ extension HomeController: CustomSearchBarDelegate {
 // MARK: - Job Button Delegate
 extension HomeController: CategoryViewDelegate {
     func clickedButtonInCategory(kind: String) {
-        if kind == "IT Support" {
-        } else {
-            self.presentCreateJobController(for: kind)
-        }
+        self.presentCreateJobController(for: kind)
     }
 }
 

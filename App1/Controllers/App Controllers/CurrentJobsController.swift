@@ -25,6 +25,7 @@ class CurrentJobsController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
+        self.tabBarController?.tabBar.isHidden = false
         super.viewDidLoad()
         self.view.backgroundColor = .white
         

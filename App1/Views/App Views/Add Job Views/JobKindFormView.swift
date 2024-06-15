@@ -26,8 +26,7 @@ class JobKindFormView: UIView {
     public let pickerTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
-        textField.attributedPlaceholder = CustomFunctions()
-            .createPlaceholder(for: "Select job kind...")
+        textField.attributedPlaceholder = CustomFunctions.shared.createPlaceholder(for: "Select job kind...")
         textField.layer.cornerRadius = 10
         textField.font = .systemFont(ofSize: 20, weight: .regular)
         textField.leftViewMode = .always

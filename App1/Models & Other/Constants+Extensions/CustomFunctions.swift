@@ -8,6 +8,9 @@
 import UIKit
 
 struct CustomFunctions {
+    
+    public static let shared = CustomFunctions()
+    
     func createPlaceholder(for text: String) -> NSAttributedString {
         return NSAttributedString(
             string: text,

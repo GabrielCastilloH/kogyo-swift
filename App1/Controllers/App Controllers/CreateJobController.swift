@@ -20,7 +20,7 @@ class CreateJobController: UIViewController {
     let jobKindView: JobKindFormView
     let descriptionFormView = DescriptionFormView()
     let mediaFormView = MediaFormView()
-    let jobDateTimeView = JobDateTimeView()
+    public let jobDateTimeView = JobDateTimeView()
     let jobHoursView = JobHoursView()
     let addEquipmentFormView = AddEquipmentFormView()
     let jobPaymentView = JobPaymentView()
@@ -63,7 +63,7 @@ class CreateJobController: UIViewController {
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.tabBarController?.tabBar.isHidden = false
 
-        
+        self.jobDateTimeView.delegate = self
         self.navigationItem.title = "Create a New Job"
         
         self.submitJobBtn.isUserInteractionEnabled = true
@@ -266,5 +266,13 @@ extension CreateJobController: JobPaymentViewDelegate {
                     self.navbarBackgroundView.isHidden = true
             })
         }
+    }
+}
+
+extension CreateJobController: JobDateTimeViewDelegate {
+    func pressedLocationButton() {
+        let addressPickerController = MapController()
+        addressPickerController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(addressPickerController, animated: true)
     }
 }

@@ -17,7 +17,7 @@ class SearchBarView: UIView {
     // MARK: - UI Components
     let textField: UITextField = {
         let textField = UITextField()
-        textField.attributedPlaceholder = CustomFunctions().createPlaceholder(for: "What do you need done?")
+        textField.attributedPlaceholder = CustomFunctions.shared.createPlaceholder(for: "What do you need done?")
         textField.layer.cornerRadius = 10
         textField.backgroundColor = Constants().darkWhiteColor
         textField.leftViewMode = .always

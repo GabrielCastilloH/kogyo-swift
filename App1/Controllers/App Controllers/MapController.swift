@@ -16,8 +16,17 @@ class MapController: UIViewController {
     var previousLocation: CLLocation?
     
     // MARK: - UI Components
+    private let pinImage: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = .red
+        iv.image = UIImage(systemName: "mappin")
+        return iv
+    }()
+    
     private let mapView: MKMapView = {
         let mapView = MKMapView()
+        mapView.backgroundColor = .blue
         return mapView
     }()
     
@@ -25,46 +34,56 @@ class MapController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
+        label.backgroundColor = .systemRed
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.text = "Move the map to select a location."
         return label
     }()
     
-    
-    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkLocationServices()
+        self.view.backgroundColor = .white
+        self.checkLocationServices()
+        setupUI()
+        setupNavBar()
     }
     
     // MARK: - UI Setup
+    private func setupNavBar() {
+        self.navigationController?.navigationBar.backgroundColor = .white
+        self.navigationController?.navigationBar.titleTextAttributes =
+        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(tappedDoneButton))
+        self.navigationItem.title = "Move the map to select a location"
+    }
+    
     private func setupUI() {
         self.view.addSubview(mapView)
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        
+//        
         self.view.addSubview(addressLabel)
         addressLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(pinImage)
+        pinImage.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            addressLabel.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 50),
+            pinImage.heightAnchor.constraint(equalToConstant: 40),
+            pinImage.widthAnchor.constraint(equalToConstant: 40),
+            pinImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            pinImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -20),
+            
+            addressLabel.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -90),
             addressLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             addressLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            addressLabel.heightAnchor.constraint(equalToConstant: 50),
+            addressLabel.heightAnchor.constraint(equalToConstant: 60),
             
             mapView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
             mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
-    }
-    
-    private func setupNavBar() {
-        self.navigationController?.navigationBar.backgroundColor = .white
-        self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .regular)]
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(tappedDoneButton))
-        self.navigationItem.title = "Move the map to select a location."
     }
     
     // MARK: - Selectors
@@ -148,7 +167,9 @@ extension MapController: CLLocationManagerDelegate {
 
 extension MapController: MKMapViewDelegate {
     
+    
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        print("changed!")
         let center = getCenterLocation(for: mapView)
         let geoCoder = CLGeocoder()
         
@@ -174,6 +195,7 @@ extension MapController: MKMapViewDelegate {
             let streetName = placemark.thoroughfare ?? ""
             
             DispatchQueue.main.async {
+                print("doing this")
                 self.addressLabel.text = "\(streetNumber) \(streetName)"
             }
         }

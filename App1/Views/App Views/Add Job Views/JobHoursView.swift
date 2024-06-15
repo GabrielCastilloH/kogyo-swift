@@ -29,8 +29,7 @@ class JobHoursView: UIView {
     public let pickerTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
-        textField.attributedPlaceholder = CustomFunctions()
-            .createPlaceholder(for: "?")
+        textField.attributedPlaceholder = CustomFunctions.shared.createPlaceholder(for: "?")
         textField.layer.cornerRadius = 10
         textField.font = .systemFont(ofSize: 20, weight: .regular)
         textField.textAlignment = .center

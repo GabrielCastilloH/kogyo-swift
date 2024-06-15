@@ -23,8 +23,7 @@ class JobPaymentView: UIView {
     public let paymentTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
-        textField.attributedPlaceholder = CustomFunctions()
-            .createPlaceholder(for: "?") // Here you should put the recommended payment.
+        textField.attributedPlaceholder = CustomFunctions.shared.createPlaceholder(for: "?") // Here you should put the recommended payment.
         textField.layer.cornerRadius = 5
         textField.font = .systemFont(ofSize: 20, weight: .regular)
         textField.leftViewMode = .always

@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol JobDateTimeViewDelegate {
+    func pressedLocationButton()
+}
+
 class JobDateTimeView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
+    var delegate: JobDateTimeViewDelegate?
     
     // MARK: - UI Components
     private lazy var locationButton: UIButton = {
@@ -30,7 +35,7 @@ class JobDateTimeView: UIView {
         return imageView
     }()
     
-    private let addressLabel: UILabel = {
+    public let addressLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
@@ -112,7 +117,7 @@ class JobDateTimeView: UIView {
 
     // MARK: - Selectors
     @objc func didTapLocationButton() {
-        print("good luck with the location functionality.")
+        self.delegate?.pressedLocationButton()
     }
 
 }
