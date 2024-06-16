@@ -3,7 +3,7 @@
 //  App1
 //
 //  Created by Gabriel Castillo on 6/15/24.
-//
+// TODO: Add location to the database.
 
 import UIKit
 import MapKit
@@ -34,9 +34,10 @@ class MapController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
-        label.backgroundColor = .systemRed
-        label.font = .systemFont(ofSize: 18, weight: .regular)
-        label.text = "Move the map to select a location."
+        label.backgroundColor = .white
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.text = ""
+        label.numberOfLines = 2
         return label
     }()
     
@@ -53,15 +54,15 @@ class MapController: UIViewController {
     private func setupNavBar() {
         self.navigationController?.navigationBar.backgroundColor = .white
         self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: .regular)]
+        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(tappedDoneButton))
-        self.navigationItem.title = "Move the map to select a location"
+        self.navigationItem.title = "Select Location"
     }
     
     private func setupUI() {
         self.view.addSubview(mapView)
         mapView.translatesAutoresizingMaskIntoConstraints = false
-//        
+        //
         self.view.addSubview(addressLabel)
         addressLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -75,19 +76,21 @@ class MapController: UIViewController {
             pinImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -20),
             
             addressLabel.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -90),
-            addressLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            addressLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            addressLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             addressLabel.heightAnchor.constraint(equalToConstant: 60),
+            addressLabel.widthAnchor.constraint(equalToConstant: 300),
             
             mapView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
-            mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            mapView.bottomAnchor.constraint(equalTo: self.addressLabel.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
     }
     
-    // MARK: - Selectors
+    
+    // MARK: - Functions & Selectors
     func setupLocationManager() {
+        mapView.delegate = self
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
@@ -111,7 +114,6 @@ class MapController: UIViewController {
             }
         }
     }
-    
     
     func checkLocationAuthorization() {
         switch CLLocationManager().authorizationStatus {
@@ -149,13 +151,12 @@ class MapController: UIViewController {
     @objc func tappedDoneButton() {
         if let createJobController = self.navigationController?.viewControllers.first(where: { $0 is CreateJobController }) as? CreateJobController {
             createJobController.jobDateTimeView.addressLabel.text = self.addressLabel.text
-            self.navigationController?.popToViewController(createJobController, animated: true)
+//            self.navigationController?.popViewController(animated: true)
         }
         
         self.navigationController?.popViewController(animated: true)
     }
 }
-
 
 extension MapController: CLLocationManagerDelegate {
     
@@ -164,12 +165,8 @@ extension MapController: CLLocationManagerDelegate {
     }
 }
 
-
 extension MapController: MKMapViewDelegate {
-    
-    
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("changed!")
         let center = getCenterLocation(for: mapView)
         let geoCoder = CLGeocoder()
         
@@ -193,11 +190,16 @@ extension MapController: MKMapViewDelegate {
             
             let streetNumber = placemark.subThoroughfare ?? ""
             let streetName = placemark.thoroughfare ?? ""
-            
+            let city = placemark.locality ?? ""
+            let state = placemark.administrativeArea ?? ""
+            let postalCode = placemark.postalCode ?? ""
+            let country = placemark.country ?? ""
+
             DispatchQueue.main.async {
-                print("doing this")
-                self.addressLabel.text = "\(streetNumber) \(streetName)"
+                self.addressLabel.text = "\(streetNumber) \(streetName), \(city), \(state) \(postalCode), \(country)"
             }
         }
     }
 }
+    
+    

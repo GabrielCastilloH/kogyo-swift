@@ -80,10 +80,6 @@ class CreateJobController: UIViewController {
         )
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        
-    }
-    
     // MARK: - UI Setup
     private func setupUI() {
         self.view.addSubview(navbarBackgroundView)
