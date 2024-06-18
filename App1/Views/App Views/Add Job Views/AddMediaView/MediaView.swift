@@ -17,8 +17,10 @@ class MediaView: UIView {
     var media: UIImage?
     var id: Int
     var isHighlightedViewHidden = true
+    var videoURL: URL?
     
     var delegate: MediaViewDelegate?
+    
     
     // MARK: - UI Components
     // EMPTY:
@@ -42,7 +44,7 @@ class MediaView: UIView {
     }()
     
     // NOT EMPTY:
-    private let mediaImageView: UIImageView = {
+    public let mediaImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.backgroundColor = .systemPink
@@ -88,9 +90,10 @@ class MediaView: UIView {
     }()
     
     // MARK: - Life Cycle
-    init(with image: UIImage?, and id: Int, isVideo: Bool = false) {
+    init(with image: UIImage?, and id: Int, videoURL: URL? = nil) {
         self.media = image
         self.id = id
+        self.videoURL = videoURL
         
         super.init(frame: .zero)
         
@@ -98,7 +101,7 @@ class MediaView: UIView {
             mediaImageView.image = self.media
             self.setupUI()
                 
-            if isVideo {
+            if videoURL != nil {
                 self.videoIcon.isHidden = false
             }
             

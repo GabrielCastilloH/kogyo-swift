@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import Photos
+import FirebaseStorage
 
 class CreateJobController: UIViewController {
     // Responsible for creating a new job.
@@ -103,8 +104,6 @@ class CreateJobController: UIViewController {
         )
         
         addMedia(nil)
-        addMedia(UIImage(named: "Baby Sitting"))
-        addMedia(UIImage(named: "Cleaning"))
     }
     
     // MARK: - UI Setup
@@ -252,6 +251,7 @@ class CreateJobController: UIViewController {
             helper: nil
         )
         
+        
         if newJob.kind == "" || newJob.description == "" || newJob.expectedHours == 0 || newJob.location == "" || newJob.payment == 0 || newJob.location == "Click to set location" {
             AlertManager.showMissingJobInfoAlert(on: self)
             
@@ -262,6 +262,23 @@ class CreateJobController: UIViewController {
                 switch result {
                 case .success(let jobId):
                     self.presentLoadingScreen(jobId: jobId, userId: userUID)
+                    
+                    
+                    for media in self.mediaData {
+                        if media != self.mediaData[0] {
+                            
+                            if let videoURL = media.videoURL {
+                                // Upload video to database.
+                                let videoToUploadURL = videoURL
+                                self.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL)
+                            } else {
+                                // Upload image to database.
+                                let imageToUpload = media.mediaImageView.image
+                                self.uploadImageToFirebase(parentFolder: "jobs", containerId: jobId, image: imageToUpload!)
+                            }
+                        }
+                    }
+                    
                 case .failure(let error):
                     print("Error adding job: \(error.localizedDescription)")
                 }
@@ -271,6 +288,47 @@ class CreateJobController: UIViewController {
             self.submitJobBtn.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
         }
     }
+    
+    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpg")
+        
+        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+          if let error = error {
+            print("Error uploading image: \(error.localizedDescription)")
+            return
+          }
+          
+          storageRef.downloadURL { (url, error) in
+            if let error = error {
+              print("Error getting download URL: \(error.localizedDescription)")
+              return
+            }
+            guard let downloadURL = url else { return }
+            print("Download URL: \(downloadURL.absoluteString)")
+          }
+        }
+      }
+    
+    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL) {
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).mov")
+        
+        storageRef.putFile(from: videoURL, metadata: nil) { (metadata, error) in
+          if let error = error {
+            print("Error uploading video: \(error.localizedDescription)")
+            return
+          }
+          
+          storageRef.downloadURL { (url, error) in
+            if let error = error {
+              print("Error getting download URL: \(error.localizedDescription)")
+              return
+            }
+            guard let downloadURL = url else { return }
+//            print("Download URL: \(downloadURL.absoluteString)")
+          }
+        }
+      }
 }
 
 extension CreateJobController: JobPaymentViewDelegate {
@@ -318,11 +376,11 @@ extension CreateJobController: JobDateTimeViewDelegate {
 // MARK: - Media View Functions and Delegate
 extension CreateJobController: MediaViewDelegate {
     
-    public func addMedia(_ image: UIImage?, isVideo: Bool = false) {
+    public func addMedia(_ image: UIImage?, videoURL: URL? = nil) {
         var newMediaView = MediaView(with: image, and: self.idCounter)
         
-        if isVideo {
-            newMediaView = MediaView(with: image, and: self.idCounter, isVideo: true)
+        if videoURL != nil {
+            newMediaView = MediaView(with: image, and: self.idCounter, videoURL: videoURL)
         }
         
         newMediaView.delegate = self
@@ -378,32 +436,14 @@ extension CreateJobController: UIImagePickerControllerDelegate & UINavigationCon
     private func handleVideos(_ info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let videoURL = info[.mediaURL] as? URL else { return }
+        
+        guard let videoData = try? Data(contentsOf: videoURL, options: NSData.ReadingOptions.mappedIfSafe) else { return }
     
         AVAsset(url: videoURL).generateThumbnail { thumbnail in
             DispatchQueue.main.async {
-                self.addMedia(thumbnail, isVideo: true) // Make sure that you add a play button on top left corner so they know its a video.
+                self.addMedia(thumbnail, videoURL: videoURL) // Make sure that you add a play button on top left corner so they know its a video.
             }
         }
     }
     
-}
-
-
-
-extension AVAsset {
-
-    func generateThumbnail(completion: @escaping (UIImage) -> Void) {
-        DispatchQueue.global().async {
-            let imageGenerator = AVAssetImageGenerator(asset: self)
-            let times = [NSValue(time: CMTime(seconds: 0.0, preferredTimescale: 600))]
-            imageGenerator.appliesPreferredTrackTransform = true
-            imageGenerator.generateCGImagesAsynchronously(forTimes: times, completionHandler: { _, image, aaa, bbb, ccc in
-                if let image = image {
-                    completion(UIImage(cgImage: image))
-                } else {
-                    completion(UIImage(systemName: "video")!)
-                }
-            })
-        }
-    }
 }
