@@ -23,12 +23,33 @@ class CurrentJobsController: UIViewController {
         return tableView
     }()
     
+    private let noJobsLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = Constants().lightGrayColor.withAlphaComponent(0.7)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.text = "You do not have any active jobs. Please go to the home screen and select a job cateogry to create a new job."
+        return label
+    }()
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         self.tabBarController?.tabBar.isHidden = false
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
+        currentJobsTableView.delegate = self
+        currentJobsTableView.dataSource = self
+        
+        self.setupNavBar()
+        self.setupUI()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
         // TODO: move this to the firebase handler.
         guard let userUID = Auth.auth().currentUser?.uid else {
             // Handle the case where the user is not authenticated
@@ -37,19 +58,20 @@ class CurrentJobsController: UIViewController {
         }
         
         self.configureCurrentJobs(for: userUID)
-        
-        currentJobsTableView.delegate = self
-        currentJobsTableView.dataSource = self
-        
-        self.setupNavBar()
-        self.setupUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     // MARK: - UI Setup
+    private func noJobsSetup() {
+        self.view.addSubview(noJobsLabel)
+        noJobsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            noJobsLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            noJobsLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            noJobsLabel.widthAnchor.constraint(equalToConstant: 200),
+        ])
+    }
+    
     private func setupNavBar() {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
@@ -73,9 +95,18 @@ class CurrentJobsController: UIViewController {
     private func configureCurrentJobs(for userUID: String) {
         FirestoreHandler.shared.fetchJobs(for: userUID) { result in
             switch result {
-            case .success(let jobs):
+            case .success(var jobs):
+                jobs.sort { $0.dateAdded > $1.dateAdded } // Sorting the jobs from newest to oldest.
+                
                 self.currentJobs = jobs
                 self.currentJobsTableView.reloadData()
+                
+                if self.currentJobs.count == 0 {
+                    self.noJobsSetup()
+                } else {
+                    self.noJobsLabel.isHidden = true
+                }
+                
             case .failure(let error):
                 print("Error fetching jobs: \(error.localizedDescription)")
             }

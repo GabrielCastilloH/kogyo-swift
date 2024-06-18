@@ -26,6 +26,7 @@
 		D0E923F12C0E98670070977A /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F02C0E98670070977A /* SettingsController.swift */; };
 		D0E923F32C0E98C90070977A /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F22C0E98C90070977A /* TabController.swift */; };
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
+		FF28AF562C21258C00F58D0F /* EmptyMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF552C21258C00F58D0F /* EmptyMediaView.swift */; };
 		FF45E4B32C161047000F1BE7 /* JobDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */; };
 		FF45E4B52C1613BA000F1BE7 /* JobPhotosVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */; };
 		FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */; };
@@ -92,6 +93,7 @@
 		D0E923F02C0E98670070977A /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		D0E923F22C0E98C90070977A /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
+		FF28AF552C21258C00F58D0F /* EmptyMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMediaView.swift; sourceTree = "<group>"; };
 		FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDescriptionView.swift; sourceTree = "<group>"; };
 		FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPhotosVideosView.swift; sourceTree = "<group>"; };
 		FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHelperInfoView.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 		D0D3A99D2C11B951000DFFB8 /* Add Job Views */ = {
 			isa = PBXGroup;
 			children = (
+				FF28AF572C21258D00F58D0F /* AddMediaView */,
 				D0C5CED32C12EEBA002582D4 /* JobKindFormView.swift */,
 				D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */,
 				D0C5CED72C130C8C002582D4 /* MediaFormView.swift */,
@@ -239,6 +242,14 @@
 				FFF372EC2C16CB0D00F8D362 /* GoogleService-Info.plist */,
 			);
 			path = Supporting;
+			sourceTree = "<group>";
+		};
+		FF28AF572C21258D00F58D0F /* AddMediaView */ = {
+			isa = PBXGroup;
+			children = (
+				FF28AF552C21258C00F58D0F /* EmptyMediaView.swift */,
+			);
+			path = AddMediaView;
 			sourceTree = "<group>";
 		};
 		FF879A452C1B2C1000922513 /* Setting Views */ = {
@@ -333,6 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				FFF372E32C16C82300F8D362 /* Auth Objects */,
+				FFF372E42C16C84800F8D362 /* AlertManager.swift */,
 				D09C5ED12C0F3F8E002C6F89 /* Constants.swift */,
 				D0D3A9992C11A868000DFFB8 /* Extensions.swift */,
 				FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */,
@@ -366,7 +378,6 @@
 			isa = PBXGroup;
 			children = (
 				FFF372E12C16C80500F8D362 /* Validator.swift */,
-				FFF372E42C16C84800F8D362 /* AlertManager.swift */,
 				FFF372E62C16C87400F8D362 /* AuthService.swift */,
 			);
 			path = "Auth Objects";
@@ -459,6 +470,7 @@
 				FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */,
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
 				FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */,
+				FF28AF562C21258C00F58D0F /* EmptyMediaView.swift in Sources */,
 				FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,

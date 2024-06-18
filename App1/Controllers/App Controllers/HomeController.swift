@@ -35,12 +35,8 @@ class HomeController: UIViewController {
     }()
     
     // MARK: - Life Cycle
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-        self.view.backgroundColor = .white
-        self.setupNavBar()
-        
+    override func viewWillAppear(_ animated: Bool) {
+        // TODO: Move this to Firebase handler.
         AuthService.shared.fetchUser { [weak self] user, error in
             guard let self = self else { return }
             if let error = error {
@@ -51,6 +47,13 @@ class HomeController: UIViewController {
                 self.navigationItem.title = "Welcome, \(user.firstName)"
             }
         }
+    }
+    
+    override func viewDidLoad() {
+
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
+        self.setupNavBar()
         
         self.jobSearch = jobListing.allJobs
         

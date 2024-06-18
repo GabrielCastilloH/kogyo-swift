@@ -23,7 +23,7 @@ class JobPaymentView: UIView {
     public let paymentTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = Constants().darkWhiteColor
-        textField.attributedPlaceholder = CustomFunctions.shared.createPlaceholder(for: "?") // Here you should put the recommended payment.
+        textField.attributedPlaceholder = CustomFunctions.shared.createPlaceholder(for: "?") // Here you should put the recommended payment
         textField.layer.cornerRadius = 5
         textField.font = .systemFont(ofSize: 20, weight: .regular)
         textField.leftViewMode = .always
@@ -96,6 +96,7 @@ class JobPaymentView: UIView {
     private func setupUI() {
         let paymentTitle = cf.createFormLabel(for: "Payment:")
         let recPaymentTitle = cf.createFormLabel(for: "Recommended Payment:")
+        let paymentMethodTitle = cf.createFormLabel(for: "Payment Method:")
 
         self.addSubview(paymentTitle)
         paymentTitle.translatesAutoresizingMaskIntoConstraints = false
@@ -103,6 +104,8 @@ class JobPaymentView: UIView {
         self.addSubview(recPaymentTitle)
         recPaymentTitle.translatesAutoresizingMaskIntoConstraints = false
         
+        self.addSubview(paymentMethodTitle)
+        paymentMethodTitle.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(paymentTextField)
         paymentTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -141,6 +144,9 @@ class JobPaymentView: UIView {
             
             recPaymentLabel.topAnchor.constraint(equalTo: recPaymentTitle.topAnchor),
             recPaymentLabel.leadingAnchor.constraint(equalTo: recPaymentTitle.trailingAnchor, constant: 10),
+            
+            paymentMethodTitle.topAnchor.constraint(equalTo: recPaymentLabel.bottomAnchor, constant: 5),
+            paymentMethodTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
         ])
     }
 

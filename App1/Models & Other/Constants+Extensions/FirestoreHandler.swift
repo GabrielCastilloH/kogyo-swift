@@ -21,14 +21,15 @@ class FirestoreHandler {
         let jobsRef = db.collection("users").document(userId).collection("jobs")
         
         let jobData: [String: Any] = [
-                "kind": job.kind,
-                "description": job.description,
-                "dateTime": job.dateTime,
-                "expectedHours": job.expectedHours,
-                "location": job.location,
-                "payment": job.payment,
-            ]
-                
+            "dateAdded": job.dateAdded,
+            "kind": job.kind,
+            "description": job.description,
+            "dateTime": job.dateTime,
+            "expectedHours": job.expectedHours,
+            "location": job.location,
+            "payment": job.payment,
+        ]
+        
         var ref: DocumentReference? = nil
         ref = jobsRef.addDocument(data: jobData) { error in
             if let error = error {
@@ -76,6 +77,7 @@ class FirestoreHandler {
                 for document in querySnapshot!.documents {
                     let data = document.data()
                     let job = Job(
+                        dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
                         kind: data["kind"] as? String ?? "",
                         description: data["description"] as? String ?? "",
                         dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
@@ -92,40 +94,56 @@ class FirestoreHandler {
     }
     
     func fetchHelper(for helperUID: String, completion: @escaping (Result<(Helper, UIImage?), Error>) -> Void) {
-            let storageRef = Storage.storage().reference()
-
-            // Fetch helper information from Firestore
-            let helperRef = db.collection("helpers").document(helperUID)
-            helperRef.getDocument { (document, error) in
+        let storageRef = Storage.storage().reference()
+        
+        // Fetch helper information from Firestore
+        let helperRef = db.collection("helpers").document(helperUID)
+        helperRef.getDocument { (document, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let document = document, document.exists, let data = document.data() else {
+                let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Helper not found"])
+                completion(.failure(error))
+                return
+            }
+            
+            let helper = Helper(
+                firstName: data["firstName"] as? String ?? "",
+                lastName: data["lastName"] as? String ?? "",
+                description: data["helperDescription"] as? String ?? ""
+            )
+            
+            // Fetch profile image from Firebase Storage
+            let profileRef = storageRef.child("profile/\(helperUID).jpeg")
+            profileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
                 if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let document = document, document.exists, let data = document.data() else {
-                    let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Helper not found"])
-                    completion(.failure(error))
-                    return
-                }
-                
-                let helper = Helper(
-                    firstName: data["firstName"] as? String ?? "",
-                    lastName: data["lastName"] as? String ?? "",
-                    description: data["helperDescription"] as? String ?? ""
-                )
-                
-                // Fetch profile image from Firebase Storage
-                let profileRef = storageRef.child("profile/\(helperUID).jpeg")
-                profileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
-                    if let error = error {
-                        // If there's an error fetching the image, return the helper info without image
-                        completion(.success((helper, nil)))
-                        print("Error fetching image: \(error.localizedDescription)")
-                    } else {
-                        let image = UIImage(data: data!)
-                        completion(.success((helper, image)))
-                    }
+                    // If there's an error fetching the image, return the helper info without image
+                    completion(.success((helper, nil)))
+                    print("Error fetching image: \(error.localizedDescription)")
+                } else {
+                    let image = UIImage(data: data!)
+                    completion(.success((helper, image)))
                 }
             }
         }
+    }
+    
+    public func editNames(userUID: String, firstName: String, lastName: String) {
+        
+        let userRef = db.collection("users").document(userUID)
+        
+        userRef.updateData([
+            "firstName": firstName,
+            "lastName": lastName
+        ]) { error in
+            if let error = error {
+                print("Error updating names: \(error.localizedDescription)")
+            } else {
+                return
+            }
+        }
+    }
 }

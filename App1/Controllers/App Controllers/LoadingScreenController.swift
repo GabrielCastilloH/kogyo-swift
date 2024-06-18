@@ -151,15 +151,10 @@ class LoadingScreenController: UIViewController {
     }
     
     func presentCurrentJobsController() {
-        print("presenting")
         if let homeController = self.navigationController?.viewControllers.first(where: { $0 is HomeController }) {
             // Pop to HomeController if found
             self.navigationController?.popToViewController(homeController, animated: true)
-        }
-        
-        // Set tabBarController's selected index to 1
-        if let tabBarController = self.tabBarController {
-            tabBarController.selectedIndex = 1
+            AlertManager.showJobAddedAlert(on: homeController)
         }
     }
     

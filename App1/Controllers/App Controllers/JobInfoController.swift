@@ -15,6 +15,16 @@ class JobInfoController: UIViewController {
     
     
     // MARK: - UI Components
+    private let dateAddedLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = Constants().lightGrayColor.withAlphaComponent(0.7)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.text = "Loading..."
+        return label
+    }()
     
     
     // MARK: - Life Cycle
@@ -35,6 +45,12 @@ class JobInfoController: UIViewController {
         self.view.backgroundColor = .white
         self.setupNavBar()
         self.setupUI()
+        
+        let dateNotFormatted = self.currentJob.dateAdded
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM d 'at' h:mm a"
+        let formattedDate = dateFormatter.string(from: dateNotFormatted)
+        self.dateAddedLabel.text = "Created on: \(formattedDate)"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,10 +61,13 @@ class JobInfoController: UIViewController {
     private func setupNavBar() {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = self.currentJob.kind + " Job"
+        self.navigationItem.title = self.currentJob.kind
     }
     
     private func setupUI() {
+        self.view.addSubview(dateAddedLabel)
+        dateAddedLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         let jobQuickInfoView = JobQuickInfoView(for: self.currentJob)
         let jobDescriptionView = JobDescriptionView(for: self.currentJob)
         let jobPhotosVideosView = JobPhotosVideosView(for: self.currentJob)
@@ -73,7 +92,12 @@ class JobInfoController: UIViewController {
         jobHelperInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            jobQuickInfoView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
+            dateAddedLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
+            dateAddedLabel.heightAnchor.constraint(equalToConstant: 30),
+            dateAddedLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            dateAddedLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            
+            jobQuickInfoView.topAnchor.constraint(equalTo: self.dateAddedLabel.bottomAnchor, constant: 10),
             jobQuickInfoView.heightAnchor.constraint(equalToConstant: 120),
             jobQuickInfoView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobQuickInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

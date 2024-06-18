@@ -77,7 +77,7 @@ class DescriptionFormView: UIView {
             descriptionTextView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5),
             descriptionTextView.leadingAnchor.constraint(equalTo: descriptionLabel.leadingAnchor),
             descriptionTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: 100),
+            descriptionTextView.heightAnchor.constraint(equalToConstant: 70),
         ])
     }
 

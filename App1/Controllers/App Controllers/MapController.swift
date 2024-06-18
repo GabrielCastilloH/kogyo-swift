@@ -4,6 +4,7 @@
 //
 //  Created by Gabriel Castillo on 6/15/24.
 // TODO: Add location to the database.
+// TODO: Allow user to change their name in the settings controller. 
 
 import UIKit
 import MapKit
@@ -73,7 +74,7 @@ class MapController: UIViewController {
             pinImage.heightAnchor.constraint(equalToConstant: 40),
             pinImage.widthAnchor.constraint(equalToConstant: 40),
             pinImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            pinImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -20),
+            pinImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -40),
             
             addressLabel.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -90),
             addressLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),

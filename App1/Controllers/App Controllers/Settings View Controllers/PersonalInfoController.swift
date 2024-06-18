@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class PersonalInfoController: UIViewController {
-
+    
     
     // MARK: - Variables
     var cf = CustomFunctions()
@@ -25,6 +26,17 @@ class PersonalInfoController: UIViewController {
         setupUI()
         
         firstLastNameForm.firstNameTextField.delegate = self
+        
+        AuthService.shared.fetchUser { [weak self] user, error in
+            guard let self = self else { return }
+            if let error = error {
+                AlertManager.showFetchingUserError(on: self, with: error)
+                return
+            } else if let user = user {
+                self.firstLastNameForm.firstNameTextField.text = user.firstName
+                self.firstLastNameForm.lastNameTextField.text = user.lastName
+            }
+        }
     }
     
     // MARK: - UI Setup
@@ -53,12 +65,24 @@ class PersonalInfoController: UIViewController {
 
 extension PersonalInfoController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == firstLastNameForm.firstNameTextField {
-            print("first name changed")
-        } else {
-            print("last name changed.")
+        let firstName = self.firstLastNameForm.firstNameTextField.text ?? ""
+        let lastName = self.firstLastNameForm.lastNameTextField.text ?? ""
+        
+        if !Validator.isNameValid(for: firstName) {
+            AlertManager.showInvalidFirstNameAlert(on: self)
+            return true
         }
+        
+        if !Validator.isNameValid(for: lastName) {
+            AlertManager.showInvalidLastNameAlert(on: self)
+            return true
+        }
+        
+        // TODO: Find some way to do this in the Auth class.
+        guard let userUID = Auth.auth().currentUser?.uid else { return true }
+        FirestoreHandler.shared.editNames(userUID: userUID, firstName: firstName, lastName: lastName)
         textField.resignFirstResponder()
+        AlertManager.showNameChangedAlert(on: self)
         
         return true
     }

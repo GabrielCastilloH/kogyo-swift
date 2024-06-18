@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 
 class CreateJobController: UIViewController {
+    // Responsible for the addition of photos and videos.
 
     
     // MARK: - Variables
@@ -19,7 +20,17 @@ class CreateJobController: UIViewController {
     // MARK: - UI Components
     let jobKindView: JobKindFormView
     let descriptionFormView = DescriptionFormView()
-    let mediaFormView = MediaFormView()
+    
+    let mediaTitleView: UITextView = {
+        let textView = UITextView()
+        textView.isUserInteractionEnabled = false
+        textView.text = "Photos & Videos:"
+        textView.textColor = .label
+        textView.textAlignment = .left
+        textView.font = .systemFont(ofSize: 20, weight: .medium)
+        return textView
+    }()
+
     public let jobDateTimeView = JobDateTimeView()
     let jobHoursView = JobHoursView()
     let addEquipmentFormView = AddEquipmentFormView()
@@ -34,6 +45,13 @@ class CreateJobController: UIViewController {
         button.backgroundColor = Constants().lightBlueColor
         button.addTarget(self, action: #selector(didTapSubmitJob), for: .touchUpInside)
         return button
+    }()
+    
+    private let mediaBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants().darkWhiteColor
+        view.layer.cornerRadius = 5
+        return view
     }()
     
     private let navbarBackgroundView: UIView = {
@@ -62,7 +80,7 @@ class CreateJobController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.tabBarController?.tabBar.isHidden = false
-
+        
         self.jobDateTimeView.delegate = self
         self.navigationItem.title = "Create a New Job"
         
@@ -94,11 +112,11 @@ class CreateJobController: UIViewController {
         self.view.addSubview(descriptionFormView)
         descriptionFormView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(mediaFormView)
-        mediaFormView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(mediaTitleView)
+        mediaTitleView.translatesAutoresizingMaskIntoConstraints = false
         
-        let separator2 = UIView()
-        cf.createSeparatorView(for: self, with: separator2, under: mediaFormView)
+        self.view.addSubview(mediaBackgroundView)
+        mediaBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(jobDateTimeView)
         jobDateTimeView.translatesAutoresizingMaskIntoConstraints = false
@@ -122,10 +140,6 @@ class CreateJobController: UIViewController {
         let separator5 = UIView()
         cf.createSeparatorView(for: self, with: separator5, under: jobPaymentView)
         
-        let paymentTitle = cf.createFormLabel(for: "Payment:")
-        self.view.addSubview(paymentTitle)
-        paymentTitle.translatesAutoresizingMaskIntoConstraints = false
-        
         self.view.addSubview(submitJobBtn)
         submitJobBtn.translatesAutoresizingMaskIntoConstraints = false
         
@@ -143,14 +157,19 @@ class CreateJobController: UIViewController {
             descriptionFormView.topAnchor.constraint(equalTo: separator1.bottomAnchor, constant: 15),
             descriptionFormView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             descriptionFormView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            descriptionFormView.heightAnchor.constraint(equalToConstant: 130),
+            descriptionFormView.heightAnchor.constraint(equalToConstant: 100),
             
-            mediaFormView.topAnchor.constraint(equalTo: descriptionFormView.bottomAnchor, constant: 15),
-            mediaFormView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            mediaFormView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mediaFormView.heightAnchor.constraint(equalToConstant: 20),
+            mediaTitleView.topAnchor.constraint(equalTo: descriptionFormView.bottomAnchor, constant: 0),
+            mediaTitleView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            mediaTitleView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            mediaTitleView.heightAnchor.constraint(equalToConstant: 70),
             
-            jobDateTimeView.topAnchor.constraint(equalTo: separator2.bottomAnchor, constant: 15),
+            mediaBackgroundView.topAnchor.constraint(equalTo: descriptionFormView.bottomAnchor, constant: 35),
+            mediaBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            mediaBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+            mediaBackgroundView.heightAnchor.constraint(equalToConstant: 70),
+            
+            jobDateTimeView.topAnchor.constraint(equalTo: mediaBackgroundView.bottomAnchor, constant: 15),
             jobDateTimeView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobDateTimeView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             jobDateTimeView.heightAnchor.constraint(equalToConstant: 60),
@@ -168,12 +187,7 @@ class CreateJobController: UIViewController {
             jobPaymentView.topAnchor.constraint(equalTo: separator4.bottomAnchor, constant: 15),
             jobPaymentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobPaymentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            jobPaymentView.heightAnchor.constraint(equalToConstant: 45),
-            
-            paymentTitle.topAnchor.constraint(equalTo: separator5.bottomAnchor, constant: 0),
-            paymentTitle.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
-            paymentTitle.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            paymentTitle.heightAnchor.constraint(equalToConstant: 50),
+            jobPaymentView.heightAnchor.constraint(equalToConstant: 75),
             
             submitJobBtn.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
             submitJobBtn.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -201,16 +215,17 @@ class CreateJobController: UIViewController {
     
     @objc func didTapSubmitJob() {
         let newJob = Job(
+            dateAdded: Date(),
             kind: self.jobKindView.pickerTextField.text ?? "",
             description: self.descriptionFormView.descriptionTextView.text ?? "",
             dateTime: self.jobDateTimeView.datePicker.date,
             expectedHours: Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0,
-            location: "your moms house",
+            location: self.jobDateTimeView.addressLabel.text ?? "Click to set location",
             payment: Int(self.jobPaymentView.paymentTextField.text ?? "") ?? 0,
             helper: nil
         )
         
-        if newJob.kind == "" || newJob.description == "" || newJob.expectedHours == 0 || newJob.location == "" || newJob.payment == 0 {
+        if newJob.kind == "" || newJob.description == "" || newJob.expectedHours == 0 || newJob.location == "" || newJob.payment == 0 || newJob.location == "Click to set location" {
             AlertManager.showMissingJobInfoAlert(on: self)
             
         } else {

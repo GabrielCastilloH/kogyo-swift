@@ -32,4 +32,38 @@ extension UIView {
             self.alpha = 1
         }
     }
+
+    func addDashedBorder(cornerRadius: CGFloat = 5,
+                         dashWidth: CGFloat = 1,
+                         dashColor: UIColor = .black,
+                         dashLength: CGFloat = 5,
+                         betweenDashesSpace: CGFloat = 3) {
+        
+        // Remove any existing dashed border layers
+        layer.sublayers?.removeAll(where: { $0 is CAShapeLayer && $0.name == "dashedBorder" })
+        
+        // Create a new CAShapeLayer for the dashed border
+        let dashBorder = CAShapeLayer()
+        dashBorder.name = "dashedBorder"
+        dashBorder.lineWidth = dashWidth
+        dashBorder.strokeColor = dashColor.cgColor
+        dashBorder.lineDashPattern = [dashLength, betweenDashesSpace] as [NSNumber]
+        dashBorder.frame = bounds
+        dashBorder.fillColor = nil
+        
+        // Set the path for the dashed border
+        if cornerRadius > 0 {
+            dashBorder.path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
+        } else {
+            dashBorder.path = UIBezierPath(rect: bounds).cgPath
+        }
+        
+        // Add the dashed border to the view's layer
+        layer.addSublayer(dashBorder)
+        
+        // Set the corner radius for the view itself
+        self.layer.cornerRadius = cornerRadius
+        self.layer.masksToBounds = true
+    }
 }
+
