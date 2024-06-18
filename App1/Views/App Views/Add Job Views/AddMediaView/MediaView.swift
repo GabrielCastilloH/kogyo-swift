@@ -9,6 +9,7 @@ import UIKit
 
 protocol MediaViewDelegate {
     func didTapX(at id: Int)
+    func didTapAddImage()
 }
 
 class MediaView: UIView {
@@ -29,6 +30,15 @@ class MediaView: UIView {
         iv.image = UIImage(systemName: "plus")
         iv.tintColor = .black
         return iv
+    }()
+    
+    private lazy var addImageButton: UIButton = {
+        let button = UIButton()
+        button.tintColor = .white
+        button.layer.cornerRadius = 10
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(addImageButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     // NOT EMPTY:
@@ -133,6 +143,9 @@ class MediaView: UIView {
         self.addSubview(borderView)
         borderView.translatesAutoresizingMaskIntoConstraints = false
         
+        self.addSubview(addImageButton)
+        addImageButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             addImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             addImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
@@ -143,6 +156,11 @@ class MediaView: UIView {
             borderView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
             borderView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
             borderView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5),
+            
+            addImageButton.topAnchor.constraint(equalTo: borderView.topAnchor),
+            addImageButton.bottomAnchor.constraint(equalTo: borderView.bottomAnchor),
+            addImageButton.leadingAnchor.constraint(equalTo: borderView.leadingAnchor),
+            addImageButton.trailingAnchor.constraint(equalTo: borderView.trailingAnchor),
         ])
     }
     
@@ -157,6 +175,10 @@ class MediaView: UIView {
             self.isHighlightedViewHidden = false
             self.xButton.isHidden = false
         }
+    }
+    
+    @objc func addImageButtonTapped() {
+        self.delegate?.didTapAddImage()
     }
     
     @objc func xButtonTapped() {

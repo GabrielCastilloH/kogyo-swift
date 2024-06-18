@@ -22,6 +22,7 @@ class CreateJobController: UIViewController {
     // Media Scroll View:
     var mediaData: [MediaView] = []
     var mediaScrollView: MediaScrollView
+    let imagePickerController = UIImagePickerController()
     
     // MARK: - UI Components
     let jobKindView: JobKindFormView
@@ -56,7 +57,7 @@ class CreateJobController: UIViewController {
     private let mediaBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants().darkWhiteColor
-        view.layer.cornerRadius = 5
+        view.layer.cornerRadius = 10
         return view
     }()
     
@@ -82,12 +83,16 @@ class CreateJobController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.imagePickerController.delegate = self
+        imagePickerController.allowsEditing = false
+        imagePickerController.mediaTypes = ["public.image", "public.movie"]
+        
         self.jobDateTimeView.delegate = self
         self.submitJobBtn.isUserInteractionEnabled = true
         self.submitJobBtn.backgroundColor = Constants().lightBlueColor
         
+        self.setupNavbar()
         self.setupUI()
-        self.view.backgroundColor = .white
         
         NotificationCenter.default.addObserver(
             self,
@@ -103,7 +108,7 @@ class CreateJobController: UIViewController {
     
     // MARK: - UI Setup
     private func setupNavbar() {
-        view.backgroundColor = .white
+        self.view.backgroundColor = .white
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
@@ -328,6 +333,13 @@ extension CreateJobController: MediaViewDelegate {
         self.mediaData.append(newMediaView)
     }
     
+    func didTapAddImage() {
+        DispatchQueue.main.async { [ weak self ] in
+            guard let self = self else { return }
+            self.present(self.imagePickerController, animated: true, completion: nil)
+        }
+    }
+    
     func didTapX(at id: Int) {
         for media in self.mediaData {
             if media.id == id {
@@ -336,3 +348,25 @@ extension CreateJobController: MediaViewDelegate {
         }
     }
 }
+
+extension CreateJobController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        let mediaType = info[.mediaType] as? String
+        if mediaType == "public.image" {
+            if let image = info[.originalImage] as? UIImage {
+                self.addMedia(image)
+            }
+            
+        } else if mediaType == "public.movie" {
+            
+        } else {
+            print("DEBUG PRINT:", "Image was neither photos or videos.")
+        }
+        
+        DispatchQueue.main.async { [ weak self ] in
+            self?.dismiss(animated: true, completion: nil)
+        }
+    }
+}
+
