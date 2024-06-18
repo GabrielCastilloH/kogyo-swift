@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Photos
 
 class CreateJobController: UIViewController {
     // Responsible for creating a new job.
@@ -72,7 +73,7 @@ class CreateJobController: UIViewController {
         self.jobKindView = JobKindFormView(kind: kind)
         self.jobKind = kind
         
-        self.mediaScrollView = MediaScrollView(title: "nerd", media: self.mediaData)
+        self.mediaScrollView = MediaScrollView(media: self.mediaData)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -317,8 +318,12 @@ extension CreateJobController: JobDateTimeViewDelegate {
 // MARK: - Media View Functions and Delegate
 extension CreateJobController: MediaViewDelegate {
     
-    public func addMedia(_ image: UIImage?) {
-        let newMediaView = MediaView(with: image, and: self.idCounter)
+    public func addMedia(_ image: UIImage?, isVideo: Bool = false) {
+        var newMediaView = MediaView(with: image, and: self.idCounter)
+        
+        if isVideo {
+            newMediaView = MediaView(with: image, and: self.idCounter, isVideo: true)
+        }
         
         newMediaView.delegate = self
         self.mediaScrollView.stackView.insertArrangedSubview(newMediaView, at: 0)
@@ -359,7 +364,7 @@ extension CreateJobController: UIImagePickerControllerDelegate & UINavigationCon
             }
             
         } else if mediaType == "public.movie" {
-            
+            self.handleVideos(info)
         } else {
             print("DEBUG PRINT:", "Image was neither photos or videos.")
         }
@@ -368,5 +373,37 @@ extension CreateJobController: UIImagePickerControllerDelegate & UINavigationCon
             self?.dismiss(animated: true, completion: nil)
         }
     }
+    
+    // Handle Videos
+    private func handleVideos(_ info: [UIImagePickerController.InfoKey : Any]) {
+        
+        guard let videoURL = info[.mediaURL] as? URL else { return }
+    
+        AVAsset(url: videoURL).generateThumbnail { thumbnail in
+            DispatchQueue.main.async {
+                self.addMedia(thumbnail, isVideo: true) // Make sure that you add a play button on top left corner so they know its a video.
+            }
+        }
+    }
+    
 }
 
+
+
+extension AVAsset {
+
+    func generateThumbnail(completion: @escaping (UIImage) -> Void) {
+        DispatchQueue.global().async {
+            let imageGenerator = AVAssetImageGenerator(asset: self)
+            let times = [NSValue(time: CMTime(seconds: 0.0, preferredTimescale: 600))]
+            imageGenerator.appliesPreferredTrackTransform = true
+            imageGenerator.generateCGImagesAsynchronously(forTimes: times, completionHandler: { _, image, aaa, bbb, ccc in
+                if let image = image {
+                    completion(UIImage(cgImage: image))
+                } else {
+                    completion(UIImage(systemName: "video")!)
+                }
+            })
+        }
+    }
+}

@@ -78,8 +78,17 @@ class MediaView: UIView {
         return button
     }()
     
+    private lazy var videoIcon: UIImageView = {
+        let iv = UIImageView()
+        iv.tintColor = .white.withAlphaComponent(0.9)
+        iv.image = UIImage(systemName: "play.fill")
+        iv.contentMode = .scaleAspectFit
+        iv.backgroundColor = .clear
+        return iv
+    }()
+    
     // MARK: - Life Cycle
-    init(with image: UIImage?, and id: Int) {
+    init(with image: UIImage?, and id: Int, isVideo: Bool = false) {
         self.media = image
         self.id = id
         
@@ -88,6 +97,11 @@ class MediaView: UIView {
         if self.media != nil {
             mediaImageView.image = self.media
             self.setupUI()
+                
+            if isVideo {
+                self.videoIcon.isHidden = false
+            }
+            
         } else {
             self.setupEmptyUI()
         }
@@ -101,6 +115,10 @@ class MediaView: UIView {
     private func setupUI() {
         self.addSubview(mediaImageView)
         mediaImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(videoIcon)
+        videoIcon.translatesAutoresizingMaskIntoConstraints = false
+        videoIcon.isHidden = true
         
         self.addSubview(highlightedView)
         highlightedView.translatesAutoresizingMaskIntoConstraints = false
@@ -123,6 +141,11 @@ class MediaView: UIView {
             highlightedView.bottomAnchor.constraint(equalTo: mediaImageView.bottomAnchor),
             highlightedView.leadingAnchor.constraint(equalTo: mediaImageView.leadingAnchor),
             highlightedView.trailingAnchor.constraint(equalTo: mediaImageView.trailingAnchor),
+            
+            videoIcon.topAnchor.constraint(equalTo: self.topAnchor, constant: 11),
+            videoIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 11),
+            videoIcon.heightAnchor.constraint(equalToConstant: 15),
+            videoIcon.widthAnchor.constraint(equalToConstant: 15),
             
             touchButton.topAnchor.constraint(equalTo: mediaImageView.topAnchor),
             touchButton.bottomAnchor.constraint(equalTo: mediaImageView.bottomAnchor),

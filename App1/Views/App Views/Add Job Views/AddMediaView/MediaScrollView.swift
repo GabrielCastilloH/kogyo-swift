@@ -33,7 +33,7 @@ class MediaScrollView: UIView {
     
     
     // MARK: - Life Cycle
-    init(title: String, media: [MediaView]) {
+    init(media: [MediaView]) {
         self.mediaArray = media
         super.init(frame: .zero)
         
