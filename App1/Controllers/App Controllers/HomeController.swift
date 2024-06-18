@@ -94,6 +94,7 @@ class HomeController: UIViewController {
             categoriesTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
             categoriesTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
         ])
+        
     }
     
     private func setupNavBar() {

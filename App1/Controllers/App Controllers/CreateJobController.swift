@@ -9,13 +9,19 @@ import UIKit
 import FirebaseAuth
 
 class CreateJobController: UIViewController {
-    // Responsible for the addition of photos and videos.
+    // Responsible for creating a new job.
+    // Also responsible for the addition of photos and videos.
 
     
     // MARK: - Variables
     var jobKind: String
     var keyboardHeight: CGFloat = 300
     var cf = CustomFunctions()
+    var idCounter = 0
+    
+    // Media Scroll View:
+    var mediaData: [MediaView] = []
+    var mediaScrollView: MediaScrollView
     
     // MARK: - UI Components
     let jobKindView: JobKindFormView
@@ -60,12 +66,12 @@ class CreateJobController: UIViewController {
         return view
     }()
     
-    
-    
     // MARK: - Life Cycle
     init(kind: String) {
         self.jobKindView = JobKindFormView(kind: kind)
         self.jobKind = kind
+        
+        self.mediaScrollView = MediaScrollView(title: "nerd", media: self.mediaData)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -75,15 +81,8 @@ class CreateJobController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.tabBarController?.tabBar.isHidden = false
         
         self.jobDateTimeView.delegate = self
-        self.navigationItem.title = "Create a New Job"
-        
         self.submitJobBtn.isUserInteractionEnabled = true
         self.submitJobBtn.backgroundColor = Constants().lightBlueColor
         
@@ -96,9 +95,22 @@ class CreateJobController: UIViewController {
             name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
+        
+        addMedia(nil)
+        addMedia(UIImage(named: "Baby Sitting"))
+        addMedia(UIImage(named: "Cleaning"))
     }
     
     // MARK: - UI Setup
+    private func setupNavbar() {
+        view.backgroundColor = .white
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.titleTextAttributes =
+        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.tabBarController?.tabBar.isHidden = false
+        self.navigationItem.title = "Create a New Job"
+    }
+    
     private func setupUI() {
         self.view.addSubview(navbarBackgroundView)
         navbarBackgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -117,6 +129,9 @@ class CreateJobController: UIViewController {
         
         self.view.addSubview(mediaBackgroundView)
         mediaBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(mediaScrollView)
+        mediaScrollView.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(jobDateTimeView)
         jobDateTimeView.translatesAutoresizingMaskIntoConstraints = false
@@ -168,6 +183,12 @@ class CreateJobController: UIViewController {
             mediaBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             mediaBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
             mediaBackgroundView.heightAnchor.constraint(equalToConstant: 70),
+            
+            mediaScrollView.topAnchor.constraint(equalTo: descriptionFormView.bottomAnchor, constant: 35),
+            mediaScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            mediaScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+            mediaScrollView.heightAnchor.constraint(equalToConstant: 70),
+            
             
             jobDateTimeView.topAnchor.constraint(equalTo: mediaBackgroundView.bottomAnchor, constant: 15),
             jobDateTimeView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -285,5 +306,33 @@ extension CreateJobController: JobDateTimeViewDelegate {
         let addressPickerController = MapController()
         addressPickerController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(addressPickerController, animated: true)
+    }
+}
+
+// MARK: - Media View Functions and Delegate
+extension CreateJobController: MediaViewDelegate {
+    
+    public func addMedia(_ image: UIImage?) {
+        let newMediaView = MediaView(with: image, and: self.idCounter)
+        
+        newMediaView.delegate = self
+        self.mediaScrollView.stackView.insertArrangedSubview(newMediaView, at: 0)
+        self.idCounter += 1
+        
+        NSLayoutConstraint.activate([
+            newMediaView.topAnchor.constraint(equalTo: self.mediaScrollView.stackView.topAnchor),
+            newMediaView.widthAnchor.constraint(equalToConstant: 70),
+            newMediaView.heightAnchor.constraint(equalToConstant: 70),
+        ])
+        
+        self.mediaData.append(newMediaView)
+    }
+    
+    func didTapX(at id: Int) {
+        for media in self.mediaData {
+            if media.id == id {
+                media.removeFromSuperview()
+            }
+        }
     }
 }

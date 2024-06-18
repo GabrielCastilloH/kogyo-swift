@@ -26,7 +26,8 @@
 		D0E923F12C0E98670070977A /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F02C0E98670070977A /* SettingsController.swift */; };
 		D0E923F32C0E98C90070977A /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F22C0E98C90070977A /* TabController.swift */; };
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
-		FF28AF562C21258C00F58D0F /* EmptyMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF552C21258C00F58D0F /* EmptyMediaView.swift */; };
+		FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */; };
+		FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5C2C212BBC00F58D0F /* MediaView.swift */; };
 		FF45E4B32C161047000F1BE7 /* JobDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */; };
 		FF45E4B52C1613BA000F1BE7 /* JobPhotosVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */; };
 		FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */; };
@@ -93,7 +94,8 @@
 		D0E923F02C0E98670070977A /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		D0E923F22C0E98C90070977A /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
-		FF28AF552C21258C00F58D0F /* EmptyMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMediaView.swift; sourceTree = "<group>"; };
+		FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaScrollView.swift; sourceTree = "<group>"; };
+		FF28AF5C2C212BBC00F58D0F /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDescriptionView.swift; sourceTree = "<group>"; };
 		FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPhotosVideosView.swift; sourceTree = "<group>"; };
 		FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHelperInfoView.swift; sourceTree = "<group>"; };
@@ -247,7 +249,8 @@
 		FF28AF572C21258D00F58D0F /* AddMediaView */ = {
 			isa = PBXGroup;
 			children = (
-				FF28AF552C21258C00F58D0F /* EmptyMediaView.swift */,
+				FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */,
+				FF28AF5C2C212BBC00F58D0F /* MediaView.swift */,
 			);
 			path = AddMediaView;
 			sourceTree = "<group>";
@@ -470,7 +473,6 @@
 				FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */,
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
 				FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */,
-				FF28AF562C21258C00F58D0F /* EmptyMediaView.swift in Sources */,
 				FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,
@@ -485,6 +487,7 @@
 				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
 				D0E923F12C0E98670070977A /* SettingsController.swift in Sources */,
 				FFD8A9A02C157A6E009F5C8C /* CurrentJobsCell.swift in Sources */,
+				FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,
@@ -517,6 +520,7 @@
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
 				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
 				FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */,
+				FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */,
 				FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

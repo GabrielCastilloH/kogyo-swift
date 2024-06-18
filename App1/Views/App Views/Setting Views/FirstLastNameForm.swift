@@ -125,10 +125,10 @@ class FirstLastNameForm: UIView {
 
     // MARK: - Selectors
     @objc func pickerToolbarDonePressed() {
-        firstNameTextField.resignFirstResponder()
-        firstNameTextField.delegate?.textFieldShouldReturn?(firstNameTextField)
+        _ = firstNameTextField.resignFirstResponder()
+        _ = firstNameTextField.delegate?.textFieldShouldReturn?(firstNameTextField) // the first part might cause a bug.
         
-        lastNameTextField.resignFirstResponder()
-        lastNameTextField.delegate?.textFieldShouldReturn?(lastNameTextField)
+        _ = lastNameTextField.resignFirstResponder()
+        _ = lastNameTextField.delegate?.textFieldShouldReturn?(lastNameTextField)
     }
 }
