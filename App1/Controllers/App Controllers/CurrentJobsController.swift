@@ -138,7 +138,10 @@ extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let jobInfoController = JobInfoController(for: self.currentJobs[indexPath.row])
+        let job = self.currentJobs[indexPath.row]
+        guard let jobId = job.jobUID else { return }
+        
+        let jobInfoController = JobInfoController(for: job, jobUID: jobId)
         
         jobInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(jobInfoController, animated: true)

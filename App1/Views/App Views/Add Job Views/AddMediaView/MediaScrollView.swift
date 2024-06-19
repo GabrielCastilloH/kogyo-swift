@@ -2,20 +2,15 @@
 //  MediaScrollView.swift
 //  App1
 //
-//  Created by Gabriel Castillo on 6/4/24.
+//  Created by Gabriel Castillo on 6/18/24.
 //
 
 import UIKit
-
-protocol MediaScrollViewDelegate {
-    func clickedImage(ID: String)
-}
 
 class MediaScrollView: UIView {
     
     // MARK: - Variables
     let mediaArray: [MediaView]
-    var delegate: MediaScrollViewDelegate?
     
     // MARK: - UI Components
     lazy var scrollView: UIScrollView = {

@@ -85,7 +85,9 @@ class CurrentJobsCell: UITableViewCell {
         self.jobDescriptionLabel.text = job.description
         
         // Fetching heler data
-        FirestoreHandler.shared.fetchHelper(for: job.helper!) { result in // TODO: make sure it only fetches jobs with helpers!
+        guard let helper = job.helper else { return }
+        
+        FirestoreHandler.shared.fetchHelper(for: helper) { result in // TODO: make sure it only fetches jobs with helpers!
             switch result {
             case .success(let (helper, image)):
                 self.profileImageView.image = image

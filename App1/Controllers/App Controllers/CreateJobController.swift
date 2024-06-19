@@ -56,6 +56,7 @@ class CreateJobController: UIViewController {
         return button
     }()
     
+    // Media view:
     private let mediaBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants().darkWhiteColor
@@ -241,6 +242,7 @@ class CreateJobController: UIViewController {
     
     @objc func didTapSubmitJob() {
         let newJob = Job(
+            jobUID: nil,
             dateAdded: Date(),
             kind: self.jobKindView.pickerTextField.text ?? "",
             description: self.descriptionFormView.descriptionTextView.text ?? "",
@@ -270,11 +272,11 @@ class CreateJobController: UIViewController {
                             if let videoURL = media.videoURL {
                                 // Upload video to database.
                                 let videoToUploadURL = videoURL
-                                self.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL)
+                                FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL)
                             } else {
                                 // Upload image to database.
                                 let imageToUpload = media.mediaImageView.image
-                                self.uploadImageToFirebase(parentFolder: "jobs", containerId: jobId, image: imageToUpload!)
+                                FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: jobId, image: imageToUpload!)
                             }
                         }
                     }
@@ -288,47 +290,6 @@ class CreateJobController: UIViewController {
             self.submitJobBtn.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
         }
     }
-    
-    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage) {
-        guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpg")
-        
-        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-          if let error = error {
-            print("Error uploading image: \(error.localizedDescription)")
-            return
-          }
-          
-          storageRef.downloadURL { (url, error) in
-            if let error = error {
-              print("Error getting download URL: \(error.localizedDescription)")
-              return
-            }
-            guard let downloadURL = url else { return }
-            print("Download URL: \(downloadURL.absoluteString)")
-          }
-        }
-      }
-    
-    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL) {
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).mov")
-        
-        storageRef.putFile(from: videoURL, metadata: nil) { (metadata, error) in
-          if let error = error {
-            print("Error uploading video: \(error.localizedDescription)")
-            return
-          }
-          
-          storageRef.downloadURL { (url, error) in
-            if let error = error {
-              print("Error getting download URL: \(error.localizedDescription)")
-              return
-            }
-            guard let downloadURL = url else { return }
-//            print("Download URL: \(downloadURL.absoluteString)")
-          }
-        }
-      }
 }
 
 extension CreateJobController: JobPaymentViewDelegate {
@@ -437,7 +398,7 @@ extension CreateJobController: UIImagePickerControllerDelegate & UINavigationCon
         
         guard let videoURL = info[.mediaURL] as? URL else { return }
         
-        guard let videoData = try? Data(contentsOf: videoURL, options: NSData.ReadingOptions.mappedIfSafe) else { return }
+//        guard let videoData = try? Data(contentsOf: videoURL, options: NSData.ReadingOptions.mappedIfSafe) else { return }
     
         AVAsset(url: videoURL).generateThumbnail { thumbnail in
             DispatchQueue.main.async {

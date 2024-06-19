@@ -13,7 +13,7 @@ class JobHelperInfoView: UIView {
     
     // MARK: - Variables
     let cf = CustomFunctions()
-    let helperUID: String
+    let helperUID: String?
     let storageRef = Storage.storage().reference()
     
     // MARK: - UI Components
@@ -61,11 +61,16 @@ class JobHelperInfoView: UIView {
     // MARK: - Life Cycle
     
     init(for job: Job) {
-        self.helperUID = job.helper!
+        self.helperUID = job.helper
+        
+        guard let helper = self.helperUID else {
+            super.init(frame: .zero)
+            return
+        }
         super.init(frame: .zero)
         
         // Fetching heler data
-        FirestoreHandler.shared.fetchHelper(for: helperUID) { result in
+        FirestoreHandler.shared.fetchHelper(for: helper) { result in
             switch result {
             case .success(let (helper, image)):
                 
@@ -125,3 +130,4 @@ class JobHelperInfoView: UIView {
     
     // MARK: - Functions
 }
+

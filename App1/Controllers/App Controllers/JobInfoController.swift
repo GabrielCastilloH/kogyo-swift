@@ -12,6 +12,7 @@ class JobInfoController: UIViewController {
     // MARK: - Variables
     var currentJob: Job
     var cf = CustomFunctions()
+    var mediaData: [PlayableMediaView]
     
     
     // MARK: - UI Components
@@ -28,8 +29,9 @@ class JobInfoController: UIViewController {
     
     
     // MARK: - Life Cycle
-    init(for job: Job) {
+    init(for job: Job, jobUID: String) {
         self.currentJob = job
+        self.mediaData = FirestoreHandler.shared.fetchJobMedia(jobId: jobUID)
         
         super.init(nibName: nil, bundle: nil)
         setupUI()
@@ -121,5 +123,47 @@ class JobInfoController: UIViewController {
     
     
     // MARK: - Selectors
+}
 
+// MARK: - Media View Functions and Delegate
+extension JobInfoController: PlayableMediaViewDelegate {
+    func didTapMedia() {
+        print("showing stuff")
+    }
+    
+//    
+//    public func addMedia(_ image: UIImage?, videoURL: URL? = nil) {
+//        var newMediaView = MediaView(with: image, and: self.idCounter)
+//        
+//        if videoURL != nil {
+//            newMediaView = MediaView(with: image, and: self.idCounter, videoURL: videoURL)
+//        }
+//        
+//        newMediaView.delegate = self
+//        self.mediaScrollView.stackView.insertArrangedSubview(newMediaView, at: 0)
+//        self.idCounter += 1
+//        
+//        NSLayoutConstraint.activate([
+//            newMediaView.topAnchor.constraint(equalTo: self.mediaScrollView.stackView.topAnchor),
+//            newMediaView.widthAnchor.constraint(equalToConstant: 70),
+//            newMediaView.heightAnchor.constraint(equalToConstant: 70),
+//        ])
+//        
+//        self.mediaData.append(newMediaView)
+//    }
+//    
+//    func didTapAddImage() {
+//        DispatchQueue.main.async { [ weak self ] in
+//            guard let self = self else { return }
+//            self.present(self.imagePickerController, animated: true, completion: nil)
+//        }
+//    }
+//    
+//    func didTapX(at id: Int) {
+//        for media in self.mediaData {
+//            if media.id == id {
+//                media.removeFromSuperview()
+//            }
+//        }
+//    }
 }

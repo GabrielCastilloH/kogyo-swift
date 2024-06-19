@@ -77,6 +77,7 @@ class FirestoreHandler {
                 for document in querySnapshot!.documents {
                     let data = document.data()
                     let job = Job(
+                        jobUID: document.documentID,
                         dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
                         kind: data["kind"] as? String ?? "",
                         description: data["description"] as? String ?? "",
@@ -145,5 +146,83 @@ class FirestoreHandler {
                 return
             }
         }
+    }
+    
+    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
+        
+        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
+          if let error = error {
+            print("Error uploading image: \(error.localizedDescription)")
+            return
+          }
+          
+          storageRef.downloadURL { (url, error) in
+            if let error = error {
+              print("Error getting download URL: \(error.localizedDescription)")
+              return
+            }
+            guard let downloadURL = url else { return }
+            print("Download URL: \(downloadURL.absoluteString)")
+          }
+        }
+      }
+    
+    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL) {
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).mov")
+        
+        storageRef.putFile(from: videoURL, metadata: nil) { (metadata, error) in
+          if let error = error {
+            print("Error uploading video: \(error.localizedDescription)")
+            return
+          }
+          
+          storageRef.downloadURL { (url, error) in
+            if let error = error {
+              print("Error getting download URL: \(error.localizedDescription)")
+              return
+            }
+          }
+        }
+      }
+    
+    func fetchJobMedia(jobId: String) -> [PlayableMediaView] {
+        let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
+        var mediaData: [PlayableMediaView] = []
+        
+        storageRef.listAll { (result, error) in
+            if let error = error {
+                print("Error listing files: \(error.localizedDescription)")
+                return
+            }
+            
+            for item in result!.items {
+                let fileName = item.name
+                let fileExtension = (fileName as NSString).pathExtension
+                
+                // Determine if the file is an image or a video
+                if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
+                    // Handle image
+                    item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+                        if let error = error {
+                            print("Error downloading image data: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        if let data = data, let image = UIImage(data: data) {
+                            let mediaView = PlayableMediaView(with: image, videoUID: nil)
+                            mediaData.append(mediaView)
+                        }
+                    }
+                } else if fileExtension == "mov" || fileExtension == "mp4" {
+                    // Handle video | CHANGE to a thumbnail
+                    let mediaView = PlayableMediaView(with: UIImage(named: "Cleaning"), videoUID: fileName)
+                    mediaData.append(mediaView)
+                }
+            }
+        }
+        
+        return mediaData
     }
 }
