@@ -6,16 +6,19 @@
 //
 
 import UIKit
+import FirebaseStorage
 
 class JobInfoController: UIViewController {
     
     // MARK: - Variables
     var currentJob: Job
     var cf = CustomFunctions()
-    var mediaData: [PlayableMediaView]
+    var mediaData: [PlayableMediaView] = []
     
     
     // MARK: - UI Components
+    var jobPhotosVideosView = JobPhotosVideosView()
+    
     private let dateAddedLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
@@ -31,10 +34,15 @@ class JobInfoController: UIViewController {
     // MARK: - Life Cycle
     init(for job: Job, jobUID: String) {
         self.currentJob = job
-        self.mediaData = FirestoreHandler.shared.fetchJobMedia(jobId: jobUID)
         
         super.init(nibName: nil, bundle: nil)
         setupUI()
+        
+        FirestoreHandler.shared.fetchJobMedia(jobId: jobUID) { mediaData in
+            // Use the mediaData array here
+            self.mediaData = mediaData
+            self.configureMediaViews()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -72,7 +80,7 @@ class JobInfoController: UIViewController {
         
         let jobQuickInfoView = JobQuickInfoView(for: self.currentJob)
         let jobDescriptionView = JobDescriptionView(for: self.currentJob)
-        let jobPhotosVideosView = JobPhotosVideosView(for: self.currentJob)
+        
         let jobHelperInfoView = JobHelperInfoView(for: self.currentJob)
         
         self.view.addSubview(jobQuickInfoView)
@@ -110,7 +118,7 @@ class JobInfoController: UIViewController {
             jobDescriptionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
             jobPhotosVideosView.topAnchor.constraint(equalTo: jobDescriptionView.bottomAnchor),
-            jobPhotosVideosView.heightAnchor.constraint(equalToConstant: 125),
+            jobPhotosVideosView.heightAnchor.constraint(equalToConstant: 200),
             jobPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
@@ -122,48 +130,15 @@ class JobInfoController: UIViewController {
     }
     
     
-    // MARK: - Selectors
-}
-
-// MARK: - Media View Functions and Delegate
-extension JobInfoController: PlayableMediaViewDelegate {
-    func didTapMedia() {
-        print("showing stuff")
+    // MARK: - Selectors & Functions
+    // Its better to put the configure function here to keep everything in the view.
+    func configureMediaViews() {
+        for media in self.mediaData {
+            self.jobPhotosVideosView.stackView.addArrangedSubview(media)
+            
+            NSLayoutConstraint.activate([
+                media.widthAnchor.constraint(equalToConstant: 100),
+            ])
+        }
     }
-    
-//    
-//    public func addMedia(_ image: UIImage?, videoURL: URL? = nil) {
-//        var newMediaView = MediaView(with: image, and: self.idCounter)
-//        
-//        if videoURL != nil {
-//            newMediaView = MediaView(with: image, and: self.idCounter, videoURL: videoURL)
-//        }
-//        
-//        newMediaView.delegate = self
-//        self.mediaScrollView.stackView.insertArrangedSubview(newMediaView, at: 0)
-//        self.idCounter += 1
-//        
-//        NSLayoutConstraint.activate([
-//            newMediaView.topAnchor.constraint(equalTo: self.mediaScrollView.stackView.topAnchor),
-//            newMediaView.widthAnchor.constraint(equalToConstant: 70),
-//            newMediaView.heightAnchor.constraint(equalToConstant: 70),
-//        ])
-//        
-//        self.mediaData.append(newMediaView)
-//    }
-//    
-//    func didTapAddImage() {
-//        DispatchQueue.main.async { [ weak self ] in
-//            guard let self = self else { return }
-//            self.present(self.imagePickerController, animated: true, completion: nil)
-//        }
-//    }
-//    
-//    func didTapX(at id: Int) {
-//        for media in self.mediaData {
-//            if media.id == id {
-//                media.removeFromSuperview()
-//            }
-//        }
-//    }
 }

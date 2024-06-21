@@ -42,7 +42,7 @@ class PlayableMediaView: UIView {
         let iv = UIImageView()
         iv.tintColor = .white.withAlphaComponent(0.9)
         iv.image = UIImage(systemName: "play.fill")
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
         iv.backgroundColor = .clear
         return iv
     }()

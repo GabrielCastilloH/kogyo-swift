@@ -10,19 +10,39 @@ import UIKit
 class JobPhotosVideosView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
-    
+//    var mediaData: [PlayableMediaView]
     
     // MARK: - UI Components
-    
-    private let photoVideoView: UIView = {
+    private let mediaBackgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.00)
+        view.backgroundColor = Constants().darkWhiteColor
+        view.layer.cornerRadius = 10
         return view
+    }()
+    
+    private let navbarBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    // Scroll View:
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
+    lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 0
+        return stackView
     }()
     
     
     // MARK: - Life Cycle
-    init(for job: Job) {
+    init() {
         super.init(frame: .zero)
         self.setupUI()
     }
@@ -31,7 +51,6 @@ class JobPhotosVideosView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - UI Setup
     private func setupUI() {
         let photoVideoTitle = cf.createFormLabel(for: "Photos & Videos")
@@ -39,21 +58,35 @@ class JobPhotosVideosView: UIView {
         self.addSubview(photoVideoTitle)
         photoVideoTitle.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(photoVideoView)
-        photoVideoView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(mediaBackgroundView)
+        mediaBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        scrollView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             photoVideoTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
             photoVideoTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
+
+            mediaBackgroundView.topAnchor.constraint(equalTo: photoVideoTitle.bottomAnchor, constant: 5),
+            mediaBackgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
+            mediaBackgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            mediaBackgroundView.heightAnchor.constraint(equalToConstant: 100),
             
-            photoVideoView.topAnchor.constraint(equalTo: photoVideoTitle.bottomAnchor, constant: 5),
-            photoVideoView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            photoVideoView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            photoVideoView.heightAnchor.constraint(equalToConstant: 100),
+            scrollView.topAnchor.constraint(equalTo: mediaBackgroundView.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: mediaBackgroundView.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: mediaBackgroundView.leadingAnchor, constant: 5),
+            scrollView.trailingAnchor.constraint(equalTo: mediaBackgroundView.trailingAnchor, constant: -5),
             
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
         ])
     }
 
-    // MARK: - Selectors
-
+    // MARK: - Selectors & Functions
 }

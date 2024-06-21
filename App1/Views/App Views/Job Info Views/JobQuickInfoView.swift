@@ -174,5 +174,4 @@ class JobQuickInfoView: UIView {
     @objc func didTapLocationButton() {
         print("this should just show an address")
     }
-
 }

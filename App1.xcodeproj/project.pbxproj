@@ -12,7 +12,6 @@
 		D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */; };
 		D0C5CED42C12EEBA002582D4 /* JobKindFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C5CED32C12EEBA002582D4 /* JobKindFormView.swift */; };
 		D0C5CED62C12F3AF002582D4 /* DescriptionFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */; };
-		D0C5CED82C130C8C002582D4 /* MediaFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C5CED72C130C8C002582D4 /* MediaFormView.swift */; };
 		D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */; };
 		D0D3A9982C117C29000DFFB8 /* SearchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */; };
 		D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9992C11A868000DFFB8 /* Extensions.swift */; };
@@ -28,7 +27,6 @@
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
 		FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */; };
 		FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5C2C212BBC00F58D0F /* MediaView.swift */; };
-		FF3E57BB2C2273BD0040F617 /* JobInfoScreenMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E57BA2C2273BD0040F617 /* JobInfoScreenMediaView.swift */; };
 		FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */; };
 		FF45E4B32C161047000F1BE7 /* JobDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */; };
 		FF45E4B52C1613BA000F1BE7 /* JobPhotosVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */; };
@@ -80,7 +78,6 @@
 		D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobButtonView.swift; sourceTree = "<group>"; };
 		D0C5CED32C12EEBA002582D4 /* JobKindFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobKindFormView.swift; sourceTree = "<group>"; };
 		D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionFormView.swift; sourceTree = "<group>"; };
-		D0C5CED72C130C8C002582D4 /* MediaFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFormView.swift; sourceTree = "<group>"; };
 		D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableCell.swift; sourceTree = "<group>"; };
 		D0D3A9992C11A868000DFFB8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -98,7 +95,6 @@
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
 		FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaScrollView.swift; sourceTree = "<group>"; };
 		FF28AF5C2C212BBC00F58D0F /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
-		FF3E57BA2C2273BD0040F617 /* JobInfoScreenMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobInfoScreenMediaView.swift; sourceTree = "<group>"; };
 		FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayableMediaView.swift; sourceTree = "<group>"; };
 		FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDescriptionView.swift; sourceTree = "<group>"; };
 		FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPhotosVideosView.swift; sourceTree = "<group>"; };
@@ -201,7 +197,6 @@
 				FF28AF572C21258D00F58D0F /* AddMediaView */,
 				D0C5CED32C12EEBA002582D4 /* JobKindFormView.swift */,
 				D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */,
-				D0C5CED72C130C8C002582D4 /* MediaFormView.swift */,
 				FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */,
 				FF6527822C1424460077E630 /* JobHoursView.swift */,
 				FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */,
@@ -294,7 +289,6 @@
 				FF45E4B22C161047000F1BE7 /* JobDescriptionView.swift */,
 				FF45E4B42C1613BA000F1BE7 /* JobPhotosVideosView.swift */,
 				FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */,
-				FF3E57BA2C2273BD0040F617 /* JobInfoScreenMediaView.swift */,
 				FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */,
 			);
 			path = "Job Info Views";
@@ -479,7 +473,6 @@
 				FF879A472C1B2C2E00922513 /* SettingsTableCell.swift in Sources */,
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
 				FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */,
-				FF3E57BB2C2273BD0040F617 /* JobInfoScreenMediaView.swift in Sources */,
 				FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */,
 				FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
@@ -516,7 +509,6 @@
 				FFD8A9A52C15B9EB009F5C8C /* JobQuickInfoView.swift in Sources */,
 				D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */,
 				FFF372E92C16C8B800F8D362 /* ForgotPasswordController.swift in Sources */,
-				D0C5CED82C130C8C002582D4 /* MediaFormView.swift in Sources */,
 				FFF372E52C16C84800F8D362 /* AlertManager.swift in Sources */,
 				FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */,
 				D0D3A99F2C11B975000DFFB8 /* CreateJobController.swift in Sources */,

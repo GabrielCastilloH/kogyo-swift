@@ -11,6 +11,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 class FirestoreHandler {
+    
     // Used to register, sign in, sign out, and check authentication for the user.
     public static let shared = FirestoreHandler()
     private let db = Firestore.firestore()
@@ -171,10 +172,27 @@ class FirestoreHandler {
     
     func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL) {
         let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).mov")
+        print("video url:", videoURL)
         
         storageRef.putFile(from: videoURL, metadata: nil) { (metadata, error) in
-          if let error = error {
-            print("Error uploading video: \(error.localizedDescription)")
+            if let error = error {
+                print("Error uploading video: \(error.localizedDescription)")
+                // Print additional details if available
+                if let storageError = error as NSError? {
+                    let errorCode = StorageErrorCode(rawValue: storageError.code)
+                    switch errorCode {
+                    case .objectNotFound:
+                        print("File doesn't exist.")
+                    case .unauthorized:
+                        print("User doesn't have permission to access file.")
+                    case .cancelled:
+                        print("User canceled the upload.")
+                    case .unknown:
+                        print("Unknown error occurred, inspect the server response.")
+                    default:
+                        print("An error occurred: \(storageError.localizedDescription)")
+                    }
+                }
             return
           }
           
@@ -187,13 +205,15 @@ class FirestoreHandler {
         }
       }
     
-    func fetchJobMedia(jobId: String) -> [PlayableMediaView] {
+    func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
         let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
         var mediaData: [PlayableMediaView] = []
+        let dispatchGroup = DispatchGroup()
         
         storageRef.listAll { (result, error) in
             if let error = error {
                 print("Error listing files: \(error.localizedDescription)")
+                completion(mediaData) // Complete with empty mediaData on error
                 return
             }
             
@@ -201,12 +221,15 @@ class FirestoreHandler {
                 let fileName = item.name
                 let fileExtension = (fileName as NSString).pathExtension
                 
+                dispatchGroup.enter() // Enter the dispatch group
+                
                 // Determine if the file is an image or a video
                 if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
                     // Handle image
                     item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
                         if let error = error {
                             print("Error downloading image data: \(error.localizedDescription)")
+                            dispatchGroup.leave() // Leave the dispatch group in case of error
                             return
                         }
                         
@@ -214,15 +237,26 @@ class FirestoreHandler {
                             let mediaView = PlayableMediaView(with: image, videoUID: nil)
                             mediaData.append(mediaView)
                         }
+                        dispatchGroup.leave() // Leave the dispatch group after processing
                     }
+                    
                 } else if fileExtension == "mov" || fileExtension == "mp4" {
+                    print("video file")
                     // Handle video | CHANGE to a thumbnail
                     let mediaView = PlayableMediaView(with: UIImage(named: "Cleaning"), videoUID: fileName)
                     mediaData.append(mediaView)
+                    
+                    dispatchGroup.leave() // Leave the dispatch group after processing
+                } else {
+                    dispatchGroup.leave() // Leave the dispatch group if file type is neither image nor video
                 }
             }
+            
+            // Notify when all async operations are completed
+            dispatchGroup.notify(queue: .main) {
+//                print("All operations are completed")
+                completion(mediaData) // Complete with the mediaData array
+            }
         }
-        
-        return mediaData
     }
 }
