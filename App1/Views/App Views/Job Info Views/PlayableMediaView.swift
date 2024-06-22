@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PlayableMediaViewDelegate {
-    func didTapMedia()
+    func didTapMedia(thumbnail: UIImage?, videoUID: String?)
 }
 
 class PlayableMediaView: UIView {
@@ -81,6 +81,10 @@ class PlayableMediaView: UIView {
         self.addSubview(touchButton)
         touchButton.translatesAutoresizingMaskIntoConstraints = false
         
+        // Image Viewer
+        
+        
+        
         NSLayoutConstraint.activate([
             mediaImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
             mediaImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
@@ -101,7 +105,6 @@ class PlayableMediaView: UIView {
     
     // MARK: - Selectors
     @objc func mediaViewTapped() {
-        self.delegate?.didTapMedia()
-        print("zoom in on the image, or play the video here.")
+        self.delegate?.didTapMedia(thumbnail: self.thumbnail, videoUID: self.videoUID)
     }
 }
