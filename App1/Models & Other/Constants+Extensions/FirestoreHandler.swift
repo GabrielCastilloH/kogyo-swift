@@ -174,27 +174,16 @@ class FirestoreHandler {
         let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).mov")
         print("video url:", videoURL)
         
-        storageRef.putFile(from: videoURL, metadata: nil) { (metadata, error) in
-            if let error = error {
-                print("Error uploading video: \(error.localizedDescription)")
-                // Print additional details if available
-                if let storageError = error as NSError? {
-                    let errorCode = StorageErrorCode(rawValue: storageError.code)
-                    switch errorCode {
-                    case .objectNotFound:
-                        print("File doesn't exist.")
-                    case .unauthorized:
-                        print("User doesn't have permission to access file.")
-                    case .cancelled:
-                        print("User canceled the upload.")
-                    case .unknown:
-                        print("Unknown error occurred, inspect the server response.")
-                    default:
-                        print("An error occurred: \(storageError.localizedDescription)")
-                    }
-                }
+        guard let videoData = try? Data(contentsOf: videoURL) else {
+            print("Error fetching data from video URL.")
             return
-          }
+        }
+        
+        storageRef.putData(videoData) { metadata, error in
+            guard let _ = metadata, error == nil else {
+                print("Error uploading data to firebase storage.")
+                return
+        }
           
           storageRef.downloadURL { (url, error) in
             if let error = error {
