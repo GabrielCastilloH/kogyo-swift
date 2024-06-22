@@ -272,7 +272,7 @@ class CreateJobController: UIViewController {
                             if let videoURL = media.videoURL {
                                 // Upload video to database.
                                 let videoToUploadURL = videoURL
-                                FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL)
+                                FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
                             } else {
                                 // Upload image to database.
                                 let imageToUpload = media.mediaImageView.image

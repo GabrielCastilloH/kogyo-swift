@@ -41,6 +41,7 @@ class JobInfoController: UIViewController {
         FirestoreHandler.shared.fetchJobMedia(jobId: jobUID) { mediaData in
             // Use the mediaData array here
             self.mediaData = mediaData
+            print(mediaData)
             self.configureMediaViews()
         }
     }

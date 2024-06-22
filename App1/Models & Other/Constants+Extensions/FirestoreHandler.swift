@@ -149,30 +149,37 @@ class FirestoreHandler {
         }
     }
     
-    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage) {
+    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage, imageUID: String?=nil) {
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
+        var storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
+        
+        if let imageUID = imageUID {
+            storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(imageUID).jpeg")
+        }
         
         storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-          if let error = error {
-            print("Error uploading image: \(error.localizedDescription)")
-            return
-          }
-          
-          storageRef.downloadURL { (url, error) in
             if let error = error {
-              print("Error getting download URL: \(error.localizedDescription)")
-              return
+                print("Error uploading image: \(error.localizedDescription)")
+                return
             }
-            guard let downloadURL = url else { return }
-            print("Download URL: \(downloadURL.absoluteString)")
-          }
+            
+            storageRef.downloadURL { (url, error) in
+                if let error = error {
+                    print("Error getting download URL: \(error.localizedDescription)")
+                    return
+                }
+                guard let downloadURL = url else { return }
+                print("Download URL: \(downloadURL.absoluteString)")
+            }
         }
-      }
+    }
     
-    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL) {
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).mov")
-        print("video url:", videoURL)
+    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL, thumbnail: UIImage?) {
+        let uniqueUID = UUID().uuidString
+        
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(uniqueUID).mov")
+        
+        self.uploadImageToFirebase(parentFolder: "jobs", containerId: "\(containerId)", image: thumbnail ?? UIImage(named: "Cleaning")!, imageUID: uniqueUID)
         
         guard let videoData = try? Data(contentsOf: videoURL) else {
             print("Error fetching data from video URL.")
@@ -183,16 +190,95 @@ class FirestoreHandler {
             guard let _ = metadata, error == nil else {
                 print("Error uploading data to firebase storage.")
                 return
-        }
-          
-          storageRef.downloadURL { (url, error) in
-            if let error = error {
-              print("Error getting download URL: \(error.localizedDescription)")
-              return
             }
-          }
+            
+            storageRef.downloadURL { (url, error) in
+                if let error = error {
+                    print("Error getting download URL: \(error.localizedDescription)")
+                    return
+                }
+            }
         }
-      }
+    }
+    
+    // TODO: Fix this.
+    func fetchImageData(from item: StorageReference, completion: @escaping (UIImage?) -> Void) {
+        item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+            if let error = error {
+                print("Error downloading image data: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }
+    }
+    
+//    func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
+//        let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
+//        var mediaData: [PlayableMediaView] = []
+//        let dispatchGroup = DispatchGroup()
+//        
+//        storageRef.listAll { (result, error) in
+//            if let error = error {
+//                print("Error listing files: \(error.localizedDescription)")
+//                completion(mediaData) // Complete with empty mediaData on error
+//                return
+//            }
+//            
+//            var fileNames: [String] = []
+//            var videoNames: [String] = []
+//            
+//            for item in result!.items {
+//                let name = item.name
+//                let fileName = (name as NSString).deletingPathExtension
+//                
+//                if fileNames.contains(fileName) {
+//                    videoNames.append(fileName)
+//                } else {
+//                    fileNames.append(fileName)
+//                }
+//            }
+//            
+//            for item in result!.items {
+//                let fileName = item.name
+//                let fileExtension = (fileName as NSString).pathExtension
+//                
+//                dispatchGroup.enter() // Enter the dispatch group
+//                
+//                // Determine if the file is an image or a video
+//                if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
+//                    if videoNames.contains(fileName) {
+//                        self.fetchImageData(from: item) { image in
+//                            if let image = image {
+//                                let mediaView = PlayableMediaView(with: image, videoUID: fileName)
+//                                mediaData.append(mediaView)
+//                            }
+//                            dispatchGroup.leave() // Leave the dispatch group after processing
+//                        }
+//                    } else {
+//                        self.fetchImageData(from: item) { image in
+//                            if let image = image {
+//                                let mediaView = PlayableMediaView(with: image, videoUID: nil)
+//                                mediaData.append(mediaView)
+//                            }
+//                            dispatchGroup.leave() // Leave the dispatch group after processing
+//                        }
+//                    }
+//                    // Notify when all async operations are completed
+//                    dispatchGroup.notify(queue: .main) {
+//                        print("all operations were completed")
+//                        completion(mediaData) // Complete with the mediaData array
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
     
     func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
         let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
@@ -206,14 +292,32 @@ class FirestoreHandler {
                 return
             }
             
+            
+            var fileNames: [String] = []
+            var videoNames: [String] = []
+            
+            for item in result!.items {
+                let name = item.name
+                let fileName = (name as NSString).deletingPathExtension
+                
+                if fileNames.contains(fileName) {
+                    videoNames.append(fileName)
+                } else {
+                    fileNames.append(fileName)
+                }
+            }
+            
             for item in result!.items {
                 let fileName = item.name
+                let baseName = (fileName as NSString).deletingPathExtension
+                
                 let fileExtension = (fileName as NSString).pathExtension
                 
                 dispatchGroup.enter() // Enter the dispatch group
                 
                 // Determine if the file is an image or a video
                 if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
+                    
                     // Handle image
                     item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
                         if let error = error {
@@ -223,19 +327,17 @@ class FirestoreHandler {
                         }
                         
                         if let data = data, let image = UIImage(data: data) {
-                            let mediaView = PlayableMediaView(with: image, videoUID: nil)
+                            
+                            var mediaView = PlayableMediaView(with: image, videoUID: nil)
+                            
+                            if videoNames.contains(baseName) {
+                                mediaView = PlayableMediaView(with: image, videoUID: item.name)
+                            }
+                            
                             mediaData.append(mediaView)
                         }
                         dispatchGroup.leave() // Leave the dispatch group after processing
                     }
-                    
-                } else if fileExtension == "mov" || fileExtension == "mp4" {
-                    print("video file")
-                    // Handle video | CHANGE to a thumbnail
-                    let mediaView = PlayableMediaView(with: UIImage(named: "Cleaning"), videoUID: fileName)
-                    mediaData.append(mediaView)
-                    
-                    dispatchGroup.leave() // Leave the dispatch group after processing
                 } else {
                     dispatchGroup.leave() // Leave the dispatch group if file type is neither image nor video
                 }
@@ -243,9 +345,36 @@ class FirestoreHandler {
             
             // Notify when all async operations are completed
             dispatchGroup.notify(queue: .main) {
-//                print("All operations are completed")
+                print("All operations are completed")
                 completion(mediaData) // Complete with the mediaData array
             }
         }
     }
 }
+
+//
+//
+//
+//
+//// Handle image
+//item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
+//    if let error = error {
+//        print("Error downloading image data: \(error.localizedDescription)")
+//        dispatchGroup.leave() // Leave the dispatch group in case of error
+//        return
+//    }
+//    
+//    if let data = data, let image = UIImage(data: data) {
+//        let mediaView = PlayableMediaView(with: image, videoUID: nil)
+//        mediaData.append(mediaView)
+//    }
+//    dispatchGroup.leave() // Leave the dispatch group after processing
+//}
+//
+//} else if fileExtension == "mov" || fileExtension == "mp4" {
+//print("video file")
+//// Handle video | CHANGE to a thumbnail
+//let mediaView = PlayableMediaView(with: UIImage(named: "Cleaning"), videoUID: fileName)
+//mediaData.append(mediaView)
+//
+//dispatchGroup.leave() // Leave the dispatch group after processing
