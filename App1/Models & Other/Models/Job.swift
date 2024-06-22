@@ -7,7 +7,6 @@
 
 import UIKit
 
-// Later you will have to work either with CoreData or Firebase (probably firebase) to save this data.
 struct Job {
     let jobUID: String?
     let dateAdded: Date

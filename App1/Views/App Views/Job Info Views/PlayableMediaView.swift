@@ -81,10 +81,6 @@ class PlayableMediaView: UIView {
         self.addSubview(touchButton)
         touchButton.translatesAutoresizingMaskIntoConstraints = false
         
-        // Image Viewer
-        
-        
-        
         NSLayoutConstraint.activate([
             mediaImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
             mediaImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
