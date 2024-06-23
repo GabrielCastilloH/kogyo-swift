@@ -8,7 +8,9 @@
 import UIKit
 
 public struct Helper {
+    let helperUID: String
     let firstName: String
     let lastName: String
     let description: String
+    let profileImage: UIImage
 }

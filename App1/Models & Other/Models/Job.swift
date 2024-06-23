@@ -8,7 +8,7 @@
 import UIKit
 
 struct Job {
-    let jobUID: String?
+    let jobUID: String
     let dateAdded: Date
     let kind: String
     let description: String
@@ -16,5 +16,6 @@ struct Job {
     let expectedHours: Int
     let location: String // change later
     let payment: Int
-    let helper: String?
+    let helperUID: String?
+    let media: [PlayableMediaView] // [(UIImage?, String?)]
 }

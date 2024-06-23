@@ -39,12 +39,16 @@ class JobInfoController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         setupUI()
         
-        FirestoreHandler.shared.fetchJobMedia(jobId: jobUID) { mediaData in
-            // Use the mediaData array here
-            self.mediaData = mediaData
-            print(mediaData)
-            self.configureMediaViews()
-        }
+        // Get media data from DataManager
+        self.mediaData = DataManager.shared.currentJobs[job.jobUID]?.media ?? []
+        
+        // fix this:
+//        FirestoreHandler.shared.fetchJobMedia(jobId: jobUID) { mediaData in
+//            // Use the mediaData array here
+//            self.mediaData = mediaData
+//            print(mediaData)
+//            self.configureMediaViews()
+//        }
     }
     
     required init?(coder: NSCoder) {
@@ -148,6 +152,7 @@ class JobInfoController: UIViewController {
 
 extension JobInfoController: PlayableMediaViewDelegate {
     func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
+        // Play video or zoom in on photo if it is tapped by the user. 
         if videoUID == nil {
             let viewController = MediaPlayerController(thumbnail: thumbnail)
             viewController.modalPresentationStyle = .fullScreen

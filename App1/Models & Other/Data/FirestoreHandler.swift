@@ -18,18 +18,8 @@ class FirestoreHandler {
     
     private init() {}
     
-    public func addJob(with job: Job, for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func addJob(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let jobsRef = db.collection("users").document(userId).collection("jobs")
-        
-        let jobData: [String: Any] = [
-            "dateAdded": job.dateAdded,
-            "kind": job.kind,
-            "description": job.description,
-            "dateTime": job.dateTime,
-            "expectedHours": job.expectedHours,
-            "location": job.location,
-            "payment": job.payment,
-        ]
         
         var ref: DocumentReference? = nil
         ref = jobsRef.addDocument(data: jobData) { error in
@@ -62,6 +52,7 @@ class FirestoreHandler {
     }
     
     func fetchJobs(for userId: String, completion: @escaping (Result<[Job], Error>) -> Void) {
+        // TODO: Create documentation for this function.
         guard let userUID = Auth.auth().currentUser?.uid else {
             // Handle the case where the user is not authenticated
             print("User not authenticated")
@@ -77,6 +68,14 @@ class FirestoreHandler {
                 var jobs: [Job] = []
                 for document in querySnapshot!.documents {
                     let data = document.data()
+                    // Add media:
+                    var mediaData: [PlayableMediaView] = []
+                    
+                    self.fetchJobMedia(jobId: document.documentID) { media in
+                        mediaData = media
+                    }
+                    
+                    // This job object is completely different from the one on firebase, it has more info.
                     let job = Job(
                         jobUID: document.documentID,
                         dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
@@ -86,8 +85,10 @@ class FirestoreHandler {
                         expectedHours: data["expectedHours"] as? Int ?? 0,
                         location: data["location"] as? String ?? "",
                         payment: data["payment"] as? Int ?? 0,
-                        helper: data["helper"] as? String
+                        helperUID: data["helper"] as? String,
+                        media: mediaData
                     )
+                    
                     jobs.append(job)
                 }
                 completion(.success(jobs))
@@ -95,7 +96,8 @@ class FirestoreHandler {
         }
     }
     
-    func fetchHelper(for helperUID: String, completion: @escaping (Result<(Helper, UIImage?), Error>) -> Void) {
+    func fetchHelper(for helperUID: String, completion: @escaping (Result<Helper, Error>) -> Void) {
+        // TODO: Make this function easier to read. Explain it.
         let storageRef = Storage.storage().reference()
         
         // Fetch helper information from Firestore
@@ -112,24 +114,29 @@ class FirestoreHandler {
                 return
             }
             
-            let helper = Helper(
-                firstName: data["firstName"] as? String ?? "",
-                lastName: data["lastName"] as? String ?? "",
-                description: data["helperDescription"] as? String ?? ""
-            )
-            
+            // FIX: This is questionmark, profile image not loaded for some reason.
+            var profileImage = UIImage(systemName: "questionmark")
             // Fetch profile image from Firebase Storage
             let profileRef = storageRef.child("profile/\(helperUID).jpeg")
             profileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
                 if let error = error {
                     // If there's an error fetching the image, return the helper info without image
-                    completion(.success((helper, nil)))
                     print("Error fetching image: \(error.localizedDescription)")
+                    completion(.failure(error))
                 } else {
-                    let image = UIImage(data: data!)
-                    completion(.success((helper, image)))
+                    profileImage = UIImage(data: data!)
                 }
             }
+            
+            let helper = Helper(
+                helperUID: helperUID,
+                firstName: data["firstName"] as? String ?? "",
+                lastName: data["lastName"] as? String ?? "",
+                description: data["helperDescription"] as? String ?? "", 
+                profileImage: profileImage!
+            )
+            
+            completion(.success(helper))
         }
     }
     
@@ -174,7 +181,7 @@ class FirestoreHandler {
         }
     }
     
-    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL, thumbnail: UIImage?) {
+    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL, thumbnail: UIImage?) -> String? {
         let uniqueUID = UUID().uuidString
         
         let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(uniqueUID).mov")
@@ -183,7 +190,7 @@ class FirestoreHandler {
         
         guard let videoData = try? Data(contentsOf: videoURL) else {
             print("Error fetching data from video URL.")
-            return
+            return nil
         }
         
         storageRef.putData(videoData) { metadata, error in
@@ -199,6 +206,8 @@ class FirestoreHandler {
                 }
             }
         }
+        
+        return uniqueUID
     }
     
     // TODO: Fix this.

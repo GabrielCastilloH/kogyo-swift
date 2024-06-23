@@ -61,29 +61,39 @@ class JobHelperInfoView: UIView {
     // MARK: - Life Cycle
     
     init(for job: Job) {
-        self.helperUID = job.helper
+        self.helperUID = job.helperUID
         
-        guard let helper = self.helperUID else {
+        guard let helperUID = self.helperUID else {
             super.init(frame: .zero)
             return
         }
         super.init(frame: .zero)
         
-        // Fetching heler data
-        FirestoreHandler.shared.fetchHelper(for: helper) { result in
-            switch result {
-            case .success(let (helper, image)):
-                
-                self.profileImageView.image = image
-                let firstName = helper.firstName
-                let lastName = helper.lastName
-                self.helperNameTitle.text = firstName + " " + lastName
-                self.helperDescriptionTextField.text = helper.description
-                
-            case .failure(let error):
-                print("Error fetching helper: \(error.localizedDescription)")
-            }
-        }
+        // Using DataManager to get helper.
+        let helper = DataManager.shared.helpers[helperUID]! // Only be nil for the reasons mentioned in DataManager
+        
+        let firstName = helper.firstName
+        let lastName = helper.lastName
+        self.helperNameTitle.text = firstName + " " + lastName
+        self.helperDescriptionTextField.text = helper.description
+        
+        self.profileImageView.image = helper.profileImage
+        
+        
+//        FirestoreHandler.shared.fetchHelper(for: helper) { result in
+//            switch result {
+//            case .success(let (helper, image)):
+//                
+//                self.profileImageView.image = image
+//                let firstName = helper.firstName
+//                let lastName = helper.lastName
+//                self.helperNameTitle.text = firstName + " " + lastName
+//                self.helperDescriptionTextField.text = helper.description
+//                
+//            case .failure(let error):
+//                print("Error fetching helper: \(error.localizedDescription)")
+//            }
+//        }
         
         self.setupUI()
     }

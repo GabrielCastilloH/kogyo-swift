@@ -84,21 +84,24 @@ class CurrentJobsCell: UITableViewCell {
         self.kindTitleLabel.text = job.kind
         self.jobDescriptionLabel.text = job.description
         
-        // Fetching heler data
-        guard let helper = job.helper else { return }
+        // Fetching helper data from DataManager
+        guard let helperUID = job.helperUID else { return }
+        let helper = DataManager.shared.helpers[helperUID]
         
-        FirestoreHandler.shared.fetchHelper(for: helper) { result in // TODO: make sure it only fetches jobs with helpers!
-            switch result {
-            case .success(let (helper, image)):
-                self.profileImageView.image = image
-                let firstName = helper.firstName
-                let lastName = helper.lastName
-                self.helperNameTitle.text = firstName + " " + lastName.capitalized.prefix(1) + "."
-                
-            case .failure(let error):
-                print("Error fetching helper: \(error.localizedDescription)")
-            }
-        }
+        self.profileImageView.image = helper?.profileImage
+        let firstName = helper?.firstName ?? "ur"
+        let lastName = helper?.lastName ?? "moms gay"
+        self.helperNameTitle.text = firstName + " " + lastName.capitalized.prefix(1) + "."
+        
+//        FirestoreHandler.shared.fetchHelper(for: helperUID) { result in // TODO: make sure it only fetches jobs with helpers!
+//            switch result {
+//            case .success(let (helperUID, image)):
+//                
+//                
+//            case .failure(let error):
+//                print("Error fetching helperUID: \(error.localizedDescription)")
+//            }
+//        }
     }
     
     

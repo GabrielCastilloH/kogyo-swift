@@ -40,6 +40,8 @@ class CurrentJobsController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
+        self.currentJobs = Array(DataManager.shared.currentJobs.values)
+        
         currentJobsTableView.delegate = self
         currentJobsTableView.dataSource = self
         
@@ -93,23 +95,15 @@ class CurrentJobsController: UIViewController {
     
     // MARK: - Selectors & Functions
     private func configureCurrentJobs(for userUID: String) {
-        FirestoreHandler.shared.fetchJobs(for: userUID) { result in
-            switch result {
-            case .success(var jobs):
-                jobs.sort { $0.dateAdded > $1.dateAdded } // Sorting the jobs from newest to oldest.
-                
-                self.currentJobs = jobs
-                self.currentJobsTableView.reloadData()
-                
-                if self.currentJobs.count == 0 {
-                    self.noJobsSetup()
-                } else {
-                    self.noJobsLabel.isHidden = true
-                }
-                
-            case .failure(let error):
-                print("Error fetching jobs: \(error.localizedDescription)")
-            }
+        
+        self.currentJobs = Array(DataManager.shared.currentJobs.values)
+        // .sort { $0.dateAdded > $1.dateAdded } Add this to sort the jobs from newest to oldest, if needed.
+        self.currentJobsTableView.reloadData()
+        
+        if self.currentJobs.count == 0 {
+            self.noJobsSetup()
+        } else {
+            self.noJobsLabel.isHidden = true
         }
     }
 }
@@ -139,7 +133,7 @@ extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let job = self.currentJobs[indexPath.row]
-        guard let jobId = job.jobUID else { return }
+        let jobId = job.jobUID
         
         let jobInfoController = JobInfoController(for: job, jobUID: jobId)
         

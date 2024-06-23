@@ -158,7 +158,7 @@
 		D09C5ECE2C0F3F64002C6F89 /* Models & Other */ = {
 			isa = PBXGroup;
 			children = (
-				FFD8A99A2C157908009F5C8C /* JobListing.swift */,
+				FF919BCE2C27601100A1FE27 /* Data */,
 				FFF372CD2C16C44100F8D362 /* Models */,
 				FFF372CC2C16C43300F8D362 /* Constants+Extensions */,
 			);
@@ -278,6 +278,16 @@
 			path = "Settings View Controllers";
 			sourceTree = "<group>";
 		};
+		FF919BCE2C27601100A1FE27 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				FFD8A99A2C157908009F5C8C /* JobListing.swift */,
+				FF919BCC2C275E2700A1FE27 /* DataManager.swift */,
+				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		FFD8A99E2C157A4B009F5C8C /* Current Job Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -356,7 +366,6 @@
 				D09C5ED12C0F3F8E002C6F89 /* Constants.swift */,
 				D0D3A9992C11A868000DFFB8 /* Extensions.swift */,
 				FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */,
-				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
 			);
 			path = "Constants+Extensions";
 			sourceTree = "<group>";
@@ -368,7 +377,6 @@
 				FFF372CE2C16C45A00F8D362 /* Job.swift */,
 				FF879A482C1B2CBF00922513 /* SettingsOption.swift */,
 				FF6882082C1C790600288618 /* Helper.swift */,
-				FF919BCC2C275E2700A1FE27 /* DataManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
