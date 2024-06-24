@@ -38,7 +38,14 @@ class CurrentJobsController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
         
+        self.currentJobs = Array(DataManager.shared.currentJobs.values).sorted { $0.dateAdded > $1.dateAdded } // Add this to sort the jobs from newest to oldest, if needed.
         self.currentJobsTableView.reloadData()
+        
+        if self.currentJobs.count == 0 {
+            self.noJobsSetup()
+        } else {
+            self.noJobsLabel.isHidden = true
+        }
     }
     
     override func viewDidLoad() {
@@ -46,14 +53,11 @@ class CurrentJobsController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        self.currentJobs = Array(DataManager.shared.currentJobs.values)
-        
         currentJobsTableView.delegate = self
         currentJobsTableView.dataSource = self
         
         self.setupNavBar()
         self.setupUI()
-        self.configureCurrentJobs()
         
     }
     
@@ -89,18 +93,6 @@ class CurrentJobsController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    private func configureCurrentJobs() {
-        
-        self.currentJobs = Array(DataManager.shared.currentJobs.values)
-        // .sort { $0.dateAdded > $1.dateAdded } Add this to sort the jobs from newest to oldest, if needed.
-        self.currentJobsTableView.reloadData()
-        
-        if self.currentJobs.count == 0 {
-            self.noJobsSetup()
-        } else {
-            self.noJobsLabel.isHidden = true
-        }
-    }
 }
 
 // MARK: - Search Bar Delegate

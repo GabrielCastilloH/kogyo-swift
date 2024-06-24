@@ -227,8 +227,8 @@ class CreateJobController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    private func presentLoadingScreen(jobId: String, userId: String) {
-        let loadingScreenController = LoadingScreenController(jobId: jobId, userId: userId)
+    private func presentLoadingScreen(jobUID: String, userId: String) {
+        let loadingScreenController = LoadingScreenController(jobId: jobUID, userId: userId)
         self.navigationController?.pushViewController(loadingScreenController, animated: true)
     }
     
@@ -239,58 +239,6 @@ class CreateJobController: UIViewController {
             self.keyboardHeight = keyboardRectangle.height
         }
     }
-    
-    //    @objc func didTapSubmitJob() {
-    //        let newJob = Job(
-    //            jobUID: nil,
-    //            dateAdded: Date(),
-    //            kind: self.jobKindView.pickerTextField.text ?? "",
-    //            description: self.descriptionFormView.descriptionTextView.text ?? "",
-    //            dateTime: self.jobDateTimeView.datePicker.date,
-    //            expectedHours: Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0,
-    //            location: self.jobDateTimeView.addressLabel.text ?? "Click to set location",
-    //            payment: Int(self.jobPaymentView.paymentTextField.text ?? "") ?? 0,
-    //            helper: nil
-    //        )
-    //
-    //
-    //        if newJob.kind == "" || newJob.description == "" || newJob.expectedHours == 0 || newJob.location == "" || newJob.payment == 0 || newJob.location == "Click to set location" {
-    //            AlertManager.showMissingJobInfoAlert(on: self)
-    //
-    //        } else {
-    //            guard let userUID = Auth.auth().currentUser?.uid else { return }
-    //
-    //            FirestoreHandler.shared.addJob(with: newJob, for: userUID) { result in
-    //                switch result {
-    //                case .success(let jobId):
-    //                    self.presentLoadingScreen(jobId: jobId, userId: userUID)
-    //
-    //
-    //                    for media in self.mediaData {
-    //                        if media != self.mediaData[0] {
-    //
-    //                            if let videoURL = media.videoURL {
-    //                                // Upload video to database.
-    //                                let videoToUploadURL = videoURL
-    //                                FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
-    //                            } else {
-    //                                // Upload image to database.
-    //                                let imageToUpload = media.mediaImageView.image
-    //                                FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: jobId, image: imageToUpload!)
-    //                            }
-    //                        }
-    //                    }
-    //
-    //                case .failure(let error):
-    //                    print("Error adding job: \(error.localizedDescription)")
-    //                }
-    //            }
-    //
-    //            self.submitJobBtn.isUserInteractionEnabled = false
-    //            self.submitJobBtn.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
-    //        }
-    //    }
-    
     
     @objc func didTapSubmitJob() {
         
@@ -319,9 +267,9 @@ class CreateJobController: UIViewController {
             guard let userUID = Auth.auth().currentUser?.uid else { return }
             FirestoreHandler.shared.addJob(with: jobData, for: userUID) { result in
                 switch result {
-                case .success(let jobId):
+                case .success(let jobUID):
                     // The job was added successfully (no media yet).
-                    self.presentLoadingScreen(jobId: jobId, userId: userUID)
+                    self.presentLoadingScreen(jobUID: jobUID, userId: userUID)
                     
                     var mediaArray: [PlayableMediaView] = []
                     
@@ -331,7 +279,7 @@ class CreateJobController: UIViewController {
                             if let videoURL = media.videoURL {
                                 // Upload video to database.
                                 let videoToUploadURL = videoURL
-                                let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobId, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
+                                let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobUID, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
                                 
                                 // Append media view to media in DataManager
                                 let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
@@ -340,7 +288,7 @@ class CreateJobController: UIViewController {
                             } else {
                                 // Upload image to database.
                                 let imageToUpload = media.mediaImageView.image
-                                FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: jobId, image: imageToUpload!)
+                                FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: jobUID, image: imageToUpload!)
                                 
                                 // Append media view to media in DataManager.
                                 let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
@@ -349,7 +297,19 @@ class CreateJobController: UIViewController {
                         }
                     }
                     
-
+                    DataManager.shared.currentJobs[jobUID] = Job(
+                        jobUID: jobUID,
+                        dateAdded: dateAdded,
+                        kind: kind,
+                        description: description,
+                        dateTime: dateTime,
+                        expectedHours: expectedHours,
+                        location: location,
+                        payment: payment,
+                        helperUID: nil,
+                        media: mediaArray
+                    )
+                    
                 case .failure(let error):
                     print("Error adding job: \(error.localizedDescription)")
                 }
@@ -466,8 +426,6 @@ extension CreateJobController: UIImagePickerControllerDelegate & UINavigationCon
     private func handleVideos(_ info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let videoURL = info[.mediaURL] as? URL else { return }
-        
-        //        guard let videoData = try? Data(contentsOf: videoURL, options: NSData.ReadingOptions.mappedIfSafe) else { return }
         
         AVAsset(url: videoURL).generateThumbnail { thumbnail in
             DispatchQueue.main.async {

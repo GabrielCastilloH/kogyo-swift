@@ -27,12 +27,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     public func checkAuthentication() {
-        
         self.window?.rootViewController = nil
         self.window?.subviews.forEach { $0.removeFromSuperview() }
         
-        
         if Auth.auth().currentUser == nil {
+            print("not logged in.")
             // Go to sign in screen
             DispatchQueue.main.async { [weak self] in
                 UIView.animate(withDuration: 0.25) {
@@ -49,52 +48,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             }
         } else {
-            // Go to home screen
+            self.presentHomeController()
+        }
+    }
+    
+    private func presentHomeController() {
+        // LOADING VIEW:
+        let loadingViewController = OpenLoadingController() // Replace with your actual loading view controller
+        self.window?.rootViewController = loadingViewController
+        self.window?.makeKeyAndVisible()
+        
+        DataManager.shared.fetchDatabaseData {
             // Remove this duplicate code when you feel like it broski.
-            
-            // LOADING VIEW:
-            let loadingViewController = UIViewController() // Replace with your actual loading view controller
-            self.window?.rootViewController = loadingViewController
-            loadingViewController.view.backgroundColor = .systemPink
-            self.window?.makeKeyAndVisible()
-            
-            DataManager.shared.fetchDatabaseData {
-                DataManager.shared.printValues()
-                
-                DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async { [weak self] in
+                UIView.animate(withDuration: 0.25) {
+                    self?.window?.layer.opacity = 0
+                } completion: { [weak self] _ in
+                    
+                    self?.window?.rootViewController = TabController()
+                    
                     UIView.animate(withDuration: 0.25) {
-                        self?.window?.layer.opacity = 0
-                    } completion: { [weak self] _ in
-                        
-                        self?.window?.rootViewController = TabController()
-                        
-                        UIView.animate(withDuration: 0.25) {
-                            self?.window?.layer.opacity = 1
-                        }
+                        self?.window?.layer.opacity = 1
                     }
                 }
             }
         }
-//
-//            DispatchQueue.main.async { [weak self] in
-//                UIView.animate(withDuration: 0.25) {
-//                    self?.window?.layer.opacity = 0
-//                } completion: { [weak self] _ in
-//                    
-//                   
-////                    }
-//                    self?.window?.rootViewController = TabController()
-//                    
-//                    UIView.animate(withDuration: 0.25) {
-//                        self?.window?.layer.opacity = 1
-//                    }
-//                }
-//            }
-//        }
-    }
-    
-    private func goToController(with viewController: UIViewController) {
-        
     }
         
 }

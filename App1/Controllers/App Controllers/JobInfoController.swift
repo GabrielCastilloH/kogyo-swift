@@ -35,19 +35,7 @@ class JobInfoController: UIViewController {
     // MARK: - Life Cycle
     init(for job: Job, jobUID: String) {
         self.currentJob = job
-        
         super.init(nibName: nil, bundle: nil)
-        setupUI()
-        
-        // Get media data from DataManager
-        
-        // fix this:
-//        FirestoreHandler.shared.fetchJobMedia(jobId: jobUID) { mediaData in
-//            // Use the mediaData array here
-//            self.mediaData = mediaData
-//            print(mediaData)
-//            self.configureMediaViews()
-//        }
     }
     
     required init?(coder: NSCoder) {
@@ -142,7 +130,6 @@ class JobInfoController: UIViewController {
     // MARK: - Selectors & Functions
     // Its better to put the configure function here to keep everything in the view.
     func configureMediaViews() {
-        print(self.mediaData)
         for media in self.mediaData {
             media.delegate = self
             self.jobPhotosVideosView.stackView.addArrangedSubview(media)

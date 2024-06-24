@@ -9,21 +9,41 @@ import UIKit
 
 class OpenLoadingController: UIViewController {
 
+    // MARK: - Variables
+    
+    
+    // MARK: - UI Components
+    private let logoImage: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage(named: "logo")
+        return iv
+    }()
+    
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.setupUI()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    // MARK: - UI Setup
+    private func setupUI() {
+        self.view.backgroundColor = .white
+        
+        self.view.addSubview(logoImage)
+        logoImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            logoImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            logoImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            
+            logoImage.heightAnchor.constraint(equalToConstant: 200),
+            logoImage.widthAnchor.constraint(equalToConstant: 200),
+        ])
     }
-    */
+    
+    // MARK: - Selectors
+    
+    
 
 }

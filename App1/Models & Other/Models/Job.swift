@@ -16,6 +16,6 @@ struct Job {
     let expectedHours: Int
     let location: String // change later
     let payment: Int
-    let helperUID: String?
+    var helperUID: String?
     let media: [PlayableMediaView] // [(UIImage?, String?)]
 }

@@ -152,7 +152,6 @@ class MapController: UIViewController {
     @objc func tappedDoneButton() {
         if let createJobController = self.navigationController?.viewControllers.first(where: { $0 is CreateJobController }) as? CreateJobController {
             createJobController.jobDateTimeView.addressLabel.text = self.addressLabel.text
-//            self.navigationController?.popViewController(animated: true)
         }
         
         self.navigationController?.popViewController(animated: true)

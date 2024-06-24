@@ -20,24 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             return true
         }
-        //
-        //    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        //        FirebaseApp.configure()
-        //
-        //        DataManager.shared.fetchDatabaseData {
-        //            DataManager.shared.printValues()
-        //            // Proceed with other initializations if needed
-        //
-        //            async {
-        //                try await Task.sleep(nanoseconds: UInt64(50 * Double(NSEC_PER_SEC)))
-        //                print("nerd")
-        //                DataManager.shared.printValues()
-        //            }
-        //        }
-        //
-        //
-        //        return true
-        //    }
         
         // MARK: UISceneSession Lifecycle
         

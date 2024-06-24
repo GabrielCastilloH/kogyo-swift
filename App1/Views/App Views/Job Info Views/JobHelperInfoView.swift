@@ -79,22 +79,6 @@ class JobHelperInfoView: UIView {
         
         self.profileImageView.image = helper.profileImage
         
-        
-//        FirestoreHandler.shared.fetchHelper(for: helper) { result in
-//            switch result {
-//            case .success(let (helper, image)):
-//                
-//                self.profileImageView.image = image
-//                let firstName = helper.firstName
-//                let lastName = helper.lastName
-//                self.helperNameTitle.text = firstName + " " + lastName
-//                self.helperDescriptionTextField.text = helper.description
-//                
-//            case .failure(let error):
-//                print("Error fetching helper: \(error.localizedDescription)")
-//            }
-//        }
-        
         self.setupUI()
     }
     

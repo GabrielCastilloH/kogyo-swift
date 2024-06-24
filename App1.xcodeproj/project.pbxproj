@@ -25,6 +25,7 @@
 		D0E923F12C0E98670070977A /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F02C0E98670070977A /* SettingsController.swift */; };
 		D0E923F32C0E98C90070977A /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F22C0E98C90070977A /* TabController.swift */; };
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
+		FF0B76EC2C29CEE70019FD8B /* OpenLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0B76EB2C29CEE70019FD8B /* OpenLoadingController.swift */; };
 		FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */; };
 		FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5C2C212BBC00F58D0F /* MediaView.swift */; };
 		FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */; };
@@ -95,6 +96,7 @@
 		D0E923F02C0E98670070977A /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		D0E923F22C0E98C90070977A /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
+		FF0B76EB2C29CEE70019FD8B /* OpenLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLoadingController.swift; sourceTree = "<group>"; };
 		FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaScrollView.swift; sourceTree = "<group>"; };
 		FF28AF5C2C212BBC00F58D0F /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayableMediaView.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 		D0D3A99B2C11B91B000DFFB8 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				FF0B76EB2C29CEE70019FD8B /* OpenLoadingController.swift */,
 				FFF372C92C16C3D000F8D362 /* Authentication Controllers */,
 				FFF372C82C16C3C200F8D362 /* App Controllers */,
 			);
@@ -534,6 +537,7 @@
 				FFF372EB2C16C94500F8D362 /* WebViewerController.swift in Sources */,
 				FFF372DE2C16C7E000F8D362 /* LoginUserRequest.swift in Sources */,
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
+				FF0B76EC2C29CEE70019FD8B /* OpenLoadingController.swift in Sources */,
 				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
 				FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */,
 				FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */,

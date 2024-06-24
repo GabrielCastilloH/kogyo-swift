@@ -92,16 +92,6 @@ class CurrentJobsCell: UITableViewCell {
         let firstName = helper?.firstName ?? "ur"
         let lastName = helper?.lastName ?? "moms gay"
         self.helperNameTitle.text = firstName + " " + lastName.capitalized.prefix(1) + "."
-        
-//        FirestoreHandler.shared.fetchHelper(for: helperUID) { result in // TODO: make sure it only fetches jobs with helpers!
-//            switch result {
-//            case .success(let (helperUID, image)):
-//                
-//                
-//            case .failure(let error):
-//                print("Error fetching helperUID: \(error.localizedDescription)")
-//            }
-//        }
     }
     
     

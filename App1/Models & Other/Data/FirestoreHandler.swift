@@ -38,19 +38,29 @@ class FirestoreHandler {
         }
     }
     
-    public func assignHelper(_ helperId: String, toJob jobId: String, forUser userId: String) {
+    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String) {
         
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
         
-        jobRef.updateData(["helper": helperId]) { error in
+        jobRef.updateData(["helper": helperUID]) { error in
             if let error = error {
                 print("Error assigning helper: \(error.localizedDescription)")
             } else {
+                // Update helper info on DataManager
+                DataManager.shared.currentJobs[jobId]!.helperUID = helperUID
                 return
             }
         }
     }
     
+    /// Fetches `[Job]`object for a given `userUID`.
+    ///
+    /// Only to be called in DataManager to set its data when the app is created.
+    ///
+    /// - Parameters:
+    ///     - for: The UID of the user you want to fetch jobs for.
+    ///     - completion: A completion handler that will return `([Job], Error)` when done.
+    ///
     func fetchJobs(for userId: String, completion: @escaping (Result<[Job], Error>) -> Void) {
         // TODO: Create documentation for this function.
         guard let userUID = Auth.auth().currentUser?.uid else {
@@ -96,8 +106,17 @@ class FirestoreHandler {
         }
     }
     
+    /// Fetches a `Helper`object for a given `helperUID`.
+    ///
+    /// It is called in FetchJobs.
+    ///
+    ///
+    /// - Parameters:
+    ///     - for: The UID of the helper you want to fetch.
+    ///     - completion: A completion handler that will return `(Helper, Error)` when done.
+    ///
     func fetchHelper(for helperUID: String, completion: @escaping (Result<Helper, Error>) -> Void) {
-        // TODO: Make this function easier to read. Explain it.
+        
         let storageRef = Storage.storage().reference()
         
         // Fetch helper information from Firestore
@@ -114,8 +133,7 @@ class FirestoreHandler {
                 return
             }
             
-            // FIX: This is questionmark, profile image not loaded for some reason.
-            var profileImage = UIImage(systemName: "questionmark")
+            
             // Fetch profile image from Firebase Storage
             let profileRef = storageRef.child("profile/\(helperUID).jpeg")
             profileRef.getData(maxSize: 1 * 1024 * 1024) { imageData, error in
@@ -124,7 +142,7 @@ class FirestoreHandler {
                     print("Error fetching image: \(error.localizedDescription)")
                     completion(.failure(error))
                 } else {
-                    profileImage = UIImage(data: imageData!)
+                    let profileImage = UIImage(data: imageData!)
                     
                     let helper = Helper(
                         helperUID: helperUID,
@@ -134,6 +152,7 @@ class FirestoreHandler {
                         profileImage: profileImage!
                     )
                     
+                    // NOTE: Completion has to be in the completion block for the profile image. (ensures not completed w/o image).
                     completion(.success(helper))
                 }
             }
@@ -176,7 +195,7 @@ class FirestoreHandler {
                     return
                 }
                 guard let downloadURL = url else { return }
-                print("Download URL: \(downloadURL.absoluteString)")
+//                print("Download URL: \(downloadURL.absoluteString)")
             }
         }
     }
@@ -228,7 +247,6 @@ class FirestoreHandler {
     }
     
     func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
-        print("fetching job media")
         let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
         var mediaData: [PlayableMediaView] = []
         let dispatchGroup = DispatchGroup()
@@ -293,7 +311,7 @@ class FirestoreHandler {
             
             // Notify when all async operations are completed
             dispatchGroup.notify(queue: .main) {
-                print("All operations are completed")
+//                print("All operations are completed")
                 completion(mediaData) // Complete with the mediaData array
             }
         }

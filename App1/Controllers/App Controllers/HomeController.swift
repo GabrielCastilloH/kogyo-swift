@@ -40,7 +40,7 @@ class HomeController: UIViewController {
         AuthService.shared.fetchUser { [weak self] user, error in
             guard let self = self else { return }
             if let error = error {
-                print("failed to get user")
+                print("Error getting user: \(error.localizedDescription)")
                 AlertManager.showFetchingUserError(on: self, with: error)
                 return
             } else if let user = user {
