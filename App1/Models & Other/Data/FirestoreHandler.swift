@@ -118,25 +118,25 @@ class FirestoreHandler {
             var profileImage = UIImage(systemName: "questionmark")
             // Fetch profile image from Firebase Storage
             let profileRef = storageRef.child("profile/\(helperUID).jpeg")
-            profileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            profileRef.getData(maxSize: 1 * 1024 * 1024) { imageData, error in
                 if let error = error {
                     // If there's an error fetching the image, return the helper info without image
                     print("Error fetching image: \(error.localizedDescription)")
                     completion(.failure(error))
                 } else {
-                    profileImage = UIImage(data: data!)
+                    profileImage = UIImage(data: imageData!)
+                    
+                    let helper = Helper(
+                        helperUID: helperUID,
+                        firstName: data["firstName"] as? String ?? "",
+                        lastName: data["lastName"] as? String ?? "",
+                        description: data["helperDescription"] as? String ?? "",
+                        profileImage: profileImage!
+                    )
+                    
+                    completion(.success(helper))
                 }
             }
-            
-            let helper = Helper(
-                helperUID: helperUID,
-                firstName: data["firstName"] as? String ?? "",
-                lastName: data["lastName"] as? String ?? "",
-                description: data["helperDescription"] as? String ?? "", 
-                profileImage: profileImage!
-            )
-            
-            completion(.success(helper))
         }
     }
     

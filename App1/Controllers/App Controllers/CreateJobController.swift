@@ -294,7 +294,6 @@ class CreateJobController: UIViewController {
     
     @objc func didTapSubmitJob() {
         
-        var jobUID: String? = nil
         let dateAdded = Date()
         let kind = self.jobKindView.pickerTextField.text ?? ""
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
@@ -302,7 +301,6 @@ class CreateJobController: UIViewController {
         let expectedHours = Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0
         let location = self.jobDateTimeView.addressLabel.text ?? "Click to set location"
         let payment = Int(self.jobPaymentView.paymentTextField.text ?? "") ?? 0
-        var helper: String? = nil
         
         if kind == "" || description == "" || expectedHours == 0 || location == "" || payment == 0 || location == "Click to set location" {
             AlertManager.showMissingJobInfoAlert(on: self)

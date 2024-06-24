@@ -35,6 +35,12 @@ class CurrentJobsController: UIViewController {
     }()
     
     // MARK: - Life Cycle
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        self.currentJobsTableView.reloadData()
+    }
+    
     override func viewDidLoad() {
         self.tabBarController?.tabBar.isHidden = false
         super.viewDidLoad()
@@ -47,19 +53,8 @@ class CurrentJobsController: UIViewController {
         
         self.setupNavBar()
         self.setupUI()
+        self.configureCurrentJobs()
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        // TODO: move this to the firebase handler.
-        guard let userUID = Auth.auth().currentUser?.uid else {
-            // Handle the case where the user is not authenticated
-            print("User not authenticated")
-            return
-        }
-        
-        self.configureCurrentJobs(for: userUID)
     }
     
     // MARK: - UI Setup
@@ -94,7 +89,7 @@ class CurrentJobsController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    private func configureCurrentJobs(for userUID: String) {
+    private func configureCurrentJobs() {
         
         self.currentJobs = Array(DataManager.shared.currentJobs.values)
         // .sort { $0.dateAdded > $1.dateAdded } Add this to sort the jobs from newest to oldest, if needed.

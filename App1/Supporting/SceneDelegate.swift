@@ -51,19 +51,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             // Go to home screen
             // Remove this duplicate code when you feel like it broski.
-            DispatchQueue.main.async { [weak self] in
-                UIView.animate(withDuration: 0.25) {
-                    self?.window?.layer.opacity = 0
-                } completion: { [weak self] _ in
-                    
-                    self?.window?.rootViewController = TabController()
-                    
+            
+            // LOADING VIEW:
+            let loadingViewController = UIViewController() // Replace with your actual loading view controller
+            self.window?.rootViewController = loadingViewController
+            loadingViewController.view.backgroundColor = .systemPink
+            self.window?.makeKeyAndVisible()
+            
+            DataManager.shared.fetchDatabaseData {
+                DataManager.shared.printValues()
+                
+                DispatchQueue.main.async { [weak self] in
                     UIView.animate(withDuration: 0.25) {
-                        self?.window?.layer.opacity = 1
+                        self?.window?.layer.opacity = 0
+                    } completion: { [weak self] _ in
+                        
+                        self?.window?.rootViewController = TabController()
+                        
+                        UIView.animate(withDuration: 0.25) {
+                            self?.window?.layer.opacity = 1
+                        }
                     }
                 }
             }
         }
+//
+//            DispatchQueue.main.async { [weak self] in
+//                UIView.animate(withDuration: 0.25) {
+//                    self?.window?.layer.opacity = 0
+//                } completion: { [weak self] _ in
+//                    
+//                   
+////                    }
+//                    self?.window?.rootViewController = TabController()
+//                    
+//                    UIView.animate(withDuration: 0.25) {
+//                        self?.window?.layer.opacity = 1
+//                    }
+//                }
+//            }
+//        }
     }
     
     private func goToController(with viewController: UIViewController) {

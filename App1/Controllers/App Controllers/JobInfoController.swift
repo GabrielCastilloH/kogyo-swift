@@ -40,7 +40,6 @@ class JobInfoController: UIViewController {
         setupUI()
         
         // Get media data from DataManager
-        self.mediaData = DataManager.shared.currentJobs[job.jobUID]?.media ?? []
         
         // fix this:
 //        FirestoreHandler.shared.fetchJobMedia(jobId: jobUID) { mediaData in
@@ -61,6 +60,10 @@ class JobInfoController: UIViewController {
         self.view.backgroundColor = .white
         self.setupNavBar()
         self.setupUI()
+        
+        // Configure media once the view loads.
+        self.mediaData = DataManager.shared.currentJobs[self.currentJob.jobUID]!.media
+        self.configureMediaViews()
         
         let dateNotFormatted = self.currentJob.dateAdded
         let dateFormatter = DateFormatter()
@@ -139,6 +142,7 @@ class JobInfoController: UIViewController {
     // MARK: - Selectors & Functions
     // Its better to put the configure function here to keep everything in the view.
     func configureMediaViews() {
+        print(self.mediaData)
         for media in self.mediaData {
             media.delegate = self
             self.jobPhotosVideosView.stackView.addArrangedSubview(media)
@@ -160,7 +164,7 @@ extension JobInfoController: PlayableMediaViewDelegate {
         } else {
             // Fetch video from Firestore and present AV controller.
             let videoFileName = "\(videoUID!).mov"
-            let videoRef = Storage.storage().reference().child("jobs/\(self.currentJob.jobUID ?? "you're gay")/\(videoFileName)")
+            let videoRef = Storage.storage().reference().child("jobs/\(self.currentJob.jobUID)/\(videoFileName)")
             
             // Fetch the download URL
             videoRef.downloadURL { url, error in
