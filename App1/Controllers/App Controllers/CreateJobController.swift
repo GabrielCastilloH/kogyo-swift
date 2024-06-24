@@ -71,6 +71,11 @@ class CreateJobController: UIViewController {
     }()
     
     // MARK: - Life Cycle
+    override func viewWillAppear(_ animated: Bool) {
+        self.submitJobBtn.isUserInteractionEnabled = true
+        self.submitJobBtn.backgroundColor = Constants().lightBlueColor
+    }
+    
     init(kind: String) {
         self.jobKindView = JobKindFormView(kind: kind)
         self.jobKind = kind
@@ -91,8 +96,6 @@ class CreateJobController: UIViewController {
         imagePickerController.mediaTypes = ["public.image", "public.movie"]
         
         self.jobDateTimeView.delegate = self
-        self.submitJobBtn.isUserInteractionEnabled = true
-        self.submitJobBtn.backgroundColor = Constants().lightBlueColor
         
         self.setupNavbar()
         self.setupUI()
@@ -241,7 +244,6 @@ class CreateJobController: UIViewController {
     }
     
     @objc func didTapSubmitJob() {
-        
         let dateAdded = Date()
         let kind = self.jobKindView.pickerTextField.text ?? ""
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
@@ -306,7 +308,7 @@ class CreateJobController: UIViewController {
                         expectedHours: expectedHours,
                         location: location,
                         payment: payment,
-                        helperUID: nil,
+                        helperUID: "Bcdo7sS8Gb3P5Kb54njO",
                         media: mediaArray
                     )
                     

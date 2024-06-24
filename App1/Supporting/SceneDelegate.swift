@@ -15,6 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         self.setupWindow(with: scene)
+        DataManager.shared.currentJobs = [:]
         self.checkAuthentication()
     }
     
@@ -31,7 +32,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.subviews.forEach { $0.removeFromSuperview() }
         
         if Auth.auth().currentUser == nil {
-            print("not logged in.")
             // Go to sign in screen
             DispatchQueue.main.async { [weak self] in
                 UIView.animate(withDuration: 0.25) {
