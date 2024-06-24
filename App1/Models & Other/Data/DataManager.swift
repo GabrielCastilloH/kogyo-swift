@@ -90,9 +90,9 @@ class DataManager {
                         case .failure(let error):
                             print("Error fetching helper: \(error.localizedDescription)")
                         }
-                        dispatchGroup.leave()
                     }
                 }
+                dispatchGroup.leave()
                 
             case .failure(let error):
                 print("Error fetching jobs: \(error.localizedDescription)")

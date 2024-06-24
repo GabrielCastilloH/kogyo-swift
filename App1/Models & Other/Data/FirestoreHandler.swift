@@ -73,25 +73,25 @@ class FirestoreHandler {
                     
                     self.fetchJobMedia(jobId: document.documentID) { media in
                         mediaData = media
+                        
+                        // This job object is completely different from the one on firebase, it has more info.
+                        let job = Job(
+                            jobUID: document.documentID,
+                            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
+                            kind: data["kind"] as? String ?? "",
+                            description: data["description"] as? String ?? "",
+                            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
+                            expectedHours: data["expectedHours"] as? Int ?? 0,
+                            location: data["location"] as? String ?? "",
+                            payment: data["payment"] as? Int ?? 0,
+                            helperUID: data["helper"] as? String,
+                            media: mediaData
+                        )
+                        
+                        jobs.append(job)
+                        completion(.success(jobs))
                     }
-                    
-                    // This job object is completely different from the one on firebase, it has more info.
-                    let job = Job(
-                        jobUID: document.documentID,
-                        dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
-                        kind: data["kind"] as? String ?? "",
-                        description: data["description"] as? String ?? "",
-                        dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
-                        expectedHours: data["expectedHours"] as? Int ?? 0,
-                        location: data["location"] as? String ?? "",
-                        payment: data["payment"] as? Int ?? 0,
-                        helperUID: data["helper"] as? String,
-                        media: mediaData
-                    )
-                    
-                    jobs.append(job)
                 }
-                completion(.success(jobs))
             }
         }
     }
@@ -228,6 +228,7 @@ class FirestoreHandler {
     }
     
     func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
+        print("fetching job media")
         let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
         var mediaData: [PlayableMediaView] = []
         let dispatchGroup = DispatchGroup()
