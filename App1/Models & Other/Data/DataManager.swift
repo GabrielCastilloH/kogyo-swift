@@ -11,7 +11,7 @@ import FirebaseAuth
 class DataManager {
     static let shared = DataManager()
     
-    var currentJobs: [String: Job] = [:]
+    var currentJobs: [String: Task] = [:]
     var helpers: [String: Helper] = [
 //        "Bcdo7sS8Gb3P5Kb54njO": Helper(
 //            helperUID: "Bcdo7sS8Gb3P5Kb54njO",

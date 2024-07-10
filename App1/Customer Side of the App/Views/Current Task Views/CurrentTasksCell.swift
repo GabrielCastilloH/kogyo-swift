@@ -7,9 +7,9 @@
 
 import UIKit
 
-class CurrentJobsCell: UITableViewCell {
+class CurrentTasksCell: UITableViewCell {
     
-    static let identifier = "CurrentJobsCell"
+    static let identifier = "CurrentTasksCell"
 
     // MARK: - UI Components
     private let grayBackground: UIView = {
@@ -80,7 +80,7 @@ class CurrentJobsCell: UITableViewCell {
     }
     
      // MARK: - UI Setup
-    public func configureCell(for job: Job) {
+    public func configureCell(for job: Task) {
         self.kindTitleLabel.text = job.kind
         self.jobDescriptionLabel.text = job.description
         

@@ -1,5 +1,5 @@
 //
-//  CurrentJobsController.swift
+//  CurrentTasksController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/4/24.
@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class CurrentJobsController: UIViewController {
+class CurrentTasksController: UIViewController {
     
     // MARK: - Variables
     var currentJobs: [Job] = []
@@ -96,7 +96,7 @@ class CurrentJobsController: UIViewController {
 }
 
 // MARK: - Search Bar Delegate
-extension CurrentJobsController: UITableViewDelegate, UITableViewDataSource {
+extension CurrentTasksController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         return self.currentJobs.count

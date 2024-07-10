@@ -1,5 +1,5 @@
 //
-//  Job.swift
+//  Task.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/10/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Job {
+struct Task {
     let jobUID: String
     let dateAdded: Date
     let kind: String

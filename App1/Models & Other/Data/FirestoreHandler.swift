@@ -61,9 +61,9 @@ class FirestoreHandler {
     ///
     /// - Parameters:
     ///     - for: The UID of the user you want to fetch jobs for.
-    ///     - completion: A completion handler that will return `([Job], Error)` when done.
+    ///     - completion: A completion handler that will return `([Task], Error)` when done.
     ///
-    func fetchJobs(for userId: String, completion: @escaping (Result<[Job], Error>) -> Void) {
+    func fetchJobs(for userId: String, completion: @escaping (Result<[Task], Error>) -> Void) {
         // TODO: Create documentation for this function.
         guard let userUID = Auth.auth().currentUser?.uid else {
             // Handle the case where the user is not authenticated
@@ -77,7 +77,7 @@ class FirestoreHandler {
             if let error = error {
                 completion(.failure(error))
             } else {
-                var jobs: [Job] = []
+                var jobs: [Task] = []
                 for document in querySnapshot!.documents {
                     let data = document.data()
                     // Add media:
@@ -87,7 +87,7 @@ class FirestoreHandler {
                         mediaData = media
                         
                         // This job object is completely different from the one on firebase, it has more info.
-                        let job = Job(
+                        let job = Task(
                             jobUID: document.documentID,
                             dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
                             kind: data["kind"] as? String ?? "",
