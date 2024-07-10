@@ -48,7 +48,7 @@ class CreateJobController: UIViewController {
     private lazy var submitJobBtn: UIButton = {
         let button = UIButton()
         button.tintColor = .white
-        button.setTitle("Submit Job", for: .normal)
+        button.setTitle("Submit Task", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightBlueColor
@@ -117,7 +117,7 @@ class CreateJobController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.tabBarController?.tabBar.isHidden = false
-        self.navigationItem.title = "Create a New Job"
+        self.navigationItem.title = "Create a New Task"
     }
     
     private func setupUI() {
@@ -299,7 +299,7 @@ class CreateJobController: UIViewController {
                         }
                     }
                     
-                    DataManager.shared.currentJobs[jobUID] = Job(
+                    DataManager.shared.currentJobs[jobUID] = Task(
                         jobUID: jobUID,
                         dateAdded: dateAdded,
                         kind: kind,

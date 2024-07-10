@@ -155,7 +155,7 @@ extension HomeController: UITextFieldDelegate {
     }
 }
 
-// MARK: - Search Table & Job Table Delegate
+// MARK: - Search Table & Task Table Delegate
 extension HomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
@@ -216,7 +216,7 @@ extension HomeController: CustomSearchBarDelegate {
     }
 }
 
-// MARK: - Job Button Delegate
+// MARK: - Task Button Delegate
 extension HomeController: CategoryViewDelegate {
     func clickedButtonInCategory(kind: String) {
         self.presentCreateJobController(for: kind)

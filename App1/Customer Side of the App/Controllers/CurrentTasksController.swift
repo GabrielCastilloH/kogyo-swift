@@ -11,7 +11,7 @@ import FirebaseAuth
 class CurrentTasksController: UIViewController {
     
     // MARK: - Variables
-    var currentJobs: [Job] = []
+    var currentJobs: [Task] = []
     
     // MARK: - UI Components
     private let currentJobsTableView: UITableView = {
@@ -19,7 +19,7 @@ class CurrentTasksController: UIViewController {
         tableView.backgroundColor = .white
         tableView.keyboardDismissMode = .onDrag
         tableView.allowsSelection = true
-        tableView.register(CurrentJobsCell.self, forCellReuseIdentifier: CurrentJobsCell.identifier)
+        tableView.register(CurrentTasksCell.self, forCellReuseIdentifier: CurrentTasksCell.identifier)
         return tableView
     }()
     
@@ -103,7 +103,7 @@ extension CurrentTasksController: UITableViewDelegate, UITableViewDataSource {
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CurrentJobsCell.identifier, for: indexPath) as? CurrentJobsCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CurrentTasksCell.identifier, for: indexPath) as? CurrentTasksCell else {
             fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
         }
         

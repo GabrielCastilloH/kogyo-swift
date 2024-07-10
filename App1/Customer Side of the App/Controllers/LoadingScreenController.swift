@@ -39,7 +39,7 @@ class LoadingScreenController: UIViewController {
     private lazy var editJobBtn: UIButton = {
         let button = UIButton()
         button.tintColor = .white
-        button.setTitle("Edit Job", for: .normal)
+        button.setTitle("Edit Task", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightBlueColor
@@ -131,7 +131,7 @@ class LoadingScreenController: UIViewController {
             }
             
             guard let document = documentSnapshot, document.exists else {
-                print("Job document does not exist")
+                print("Task document does not exist")
                 return
             }
             

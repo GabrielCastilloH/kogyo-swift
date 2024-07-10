@@ -12,7 +12,7 @@ import FirebaseStorage
 class JobInfoController: UIViewController {
     
     // MARK: - Variables
-    var currentJob: Job
+    var currentJob: Task
     var cf = CustomFunctions()
     var mediaData: [PlayableMediaView] = []
     
@@ -33,7 +33,7 @@ class JobInfoController: UIViewController {
     
     
     // MARK: - Life Cycle
-    init(for job: Job, jobUID: String) {
+    init(for job: Task, jobUID: String) {
         self.currentJob = job
         super.init(nibName: nil, bundle: nil)
     }

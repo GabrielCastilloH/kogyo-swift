@@ -10,38 +10,212 @@ import UIKit
 class HelperHomeController: UIViewController {
 
     // MARK: - Variables
-    
+    var availableTasks: [Task] = []
     
     // MARK: - UI Components
     private let homeHeading: UILabel = {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.text = "Dashboard"
+        label.font = .systemFont(ofSize: 34, weight: .bold)
+        label.text = "Helper Dashboard"
         return label
     }()
     
+    private let quoteLabel: UILabel = {
+        // TODO: make this text italized
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.text = "\"Any task, a tap away.\""
+        return label
+    }()
+    
+    private let moneyEarnedLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.text = "Money Earned"
+        return label
+    }()
+    
+    private let moneyTodayLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.text = "Today: "
+        return label
+    }()
+    
+    private let moneyWeekLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.text = "This week: "
+        return label
+    }()
+    
+    private let moneyMonthLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.text = "This month: "
+        return label
+    }()
+    
+    private let availableTasksLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.text = "Available Tasks"
+        return label
+    }()
+    
+    // TABLE
+    private let availableTasksTable: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.keyboardDismissMode = .onDrag
+        tableView.allowsSelection = true
+        tableView.register(HelperCurrentTasksCell.self, forCellReuseIdentifier: HelperCurrentTasksCell.identifier)
+        return tableView
+    }()
+    
+    private let noTasksLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.textColor = Constants().lightGrayColor.withAlphaComponent(0.7)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.text = "There are no available tasks. Please check back in later."
+        return label
+    }()
+    
+    
     // MARK: - Life Cycle
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values).sorted { $0.dateAdded > $1.dateAdded }
+        self.availableTasksTable.reloadData()
+        
+        if self.availableTasks.count == 0 {
+            self.noTasksLabel.isHidden = false
+        } else {
+            self.noTasksLabel.isHidden = true
+        }
+    }
+    
+    
     override func viewDidLoad() {
+        self.availableTasksTable.delegate = self
         self.setupUI()
-        self.navigationController?.navigationBar.isHidden = true
     }
     
     // MARK: - UI Setup
-    
     private func setupUI() {
+        self.view.backgroundColor = .white
+        
         self.view.addSubview(homeHeading)
         homeHeading.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(quoteLabel)
+        quoteLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(moneyEarnedLabel)
+        moneyEarnedLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(moneyTodayLabel)
+        moneyTodayLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        self.view.addSubview(moneyWeekLabel)
+        moneyWeekLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(moneyMonthLabel)
+        moneyMonthLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        self.view.addSubview(availableTasksLabel)
+        availableTasksLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(availableTasksTable)
+        availableTasksTable.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(noTasksLabel)
+        noTasksLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            homeHeading.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50),
+            homeHeading.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 80),
             homeHeading.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            
+            quoteLabel.topAnchor.constraint(equalTo: homeHeading.bottomAnchor, constant: 7),
+            quoteLabel.leadingAnchor.constraint(equalTo: homeHeading.leadingAnchor),
+            
+            moneyEarnedLabel.topAnchor.constraint(equalTo: quoteLabel.bottomAnchor, constant: 15),
+            moneyEarnedLabel.leadingAnchor.constraint(equalTo: quoteLabel.leadingAnchor),
+
+            moneyTodayLabel.topAnchor.constraint(equalTo: moneyEarnedLabel.bottomAnchor, constant: 6),
+            moneyTodayLabel.leadingAnchor.constraint(equalTo: moneyEarnedLabel.leadingAnchor),
+            
+            moneyWeekLabel.topAnchor.constraint(equalTo: moneyTodayLabel.bottomAnchor, constant: 3),
+            moneyWeekLabel.leadingAnchor.constraint(equalTo: moneyTodayLabel.leadingAnchor),
+            
+            moneyMonthLabel.topAnchor.constraint(equalTo: moneyWeekLabel.bottomAnchor, constant: 3),
+            moneyMonthLabel.leadingAnchor.constraint(equalTo: moneyWeekLabel.leadingAnchor),
+            
+            availableTasksLabel.topAnchor.constraint(equalTo: moneyMonthLabel.bottomAnchor, constant: 15),
+            availableTasksLabel.leadingAnchor.constraint(equalTo: moneyMonthLabel.leadingAnchor),
+            
+            availableTasksTable.topAnchor.constraint(equalTo: availableTasksLabel.bottomAnchor, constant: 5),
+            availableTasksTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
+            availableTasksTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            availableTasksTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+            
+            noTasksLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            noTasksLabel.centerYAnchor.constraint(equalTo: availableTasksTable.centerYAnchor),
+            noTasksLabel.widthAnchor.constraint(equalToConstant: 250)
+            
         ])
     }
     
     // MARK: - Selectors
-    
-    
+}
 
+extension HelperHomeController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
+        return self.availableTasks.count
+    }
+    
+    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HelperCurrentTasksCell.identifier, for: indexPath) as? HelperCurrentTasksCell else {
+            fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
+        }
+        
+        let currentTask = self.availableTasks[indexPath.row]
+
+        cell.configureCell(for: currentTask)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 130
+    }
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let job = self.availableTasks[indexPath.row]
+//        let jobId = job.jobUID
+//        
+//        let jobInfoController = JobInfoController(for: job, jobUID: jobId)
+//        
+//        jobInfoController.modalPresentationStyle = .fullScreen
+//        self.navigationController?.pushViewController(jobInfoController, animated: true)
+//    }
 }
