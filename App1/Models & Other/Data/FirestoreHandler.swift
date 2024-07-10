@@ -18,8 +18,10 @@ class FirestoreHandler {
     
     private init() {}
     
+    
     public func addJob(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let jobsRef = db.collection("users").document(userId).collection("jobs")
+
         
         var ref: DocumentReference? = nil
         ref = jobsRef.addDocument(data: jobData) { error in
@@ -31,7 +33,7 @@ class FirestoreHandler {
                 // TODO: Delete this.
                 // Simulate assigning a helper 10 seconds after job creation
                 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                    let helperId = "Bcdo7sS8Gb3P5Kb54njO"
+                    let helperId = "imgayster"
                     self.assignHelper(helperId, toJob: documentID, forUser: userId)
                 }
             }

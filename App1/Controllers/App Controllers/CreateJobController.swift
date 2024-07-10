@@ -308,7 +308,7 @@ class CreateJobController: UIViewController {
                         expectedHours: expectedHours,
                         location: location,
                         payment: payment,
-                        helperUID: "Bcdo7sS8Gb3P5Kb54njO",
+                        helperUID: nil,
                         media: mediaArray
                     )
                     

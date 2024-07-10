@@ -13,12 +13,20 @@ class DataManager {
     
     var currentJobs: [String: Job] = [:]
     var helpers: [String: Helper] = [
-        "Bcdo7sS8Gb3P5Kb54njO": Helper(
-            helperUID: "Bcdo7sS8Gb3P5Kb54njO",
-            firstName: "John", 
-            lastName: "Doe",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper dui in maximus pharetra. Integer faucibus massa eget nibh consequat, egestas ullamcorper purus tempor. Sed consectetur interdum dolor quis scelerisque. Suspendisse nunc augue, ultrices ut tortor eu, luctus efficitur ex. Morbi hendrerit faucibus nisi, id ultrices augue vestibulum eget. Vestibulum convallis porttitor nunc vel luctus. Nam varius, est eget iaculis accumsan, nunc ex blandit augue, vel semper ex metus non erat. Maecenas dictum condimentum ipsum. Praesent pharetra elit sed rutrum dignissim. Nunc interdum odio at mi volutpat, ut accumsan nulla consequat. Nullam ac tincidunt eros, vel sodales libero. Duis scelerisque varius interdum. Donec vitae tincidunt lacus, sit amet varius purus. Aenean scelerisque ex eu diam bibendum, rutrum posuere nulla placerat.",
-            profileImage: UIImage(named: "Bcdo7sS8Gb3P5Kb54njO")!
+//        "Bcdo7sS8Gb3P5Kb54njO": Helper(
+//            helperUID: "Bcdo7sS8Gb3P5Kb54njO",
+//            firstName: "John", 
+//            lastName: "Doe",
+//            description: "John Doe is a dedicated helper specializing in cleaning and painting, bringing a meticulous eye and skilled hand to every project he undertakes. With years of experience, John has honed his abilities to deliver spotless cleaning and flawless painting services, ensuring each client's home or office shines with perfection. Beyond his professional life, John is a devoted family man who enjoys spending weekends with his wife and two children, often embarking on outdoor adventures or engaging in community activities. His friendly demeanor and strong work ethic make him a favorite among clients, who appreciate not only his expertise but also the genuine care and respect he shows. Whether it’s a thorough spring clean or a vibrant new coat of paint, John brings a personal touch to his work, transforming spaces while building lasting relationships with those he serves.",
+//            profileImage: UIImage(named: "Bcdo7sS8Gb3P5Kb54njO")!
+//        ),
+        
+        "imgayster": Helper(
+            helperUID: "imgayster",
+            firstName: "Lyria",
+            lastName: "Smith",
+            description: "Lyria Smith is a compassionate and creative helper with a talent for babysitting and home decor, bringing warmth and beauty into every home she enters. With her extensive experience, Lyria has become known for her ability to create safe, nurturing environments for children while simultaneously transforming living spaces into aesthetically pleasing havens. Beyond her professional endeavors, Lyria is an avid gardener and artist, often drawing inspiration from nature and her surroundings to infuse her decor projects with unique, personal touches. She loves spending her free time painting or exploring new design trends, always eager to learn and grow. Her gentle nature and innovative spirit make her a beloved figure among her clients, who value not only her proficiency but also the genuine care she invests in her work. Whether she's caring for little ones with patience and kindness or redesigning a room to reflect a client's vision, Lyria brings a personal touch that leaves a lasting impression.",
+            profileImage: UIImage(named: "imgayster")!
         )
     
     ]
