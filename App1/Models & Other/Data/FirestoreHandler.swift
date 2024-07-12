@@ -97,7 +97,8 @@ class FirestoreHandler {
                             location: data["location"] as? String ?? "",
                             payment: data["payment"] as? Int ?? 0,
                             helperUID: data["helper"] as? String,
-                            media: mediaData
+                            media: mediaData,
+                            equipment: []
                         )
                         
                         jobs.append(job)

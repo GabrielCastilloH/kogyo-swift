@@ -18,4 +18,5 @@ struct Task {
     let payment: Int
     var helperUID: String?
     let media: [PlayableMediaView] // [(UIImage?, String?)]
+    let equipment: [String]
 }

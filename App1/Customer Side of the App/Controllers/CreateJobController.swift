@@ -309,7 +309,8 @@ class CreateJobController: UIViewController {
                         location: location,
                         payment: payment,
                         helperUID: nil,
-                        media: mediaArray
+                        media: mediaArray,
+                        equipment: []
                     )
                     
                 case .failure(let error):

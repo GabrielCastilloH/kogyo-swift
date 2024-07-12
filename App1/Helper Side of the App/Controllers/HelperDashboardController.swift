@@ -212,16 +212,13 @@ extension HelperDashboardController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Change appearance when tapped.
+        // Present available task info controller.
         let task = self.availableTasks[indexPath.row]
-        let jobId = task.jobUID
+        let taskID = task.jobUID
 
-        let taskInfoController = AvailableTaskInfoController(for: task, jobUID: jobId)
+        let taskInfoController = AvailableTaskInfoController(for: task, jobUID: taskID)
 
         taskInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(taskInfoController, animated: true)
-                
-        
-        print("touched me up")
     }
 }
