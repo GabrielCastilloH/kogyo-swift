@@ -13,7 +13,10 @@ class DataManager {
     
     var currentJobs: [String: Task] = [:]
     var helperAvailableTasks: [String: Task] = [
-        "I am nerd": Task(jobUID: "I am nerd", dateAdded: Date(), kind: "Cleaning", description: "I want to clean my junk.", dateTime: Date(), expectedHours: 35, location: "my house yfm", payment: 69420, media: [])
+        "I am nerd": Task(jobUID: "I am nerd", dateAdded: Date(), kind: "Cleaning", description: "I want to clean my junk. It's actually gotten pretty bad these past few days, i need someone to touch it up real good.", dateTime: Date(), expectedHours: 35, location: "my house yfm", payment: 69420, media: []),
+        "I am nerd2": Task(jobUID: "I am nerd", dateAdded: Date(), kind: "Cleaning", description: "I want to clean my junk. It's actually gotten pretty bad these past few days, i need someone to touch it up real good.", dateTime: Date(), expectedHours: 35, location: "my house yfm", payment: 69420, media: []),
+        "I am nerd3": Task(jobUID: "I am nerd", dateAdded: Date(), kind: "Cleaning", description: "I want to clean my junk. It's actually gotten pretty bad these past few days, i need someone to touch it up real good.", dateTime: Date(), expectedHours: 35, location: "my house yfm", payment: 69420, media: []),
+        "I am nerd4": Task(jobUID: "I am nerd", dateAdded: Date(), kind: "Cleaning", description: "I want to clean my junk. It's actually gotten pretty bad these past few days, i need someone to touch it up real good.", dateTime: Date(), expectedHours: 35, location: "my house yfm", payment: 69420, media: [])
     ]
     
     

@@ -45,6 +45,7 @@
 		FF879A552C1BB5E900922513 /* SupportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A542C1BB5E900922513 /* SupportController.swift */; };
 		FF919BCB2C274E0F00A1FE27 /* MediaPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF919BCA2C274E0F00A1FE27 /* MediaPlayerController.swift */; };
 		FF919BCD2C275E2700A1FE27 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF919BCC2C275E2700A1FE27 /* DataManager.swift */; };
+		FF929AA02C40CB37007B0307 /* AvailableTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */; };
 		FFC07FDC2C141B190040EF03 /* JobDateTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */; };
 		FFD8A9992C15588D009F5C8C /* LoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */; };
 		FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* JobListing.swift */; };
@@ -119,6 +120,7 @@
 		FF879A542C1BB5E900922513 /* SupportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportController.swift; sourceTree = "<group>"; };
 		FF919BCA2C274E0F00A1FE27 /* MediaPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerController.swift; sourceTree = "<group>"; };
 		FF919BCC2C275E2700A1FE27 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableTaskInfoController.swift; sourceTree = "<group>"; };
 		FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDateTimeView.swift; sourceTree = "<group>"; };
 		FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenController.swift; sourceTree = "<group>"; };
 		FFD8A99A2C157908009F5C8C /* JobListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobListing.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 			children = (
 				FFF3F2192C3F01FD00E20496 /* HelperHomeController.swift */,
 				FFF3F21F2C3F06EB00E20496 /* AllHelperJobsController.swift */,
+				FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -529,6 +532,7 @@
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,
 				FFC07FDC2C141B190040EF03 /* JobDateTimeView.swift in Sources */,
+				FF929AA02C40CB37007B0307 /* AvailableTaskInfoController.swift in Sources */,
 				D0D3A9982C117C29000DFFB8 /* SearchTableCell.swift in Sources */,
 				FFF3F2232C3F086200E20496 /* HelperCurrentTasksCell.swift in Sources */,
 				FF879A552C1BB5E900922513 /* SupportController.swift in Sources */,

@@ -83,6 +83,8 @@ class HelperHomeController: UIViewController {
         tableView.backgroundColor = .white
         tableView.keyboardDismissMode = .onDrag
         tableView.allowsSelection = true
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         tableView.register(HelperCurrentTasksCell.self, forCellReuseIdentifier: HelperCurrentTasksCell.identifier)
         return tableView
     }()
@@ -105,7 +107,6 @@ class HelperHomeController: UIViewController {
         
         self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values).sorted { $0.dateAdded > $1.dateAdded }
         self.availableTasksTable.reloadData()
-        print(availableTasks)
         
         if self.availableTasks.count == 0 {
             self.noTasksLabel.isHidden = false
@@ -161,7 +162,7 @@ class HelperHomeController: UIViewController {
             moneyEarnedLabel.topAnchor.constraint(equalTo: quoteLabel.bottomAnchor, constant: 15),
             moneyEarnedLabel.leadingAnchor.constraint(equalTo: quoteLabel.leadingAnchor),
 
-            moneyTodayLabel.topAnchor.constraint(equalTo: moneyEarnedLabel.bottomAnchor, constant: 6),
+            moneyTodayLabel.topAnchor.constraint(equalTo: moneyEarnedLabel.bottomAnchor, constant: 4),
             moneyTodayLabel.leadingAnchor.constraint(equalTo: moneyEarnedLabel.leadingAnchor),
             
             moneyWeekLabel.topAnchor.constraint(equalTo: moneyTodayLabel.bottomAnchor, constant: 3),
@@ -199,8 +200,6 @@ extension HelperHomeController: UITableViewDelegate, UITableViewDataSource {
             fatalError("The availableTasksTable could not dequeue a HelperCurrentTaskCell in HelperHomeController.")
         }
         
-        print("nerd")
-        
         let currentTask = self.availableTasks[indexPath.row]
         cell.configureCell(for: currentTask)
         
@@ -208,17 +207,19 @@ extension HelperHomeController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 130
+        return 175
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let job = self.availableTasks[indexPath.row]
-//        let jobId = job.jobUID
-//        
-//        let jobInfoController = JobInfoController(for: job, jobUID: jobId)
-//        
-//        jobInfoController.modalPresentationStyle = .fullScreen
-//        self.navigationController?.pushViewController(jobInfoController, animated: true)
+        // Change appearance when tapped.
+        let task = self.availableTasks[indexPath.row]
+        let jobId = task.jobUID
+
+        let taskInfoController = AvailableTaskInfoController(for: task, jobUID: jobId)
+
+        taskInfoController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(taskInfoController, animated: true)
+                
         
         print("touched me up")
     }
