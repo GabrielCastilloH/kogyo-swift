@@ -33,6 +33,7 @@ class PersonalInfoController: UIViewController {
                 AlertManager.showFetchingUserError(on: self, with: error)
                 return
             } else if let user = user {
+                print(user)
                 self.firstLastNameForm.firstNameTextField.text = user.firstName
                 self.firstLastNameForm.lastNameTextField.text = user.lastName
             }

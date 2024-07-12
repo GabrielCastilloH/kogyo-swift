@@ -37,7 +37,9 @@ class HomeController: UIViewController {
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         // TODO: Move this to Firebase handler.
+        
         AuthService.shared.fetchUser { [weak self] user, error in
+            print("running this")
             guard let self = self else { return }
             if let error = error {
                 print("Error getting user: \(error.localizedDescription)")
