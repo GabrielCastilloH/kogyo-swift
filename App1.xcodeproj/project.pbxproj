@@ -250,8 +250,8 @@
 				FFF3F21B2C3F036000E20496 /* Authentication */,
 				FFF3F2172C3F01B300E20496 /* Customer Side of the App */,
 				FFF3F2182C3F01C600E20496 /* Helper Side of the App */,
-				D0E923ED2C0E8DBA0070977A /* Supporting */,
 				D09C5ECE2C0F3F64002C6F89 /* Models & Other */,
+				D0E923ED2C0E8DBA0070977A /* Supporting */,
 				D0E923E72C0E8D270070977A /* Info.plist */,
 			);
 			path = App1;

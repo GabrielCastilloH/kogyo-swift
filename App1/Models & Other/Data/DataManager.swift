@@ -12,17 +12,19 @@ class DataManager {
     static let shared = DataManager()
     
     var currentJobs: [String: Task] = [:]
-    var helperAvailableTasks: [String: Task] = [:]
+    var helperAvailableTasks: [String: Task] = [
+        "I am nerd": Task(jobUID: "I am nerd", dateAdded: Date(), kind: "Cleaning", description: "I want to clean my junk.", dateTime: Date(), expectedHours: 35, location: "my house yfm", payment: 69420, media: [])
+    ]
     
     
     var helpers: [String: Helper] = [
-//        "Bcdo7sS8Gb3P5Kb54njO": Helper(
-//            helperUID: "Bcdo7sS8Gb3P5Kb54njO",
-//            firstName: "John", 
-//            lastName: "Doe",
-//            description: "John Doe is a dedicated helper specializing in cleaning and painting, bringing a meticulous eye and skilled hand to every project he undertakes. With years of experience, John has honed his abilities to deliver spotless cleaning and flawless painting services, ensuring each client's home or office shines with perfection. Beyond his professional life, John is a devoted family man who enjoys spending weekends with his wife and two children, often embarking on outdoor adventures or engaging in community activities. His friendly demeanor and strong work ethic make him a favorite among clients, who appreciate not only his expertise but also the genuine care and respect he shows. Whether it’s a thorough spring clean or a vibrant new coat of paint, John brings a personal touch to his work, transforming spaces while building lasting relationships with those he serves.",
-//            profileImage: UIImage(named: "Bcdo7sS8Gb3P5Kb54njO")!
-//        ),
+        "Bcdo7sS8Gb3P5Kb54njO": Helper(
+            helperUID: "Bcdo7sS8Gb3P5Kb54njO",
+            firstName: "John", 
+            lastName: "Doe",
+            description: "John Doe is a dedicated helper specializing in cleaning and painting, bringing a meticulous eye and skilled hand to every project he undertakes. With years of experience, John has honed his abilities to deliver spotless cleaning and flawless painting services, ensuring each client's home or office shines with perfection. Beyond his professional life, John is a devoted family man who enjoys spending weekends with his wife and two children, often embarking on outdoor adventures or engaging in community activities. His friendly demeanor and strong work ethic make him a favorite among clients, who appreciate not only his expertise but also the genuine care and respect he shows. Whether it’s a thorough spring clean or a vibrant new coat of paint, John brings a personal touch to his work, transforming spaces while building lasting relationships with those he serves.",
+            profileImage: UIImage(named: "Bcdo7sS8Gb3P5Kb54njO")!
+        ),
         
         "imgayster": Helper(
             helperUID: "imgayster",

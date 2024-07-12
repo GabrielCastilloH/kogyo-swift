@@ -105,6 +105,7 @@ class HelperHomeController: UIViewController {
         
         self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values).sorted { $0.dateAdded > $1.dateAdded }
         self.availableTasksTable.reloadData()
+        print(availableTasks)
         
         if self.availableTasks.count == 0 {
             self.noTasksLabel.isHidden = false
@@ -113,9 +114,9 @@ class HelperHomeController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         self.availableTasksTable.delegate = self
+        self.availableTasksTable.dataSource = self
         self.setupUI()
     }
     
@@ -187,7 +188,7 @@ class HelperHomeController: UIViewController {
     // MARK: - Selectors
 }
 
-extension HelperHomeController: UITableViewDelegate {
+extension HelperHomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         return self.availableTasks.count
@@ -195,11 +196,12 @@ extension HelperHomeController: UITableViewDelegate {
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HelperCurrentTasksCell.identifier, for: indexPath) as? HelperCurrentTasksCell else {
-            fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
+            fatalError("The availableTasksTable could not dequeue a HelperCurrentTaskCell in HelperHomeController.")
         }
         
+        print("nerd")
+        
         let currentTask = self.availableTasks[indexPath.row]
-
         cell.configureCell(for: currentTask)
         
         return cell
@@ -209,7 +211,7 @@ extension HelperHomeController: UITableViewDelegate {
         return 130
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let job = self.availableTasks[indexPath.row]
 //        let jobId = job.jobUID
 //        
@@ -217,5 +219,7 @@ extension HelperHomeController: UITableViewDelegate {
 //        
 //        jobInfoController.modalPresentationStyle = .fullScreen
 //        self.navigationController?.pushViewController(jobInfoController, animated: true)
-//    }
+        
+        print("touched me up")
+    }
 }
