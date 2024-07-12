@@ -1,5 +1,5 @@
 //
-//  HelperHomeController.swift
+//  HelperDashboardController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 7/10/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HelperHomeController: UIViewController {
+class HelperDashboardController: UIViewController {
 
     // MARK: - Variables
     var availableTasks: [Task] = []
@@ -106,6 +106,7 @@ class HelperHomeController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         
         self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values).sorted { $0.dateAdded > $1.dateAdded }
+        print(self.availableTasks)
         self.availableTasksTable.reloadData()
         
         if self.availableTasks.count == 0 {
@@ -189,7 +190,7 @@ class HelperHomeController: UIViewController {
     // MARK: - Selectors
 }
 
-extension HelperHomeController: UITableViewDelegate, UITableViewDataSource {
+extension HelperDashboardController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         return self.availableTasks.count

@@ -48,8 +48,8 @@ class TabController: UITabBarController {
     }
     
     private func setupHelperTabs() {
-        let home = self.createNav(with: "Home", and: UIImage(systemName: "house"), vc: HelperHomeController())
-        let allJobs = self.createNav(with: "Tasks", and: UIImage(systemName: "clock"), vc: CurrentTasksController())
+        let home = self.createNav(with: "Dashboard", and: UIImage(systemName: "house"), vc: HelperHomeController())
+        let allJobs = self.createNav(with: "My Tasks", and: UIImage(systemName: "clock"), vc: HelperMyTasksController())
         let settings = self.createNav(with: "Settings", and: UIImage(systemName: "gearshape"), vc: SettingsController())
         
         self.setViewControllers([home, allJobs, settings], animated: true)
