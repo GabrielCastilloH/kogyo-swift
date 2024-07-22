@@ -56,6 +56,7 @@
 		FFD8A9A02C157A6E009F5C8C /* CurrentTasksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99F2C157A6E009F5C8C /* CurrentTasksCell.swift */; };
 		FFD8A9A22C15B99F009F5C8C /* JobInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */; };
 		FFD8A9A52C15B9EB009F5C8C /* JobQuickInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A42C15B9EB009F5C8C /* JobQuickInfoView.swift */; };
+		FFD9EFBE2C4F156F0054DCD6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */; };
 		FFF372CF2C16C45A00F8D362 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372CE2C16C45A00F8D362 /* Task.swift */; };
 		FFF372D12C16C59B00F8D362 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D02C16C59B00F8D362 /* LoginController.swift */; };
 		FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D22C16C5CE00F8D362 /* AuthHeaderView.swift */; };
@@ -70,7 +71,6 @@
 		FFF372E72C16C87400F8D362 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372E62C16C87400F8D362 /* AuthService.swift */; };
 		FFF372E92C16C8B800F8D362 /* ForgotPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372E82C16C8B800F8D362 /* ForgotPasswordController.swift */; };
 		FFF372EB2C16C94500F8D362 /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372EA2C16C94500F8D362 /* WebViewerController.swift */; };
-		FFF372ED2C16CB0D00F8D362 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFF372EC2C16CB0D00F8D362 /* GoogleService-Info.plist */; };
 		FFF372F02C16CB9800F8D362 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FFF372EF2C16CB9800F8D362 /* FirebaseAnalytics */; };
 		FFF372F22C16CB9800F8D362 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FFF372F12C16CB9800F8D362 /* FirebaseAuth */; };
 		FFF372F42C16CB9800F8D362 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FFF372F32C16CB9800F8D362 /* FirebaseFirestore */; };
@@ -92,7 +92,7 @@
 		D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableCell.swift; sourceTree = "<group>"; };
 		D0D3A9992C11A868000DFFB8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateJobController.swift; sourceTree = "<group>"; };
-		D0E923D62C0E8D250070977A /* App1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0E923D62C0E8D250070977A /* Kogyo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kogyo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0E923D92C0E8D250070977A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0E923DB2C0E8D250070977A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D0E923DD2C0E8D250070977A /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -134,6 +134,7 @@
 		FFD8A99F2C157A6E009F5C8C /* CurrentTasksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTasksCell.swift; sourceTree = "<group>"; };
 		FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobInfoController.swift; sourceTree = "<group>"; };
 		FFD8A9A42C15B9EB009F5C8C /* JobQuickInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobQuickInfoView.swift; sourceTree = "<group>"; };
+		FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FFF372CE2C16C45A00F8D362 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		FFF372D02C16C59B00F8D362 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		FFF372D22C16C5CE00F8D362 /* AuthHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHeaderView.swift; sourceTree = "<group>"; };
@@ -148,7 +149,6 @@
 		FFF372E62C16C87400F8D362 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		FFF372E82C16C8B800F8D362 /* ForgotPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordController.swift; sourceTree = "<group>"; };
 		FFF372EA2C16C94500F8D362 /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
-		FFF372EC2C16CB0D00F8D362 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FFF372F72C16F2B800F8D362 /* CategoriesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableCell.swift; sourceTree = "<group>"; };
 		FFF3F2192C3F01FD00E20496 /* HelperDashboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperDashboardController.swift; sourceTree = "<group>"; };
 		FFF3F21C2C3F048100E20496 /* PaymentSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSettingsController.swift; sourceTree = "<group>"; };
@@ -237,7 +237,7 @@
 		D0E923CD2C0E8D250070977A = {
 			isa = PBXGroup;
 			children = (
-				D0E923D82C0E8D250070977A /* App1 */,
+				D0E923D82C0E8D250070977A /* Kogyo */,
 				D0E923D72C0E8D250070977A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -245,12 +245,12 @@
 		D0E923D72C0E8D250070977A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D0E923D62C0E8D250070977A /* App1.app */,
+				D0E923D62C0E8D250070977A /* Kogyo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D0E923D82C0E8D250070977A /* App1 */ = {
+		D0E923D82C0E8D250070977A /* Kogyo */ = {
 			isa = PBXGroup;
 			children = (
 				FFF3F21B2C3F036000E20496 /* Authentication */,
@@ -261,7 +261,7 @@
 				D0E923ED2C0E8DBA0070977A /* Supporting */,
 				D0E923E72C0E8D270070977A /* Info.plist */,
 			);
-			path = App1;
+			path = Kogyo;
 			sourceTree = "<group>";
 		};
 		D0E923ED2C0E8DBA0070977A /* Supporting */ = {
@@ -271,7 +271,7 @@
 				D0E923E42C0E8D270070977A /* LaunchScreen.storyboard */,
 				D0E923D92C0E8D250070977A /* AppDelegate.swift */,
 				D0E923DB2C0E8D250070977A /* SceneDelegate.swift */,
-				FFF372EC2C16CB0D00F8D362 /* GoogleService-Info.plist */,
+				FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -459,9 +459,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D0E923D52C0E8D250070977A /* App1 */ = {
+		D0E923D52C0E8D250070977A /* Kogyo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0E923EA2C0E8D270070977A /* Build configuration list for PBXNativeTarget "App1" */;
+			buildConfigurationList = D0E923EA2C0E8D270070977A /* Build configuration list for PBXNativeTarget "Kogyo" */;
 			buildPhases = (
 				D0E923D22C0E8D250070977A /* Sources */,
 				D0E923D32C0E8D250070977A /* Frameworks */,
@@ -471,7 +471,7 @@
 			);
 			dependencies = (
 			);
-			name = App1;
+			name = Kogyo;
 			packageProductDependencies = (
 				FFF372EF2C16CB9800F8D362 /* FirebaseAnalytics */,
 				FFF372F12C16CB9800F8D362 /* FirebaseAuth */,
@@ -479,7 +479,7 @@
 				FFF372F52C16CB9800F8D362 /* FirebaseStorage */,
 			);
 			productName = App1;
-			productReference = D0E923D62C0E8D250070977A /* App1.app */;
+			productReference = D0E923D62C0E8D250070977A /* Kogyo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -497,7 +497,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D0E923D12C0E8D250070977A /* Build configuration list for PBXProject "App1" */;
+			buildConfigurationList = D0E923D12C0E8D250070977A /* Build configuration list for PBXProject "Kogyo" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -513,7 +513,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D0E923D52C0E8D250070977A /* App1 */,
+				D0E923D52C0E8D250070977A /* Kogyo */,
 			);
 		};
 /* End PBXProject section */
@@ -525,7 +525,7 @@
 			files = (
 				D0E923E32C0E8D270070977A /* Assets.xcassets in Resources */,
 				D0E923E62C0E8D270070977A /* Base in Resources */,
-				FFF372ED2C16CB0D00F8D362 /* GoogleService-Info.plist in Resources */,
+				FFD9EFBE2C4F156F0054DCD6 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -747,7 +747,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C7N9TB3C7K;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = App1/Info.plist;
+				INFOPLIST_FILE = Kogyo/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -759,7 +759,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gabrielcastilloh.App1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gabrielcastilloh.Kogyo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -780,7 +780,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = C7N9TB3C7K;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = App1/Info.plist;
+				INFOPLIST_FILE = Kogyo/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -792,7 +792,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gabrielcastilloh.App1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gabrielcastilloh.Kogyo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -807,7 +807,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D0E923D12C0E8D250070977A /* Build configuration list for PBXProject "App1" */ = {
+		D0E923D12C0E8D250070977A /* Build configuration list for PBXProject "Kogyo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0E923E82C0E8D270070977A /* Debug */,
@@ -816,7 +816,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0E923EA2C0E8D270070977A /* Build configuration list for PBXNativeTarget "App1" */ = {
+		D0E923EA2C0E8D270070977A /* Build configuration list for PBXNativeTarget "Kogyo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0E923EB2C0E8D270070977A /* Debug */,

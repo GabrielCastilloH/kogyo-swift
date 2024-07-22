@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D0E923D52C0E8D250070977A"
-               BuildableName = "App1.app"
-               BlueprintName = "App1"
-               ReferencedContainer = "container:App1.xcodeproj">
+               BuildableName = "Kogyo.app"
+               BlueprintName = "Kogyo"
+               ReferencedContainer = "container:Kogyo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D0E923D52C0E8D250070977A"
-            BuildableName = "App1.app"
-            BlueprintName = "App1"
-            ReferencedContainer = "container:App1.xcodeproj">
+            BuildableName = "Kogyo.app"
+            BlueprintName = "Kogyo"
+            ReferencedContainer = "container:Kogyo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -68,9 +68,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D0E923D52C0E8D250070977A"
-            BuildableName = "App1.app"
-            BlueprintName = "App1"
-            ReferencedContainer = "container:App1.xcodeproj">
+            BuildableName = "Kogyo.app"
+            BlueprintName = "Kogyo"
+            ReferencedContainer = "container:Kogyo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

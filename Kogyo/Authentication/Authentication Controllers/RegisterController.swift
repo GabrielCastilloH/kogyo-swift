@@ -21,6 +21,8 @@ class RegisterController: UIViewController {
     private let signUpButton = CustomAuthButton(title: "Sign Up", hasBackground: true, fontSize: .big)
     private let hasAccountButton = CustomAuthButton(title: "Have an account? Sign In", fontSize: .med)
     
+    var keyboardHeight: CGFloat = 300
+    
     // MARK: - UI Components
     let termsTextView: UITextView = {
         let attributedString = NSMutableAttributedString(string: "By creating an account, you agree to our Terms & Conditions, and you acknowledge that you have read our Privacy Policy.")
@@ -53,6 +55,8 @@ class RegisterController: UIViewController {
         super.viewDidLoad()
         self.setupUI()
         self.termsTextView.delegate = self
+        self.confirmPasswordField.delegate = self
+        self.passwordField.delegate = self
         
         self.signUpButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
         self.hasAccountButton.addTarget(self, action: #selector(didTapHasAccount), for: .touchUpInside)
@@ -117,6 +121,12 @@ class RegisterController: UIViewController {
         self.navigationController?.popToRootViewController(animated: true)
     }
     
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            self.keyboardHeight = keyboardRectangle.height
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -231,3 +241,37 @@ extension RegisterController : UITextViewDelegate {
         textView.delegate = self
     }
 }
+
+extension RegisterController : UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        DispatchQueue.main.async {
+            UIView.transition(
+                with: self.view, duration: 0.4,
+                options: .curveLinear,
+                animations: {
+                    self.view.frame.origin.y = -self.keyboardHeight + 50
+                })
+        }
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.resignFirstResponder()
+        _ = self.textFieldShouldEndEditing(textField)
+        self.view.endEditing(true)
+        return true
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        DispatchQueue.main.async {
+            UIView.transition(
+                with: self.view, duration: 0.1,
+                options: .curveLinear,
+                animations: {
+                    self.view.frame.origin.y = 0
+                })
+        }
+        return true
+    }
+}
+
