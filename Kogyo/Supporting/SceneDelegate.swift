@@ -9,17 +9,19 @@ import UIKit
 import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
+    // MARK: - Variables & Default Functions
     var window: UIWindow?
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        // Setup window, clear DataManager, check authentication.
         self.setupWindow(with: scene)
         DataManager.shared.currentJobs = [:]
         self.checkAuthentication()
     }
     
     private func setupWindow(with scene: UIScene) {
+        // SceneDelgate setup window.
         guard let windowScene = (scene as? UIWindowScene) else { return }
         windowScene.windows.first?.backgroundColor = .white
         let window = UIWindow(windowScene: windowScene)
@@ -27,55 +29,53 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.makeKeyAndVisible()
     }
     
+    // MARK: - Auth & Animation Functions
     public func checkAuthentication() {
+        // Check if the user is logged in, removes all views from hierarchy.
         self.window?.rootViewController = nil
         self.window?.subviews.forEach { $0.removeFromSuperview() }
         
+        // If not logged in present LoginController, otherwise go to present home controller.
         if Auth.auth().currentUser == nil {
-            // Go to sign in screen
-            DispatchQueue.main.async { [weak self] in
-                UIView.animate(withDuration: 0.25) {
-                    self?.window?.layer.opacity = 0
-                } completion: { [weak self] _ in
-                    
-                    let nav = UINavigationController(rootViewController: LoginController())
-                    nav.modalPresentationStyle = .fullScreen
-                    self?.window?.rootViewController = nav
-                    
-                    UIView.animate(withDuration: 0.25) {
-                        self?.window?.layer.opacity = 1
-                    }
-                }
-            }
+            self.animateTransition(to: LoginController())
         } else {
             self.presentHomeController()
         }
     }
     
     private func presentHomeController() {
-        // LOADING VIEW:
-        let loadingViewController = OpenLoadingController() // Replace with your actual loading view controller
+        // Presents a loading screen until all data is downloaded.
+        let loadingViewController = OpenLoadingController()
         self.window?.rootViewController = loadingViewController
         self.window?.makeKeyAndVisible()
         
         DataManager.shared.fetchDatabaseData {
-            // Remove this duplicate code when you feel like it broski.
-            DispatchQueue.main.async { [weak self] in
-                UIView.animate(withDuration: 0.25) {
-                    self?.window?.layer.opacity = 0
-                } completion: { [weak self] _ in
+            self.animateTransition(to: nil)
+        }
+    }
+    
+    private func animateTransition(to viewController: UIViewController?) {
+        // If viewController is nil then the TabController is presented.
+        DispatchQueue.main.async { [weak self] in // Change opacity animation of 0.25 seconds.
+            UIView.animate(withDuration: 0.25) {
+                self?.window?.layer.opacity = 0
+            } completion: { [weak self] _ in
+                
+                if let vc = viewController {
+                    let nav = UINavigationController(rootViewController: vc)
+                    nav.modalPresentationStyle = .fullScreen
+                    self?.window?.rootViewController = nav
                     
-                    
-                    // TODO: add button or login attribute to make them login as workers. 
+                } else {
+                    // TODO: Add button or login attribute to make them login as workers.
                     self?.window?.rootViewController = TabController(isWorker: false)
-                    
-                    UIView.animate(withDuration: 0.25) {
-                        self?.window?.layer.opacity = 1
-                    }
+                }
+                
+                UIView.animate(withDuration: 0.25) {
+                    self?.window?.layer.opacity = 1
                 }
             }
         }
     }
-        
 }
 
