@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.gabrielcastilloh.App1</string>
+	<string>com.gabrielcastilloh.Kogyo</string>
 	<key>PROJECT_ID</key>
 	<string>app1-cac39</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:668219590260:ios:36f349ec4f1e3fae0cf321</string>
+	<string>1:668219590260:ios:4c565a6f2f3ef0bd0cf321</string>
 </dict>
 </plist>
