@@ -11,7 +11,7 @@ protocol JobButtonDelegate {
     func clickedJobButton(kind: String)
 }
 
-class JobButtonView: UIView {
+class TaskCategoryBtnView: UIView {
     // The buttons with the name of the different jobs available. (under the home category heading.
     
     // MARK: - Variables

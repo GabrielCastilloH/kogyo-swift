@@ -7,10 +7,7 @@
 
 import UIKit
 
-class OpenLoadingController: UIViewController {
-
-    // MARK: - Variables
-    
+class LogoLoadingController: UIViewController {
     
     // MARK: - UI Components
     private let logoImage: UIImageView = {
@@ -41,9 +38,4 @@ class OpenLoadingController: UIViewController {
             logoImage.widthAnchor.constraint(equalToConstant: 200),
         ])
     }
-    
-    // MARK: - Selectors
-    
-    
-
 }

@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class CurrentTasksController: UIViewController {
+class CustomerMyTasksController: UIViewController {
     
     // MARK: - Variables
     var currentJobs: [Task] = []
@@ -96,7 +96,7 @@ class CurrentTasksController: UIViewController {
 }
 
 // MARK: - Search Bar Delegate
-extension CurrentTasksController: UITableViewDelegate, UITableViewDataSource {
+extension CustomerMyTasksController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         return self.currentJobs.count
@@ -104,7 +104,7 @@ extension CurrentTasksController: UITableViewDelegate, UITableViewDataSource {
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurrentTasksCell.identifier, for: indexPath) as? CurrentTasksCell else {
-            fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
+            fatalError("The SearchTableView could not dequeue a SearchTableCell in CustomerHomeController.")
         }
         
         let currentJob = self.currentJobs[indexPath.row]

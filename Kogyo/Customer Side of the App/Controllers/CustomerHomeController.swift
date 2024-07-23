@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeController: UIViewController {
+class CustomerHomeController: UIViewController {
     
     // MARK: - Variables
     var jobListing = JobListing()
@@ -138,7 +138,7 @@ class HomeController: UIViewController {
 }
 
 // MARK: - Search Bar Delegate
-extension HomeController: UITextFieldDelegate {
+extension CustomerHomeController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.searchTableView.showHideView(0)
@@ -157,7 +157,7 @@ extension HomeController: UITextFieldDelegate {
 }
 
 // MARK: - Search Table & Task Table Delegate
-extension HomeController: UITableViewDelegate, UITableViewDataSource {
+extension CustomerHomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         if tableView == self.searchTableView {
@@ -205,7 +205,7 @@ extension HomeController: UITableViewDelegate, UITableViewDataSource {
 }
 
 // MARK: - Search Bar Delegate
-extension HomeController: CustomSearchBarDelegate {
+extension CustomerHomeController: CustomSearchBarDelegate {
     func didClickCancel() {
         // Do the same as if the textfield should return.
         self.searchTableView.showHideView(0)
@@ -218,7 +218,7 @@ extension HomeController: CustomSearchBarDelegate {
 }
 
 // MARK: - Task Button Delegate
-extension HomeController: CategoryViewDelegate {
+extension CustomerHomeController: CategoryViewDelegate {
     func clickedButtonInCategory(kind: String) {
         self.presentCreateJobController(for: kind)
     }
