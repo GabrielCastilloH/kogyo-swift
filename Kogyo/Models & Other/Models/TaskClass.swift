@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Task {
+struct TaskClass {
     let jobUID: String
     let dateAdded: Date
     let kind: String
