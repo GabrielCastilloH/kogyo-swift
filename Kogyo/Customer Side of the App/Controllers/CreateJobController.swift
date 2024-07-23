@@ -74,6 +74,7 @@ class CreateJobController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.submitJobBtn.isUserInteractionEnabled = true
         self.submitJobBtn.backgroundColor = Constants().lightBlueColor
+        self.setupNavbar()
     }
     
     init(kind: String) {
@@ -97,7 +98,6 @@ class CreateJobController: UIViewController {
         
         self.jobDateTimeView.delegate = self
         
-        self.setupNavbar()
         self.setupUI()
         
         NotificationCenter.default.addObserver(
@@ -117,6 +117,7 @@ class CreateJobController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.navigationBar.backgroundColor = .clear
         self.navigationItem.title = "Create a New Task"
     }
     

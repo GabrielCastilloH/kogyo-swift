@@ -88,7 +88,7 @@ class LoadingScreenController: UIViewController {
     }
     
     private func setupUI() {
-        guard let loadingAnimationUrl = URL(string: "https://gabrielcastilloh.github.io/codepen_animation/")
+        guard let loadingAnimationUrl = URL(string: "https://gabrielcastilloh.github.io/codepen_animation/redirecting_loader.html")
         else { return }
         webView.load(URLRequest(url: loadingAnimationUrl))
         
