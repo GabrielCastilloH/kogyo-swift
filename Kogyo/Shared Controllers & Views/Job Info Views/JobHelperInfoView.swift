@@ -60,7 +60,7 @@ class JobHelperInfoView: UIView {
     
     // MARK: - Life Cycle
     
-    init(for job: Task) {
+    init(for job: TaskClass) {
         self.helperUID = job.helperUID
         
         guard let helperUID = self.helperUID else {

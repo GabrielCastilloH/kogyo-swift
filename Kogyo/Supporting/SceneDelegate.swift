@@ -49,7 +49,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.rootViewController = loadingViewController
         self.window?.makeKeyAndVisible()
         
-        DataManager.shared.fetchDatabaseData {
+        Task {
+            await DataManager.shared.fetchDatabaseData()
             self.animateTransition(to: nil)
         }
     }

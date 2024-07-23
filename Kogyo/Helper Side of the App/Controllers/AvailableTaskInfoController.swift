@@ -12,7 +12,7 @@ import FirebaseStorage
 class AvailableTaskInfoController: UIViewController {
     
     // MARK: - Variables
-    var selectedTask: Task
+    var selectedTask: TaskClass
     var cf = CustomFunctions()
     var mediaData: [PlayableMediaView] = []
     
@@ -44,7 +44,7 @@ class AvailableTaskInfoController: UIViewController {
     
     
     // MARK: - Life Cycle
-    init(for job: Task, jobUID: String) {
+    init(for job: TaskClass, jobUID: String) {
         self.selectedTask = job
         super.init(nibName: nil, bundle: nil)
     }

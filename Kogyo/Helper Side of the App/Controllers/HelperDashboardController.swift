@@ -10,7 +10,7 @@ import UIKit
 class HelperDashboardController: UIViewController {
 
     // MARK: - Variables
-    var availableTasks: [Task] = []
+    var availableTasks: [TaskClass] = []
     
     // MARK: - UI Components
     private let homeHeading: UILabel = {

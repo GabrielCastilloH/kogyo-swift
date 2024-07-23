@@ -101,7 +101,7 @@ class JobCategoryView: UIView {
     }
 }
 
-// MARK: - Task Button Delegate
+// MARK: - TaskClass Button Delegate
 // We're going two levels deep baby.
 extension JobCategoryView: JobButtonDelegate {
     func clickedJobButton(kind: String) {

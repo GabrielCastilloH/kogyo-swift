@@ -46,48 +46,43 @@ class FirestoreHandler {
     ///     - for: The UID of the user you want to fetch jobs for.
     ///     - completion: A completion handler that will return `([Task], Error)` when done.
     ///
-    func fetchJobs(for userId: String, completion: @escaping (Result<[Task], Error>) -> Void) {
+    func fetchJobs(for userId: String) async throws -> [TaskClass] {
         guard let userUID = Auth.auth().currentUser?.uid else {
             // Handle the case where the user is not authenticated
-            print("User not authenticated")
-            return
+            throw NSError(domain: "User not authenticated", code: 401, userInfo: nil)
         }
         
         let jobsRef = db.collection("users").document(userUID).collection("jobs")
         
-        jobsRef.getDocuments { querySnapshot, error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                var tasks: [Task] = [] // Returns array of tasks.
+        do {
+            let querySnapshot = try await jobsRef.getDocuments()
+            var tasks: [TaskClass] = [] // Returns array of tasks.
+            
+            for document in querySnapshot.documents {
+                let data = document.data() // All data.
+                let mediaData = try await fetchJobMedia(jobId: document.documentID) // Fetch media data
                 
-                for document in querySnapshot!.documents {
-                    let data = document.data() // All data.
-                    var mediaData: [PlayableMediaView] = [] // Media Data
-                    
-                    self.fetchJobMedia(jobId: document.documentID) { media in
-                        mediaData = media
-                        
-                        // This task object is completely different from the one on firebase, it has more info.
-                        let task = Task(
-                            jobUID: document.documentID,
-                            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
-                            kind: data["kind"] as? String ?? "",
-                            description: data["description"] as? String ?? "",
-                            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
-                            expectedHours: data["expectedHours"] as? Int ?? 0,
-                            location: data["location"] as? String ?? "",
-                            payment: data["payment"] as? Int ?? 0,
-                            helperUID: data["helper"] as? String,
-                            media: mediaData,
-                            equipment: []
-                        )
-                        
-                        tasks.append(task)
-                        completion(.success(tasks))
-                    }
-                }
+                // This task object is completely different from the one on firebase, it has more info.
+                let task = TaskClass(
+                    jobUID: document.documentID,
+                    dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
+                    kind: data["kind"] as? String ?? "",
+                    description: data["description"] as? String ?? "",
+                    dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
+                    expectedHours: data["expectedHours"] as? Int ?? 0,
+                    location: data["location"] as? String ?? "",
+                    payment: data["payment"] as? Int ?? 0,
+                    helperUID: data["helper"] as? String,
+                    media: mediaData,
+                    equipment: []
+                )
+                
+                tasks.append(task)
             }
+            
+            return tasks
+        } catch {
+            throw error
         }
     }
     
@@ -117,47 +112,33 @@ class FirestoreHandler {
     ///     - for: The UID of the helper you want to fetch.
     ///     - completion: A completion handler that will return `(Helper, Error)` when done.
     ///
-    func fetchHelper(for helperUID: String, completion: @escaping (Result<Helper, Error>) -> Void) {
-        
+    func fetchHelper(for helperUID: String) async throws -> Helper {
         let storageRef = Storage.storage().reference()
         
-        // Fetch helper information from Firestore
-        let helperRef = db.collection("helpers").document(helperUID)
-        helperRef.getDocument { (document, error) in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
+        do {
+            // Fetch helper information from Firestore
+            let helperRef = db.collection("helpers").document(helperUID)
+            let document = try await helperRef.getDocument()
             
-            guard let document = document, document.exists, let data = document.data() else {
-                let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Helper not found"])
-                completion(.failure(error))
-                return
+            guard let data = document.data() else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Helper not found"])
             }
-            
             
             // Fetch profile image from Firebase Storage
             let profileRef = storageRef.child("profile/\(helperUID).jpeg")
-            profileRef.getData(maxSize: 1 * 2048 * 2048) { imageData, error in
-                if let error = error {
-                    // If there's an error fetching the image, return the helper info without image
-                    print("Error fetching image: \(error.localizedDescription)")
-                    completion(.failure(error))
-                } else {
-                    let profileImage = UIImage(data: imageData!)
-                    
-                    let helper = Helper(
-                        helperUID: helperUID,
-                        firstName: data["firstName"] as? String ?? "",
-                        lastName: data["lastName"] as? String ?? "",
-                        description: data["helperDescription"] as? String ?? "",
-                        profileImage: profileImage!
-                    )
-                    
-                    // NOTE: Completion has to be in the completion block for the profile image. (ensures not completed w/o image).
-                    completion(.success(helper))
-                }
-            }
+            let profileImage = try await self.fetchFirebaseImage(from: profileRef)
+            
+            let helper = Helper(
+                helperUID: helperUID,
+                firstName: data["firstName"] as? String ?? "",
+                lastName: data["lastName"] as? String ?? "",
+                description: data["helperDescription"] as? String ?? "",
+                profileImage: profileImage
+            )
+            
+            return helper
+        } catch {
+            throw error
         }
     }
     
@@ -219,18 +200,17 @@ class FirestoreHandler {
     ///     - from: `StorageReference` where image is held.
     ///
     /// - Returns: A greeting for the given `subject`.
-    func fetchFirebaseImage(from item: StorageReference, completion: @escaping (UIImage?) -> Void) {
-        item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
-            if let error = error {
-                print("Error downloading image data: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
-            if let data = data, let image = UIImage(data: data) {
-                completion(image)
-            } else {
-                completion(nil)
+    func fetchFirebaseImage(from item: StorageReference) async throws -> UIImage {
+        return try await withCheckedThrowingContinuation { continuation in
+            item.getData(maxSize: 10 * 1024 * 1024) { data, error in
+                if let error = error {
+                    print("Error downloading image data: \(error.localizedDescription)")
+                    continuation.resume(throwing: error)
+                } else if let data = data, let image = UIImage(data: data) {
+                    continuation.resume(returning: image)
+                } else {
+                    continuation.resume(throwing: NSError(domain: "Image data error", code: 0, userInfo: nil))
+                }
             }
         }
     }
@@ -242,25 +222,17 @@ class FirestoreHandler {
     ///     - jobId: the unique identifier of the job for which you'd like to fetch the media for.
     ///
     /// - Returns: `[PlayableMediaView]` through a completion handler. Can throw.
-    func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
+    func fetchJobMedia(jobId: String) async throws -> [PlayableMediaView] {
         let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
         var mediaData: [PlayableMediaView] = []
-        let dispatchGroup = DispatchGroup()
         
-        // 1st: Fetch all file names.
-        storageRef.listAll { (result, error) in
-            if let error = error {
-                print("Error listing files: \(error.localizedDescription)")
-                completion(mediaData) // Complete with empty mediaData on error
-                return
-            }
+        do {
+            let result = try await storageRef.listAll()
             
             var fileNames: [String] = []
             var videoNames: [String] = []
             
-            for item in result!.items {
-                // if fileName is repeated, then that means one is a thumbnail and the other is a video.
-                // NOTE: videoNames is called later.
+            for item in result.items {
                 let name = item.name
                 let fileName = (name as NSString).deletingPathExtension
                 
@@ -271,36 +243,26 @@ class FirestoreHandler {
                 }
             }
             
-            // 2nd: For all file names fetch their image (or thumbnail) and create a PlayableMediaView
-            for item in result!.items {
+            for item in result.items {
                 let fileName = item.name
                 let baseName = (fileName as NSString).deletingPathExtension
-                
                 let fileExtension = (fileName as NSString).pathExtension
                 
-                dispatchGroup.enter() // Enter the dispatch group
-                
-                // Only go through items that have jpeg (workaround problem where .mov wasn't recognized)
                 if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
+                    let image = try await fetchFirebaseImage(from: item)
+                    var mediaView = await PlayableMediaView(with: image, videoUID: nil)
                     
-                    self.fetchFirebaseImage(from: item) { image in
-                        var mediaView = PlayableMediaView(with: image, videoUID: nil)
-                        
-                        if videoNames.contains(baseName) {
-                            mediaView = PlayableMediaView(with: image, videoUID: baseName)
-                        }
-                        mediaData.append(mediaView)
-                        dispatchGroup.leave()
+                    if videoNames.contains(baseName) {
+                        mediaView = await PlayableMediaView(with: image, videoUID: baseName)
                     }
-                } else {
-                    dispatchGroup.leave() // Leave the dispatch group if file type is neither image nor video
+                    mediaData.append(mediaView)
                 }
             }
             
-            // 3rd: Complete the function and return array of PlayableMediaViews
-            dispatchGroup.notify(queue: .main) { // Notify when all async operations are completed
-                completion(mediaData)
-            }
+            return mediaData
+        } catch {
+            print("Error listing files: \(error.localizedDescription)")
+            throw error
         }
     }
 

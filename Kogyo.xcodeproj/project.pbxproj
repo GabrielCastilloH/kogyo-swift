@@ -57,7 +57,7 @@
 		FFD8A9A22C15B99F009F5C8C /* JobInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */; };
 		FFD8A9A52C15B9EB009F5C8C /* JobQuickInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A42C15B9EB009F5C8C /* JobQuickInfoView.swift */; };
 		FFD9EFBE2C4F156F0054DCD6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */; };
-		FFF372CF2C16C45A00F8D362 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372CE2C16C45A00F8D362 /* Task.swift */; };
+		FFF372CF2C16C45A00F8D362 /* TaskClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372CE2C16C45A00F8D362 /* TaskClass.swift */; };
 		FFF372D12C16C59B00F8D362 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D02C16C59B00F8D362 /* LoginController.swift */; };
 		FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D22C16C5CE00F8D362 /* AuthHeaderView.swift */; };
 		FFF372D52C16C60000F8D362 /* CustomAuthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D42C16C60000F8D362 /* CustomAuthTextField.swift */; };
@@ -135,7 +135,7 @@
 		FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobInfoController.swift; sourceTree = "<group>"; };
 		FFD8A9A42C15B9EB009F5C8C /* JobQuickInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobQuickInfoView.swift; sourceTree = "<group>"; };
 		FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		FFF372CE2C16C45A00F8D362 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		FFF372CE2C16C45A00F8D362 /* TaskClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskClass.swift; sourceTree = "<group>"; };
 		FFF372D02C16C59B00F8D362 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		FFF372D22C16C5CE00F8D362 /* AuthHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHeaderView.swift; sourceTree = "<group>"; };
 		FFF372D42C16C60000F8D362 /* CustomAuthTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAuthTextField.swift; sourceTree = "<group>"; };
@@ -382,7 +382,7 @@
 			isa = PBXGroup;
 			children = (
 				FFF372DA2C16C7BE00F8D362 /* Auth Models */,
-				FFF372CE2C16C45A00F8D362 /* Task.swift */,
+				FFF372CE2C16C45A00F8D362 /* TaskClass.swift */,
 				FF879A482C1B2CBF00922513 /* SettingsOption.swift */,
 				FF6882082C1C790600288618 /* Helper.swift */,
 			);
@@ -579,7 +579,7 @@
 				D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */,
 				FFD8A9A22C15B99F009F5C8C /* JobInfoController.swift in Sources */,
 				D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */,
-				FFF372CF2C16C45A00F8D362 /* Task.swift in Sources */,
+				FFF372CF2C16C45A00F8D362 /* TaskClass.swift in Sources */,
 				FF6882092C1C790700288618 /* Helper.swift in Sources */,
 				FF919BCB2C274E0F00A1FE27 /* MediaPlayerController.swift in Sources */,
 				D0C5CED62C12F3AF002582D4 /* DescriptionFormView.swift in Sources */,

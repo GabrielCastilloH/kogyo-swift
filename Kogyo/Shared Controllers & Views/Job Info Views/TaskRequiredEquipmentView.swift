@@ -26,7 +26,7 @@ class TaskRequiredEquipmentView: UIView {
     }()
     
     // MARK: - Life Cycle
-    init(for task: Task) {
+    init(for task: TaskClass) {
         self.requiredEquipment = task.equipment
         
         super.init(frame: .zero)

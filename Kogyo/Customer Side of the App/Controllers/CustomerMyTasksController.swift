@@ -11,7 +11,7 @@ import FirebaseAuth
 class CustomerMyTasksController: UIViewController {
     
     // MARK: - Variables
-    var currentJobs: [Task] = []
+    var currentJobs: [TaskClass] = []
     
     // MARK: - UI Components
     private let currentJobsTableView: UITableView = {

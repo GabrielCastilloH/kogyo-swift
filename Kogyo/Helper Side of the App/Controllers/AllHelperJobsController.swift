@@ -10,7 +10,7 @@ import UIKit
 class AllHelperJobsController: UIViewController {
     
     // MARK: - Variables
-    var currentTasks: [Task] = []
+    var currentTasks: [TaskClass] = []
     
     // MARK: - UI Components
     private let currentJobsTableView: UITableView = {

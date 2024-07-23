@@ -26,7 +26,7 @@ class JobDescriptionView: UIView {
     
     
     // MARK: - Life Cycle
-    init(for job: Task) {
+    init(for job: TaskClass) {
         
         self.descriptionTextView.text = job.description
         

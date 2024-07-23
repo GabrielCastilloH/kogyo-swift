@@ -299,7 +299,7 @@ class CreateJobController: UIViewController {
                         }
                     }
                     
-                    DataManager.shared.currentJobs[jobUID] = Task(
+                    DataManager.shared.currentJobs[jobUID] = TaskClass(
                         jobUID: jobUID,
                         dateAdded: dateAdded,
                         kind: kind,

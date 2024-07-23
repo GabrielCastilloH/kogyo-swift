@@ -11,7 +11,7 @@ import FirebaseAuth
 class HelperMyTasksController: UIViewController {
     
     // MARK: - Variables
-    var myTasks: [Task] = []
+    var myTasks: [TaskClass] = []
     
     // MARK: - UI Components
     private let myTasksTableView: UITableView = {

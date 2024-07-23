@@ -113,7 +113,7 @@ class HelperCurrentTasksCell: UITableViewCell {
     }
     
      // MARK: - UI Setup
-    public func configureCell(for job: Task) {
+    public func configureCell(for job: TaskClass) {
         self.kindTitleLabel.text = job.kind
         self.jobDescriptionLabel.text = "\(job.description)\n"
         

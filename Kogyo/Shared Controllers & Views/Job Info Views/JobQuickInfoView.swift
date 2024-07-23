@@ -69,7 +69,7 @@ class JobQuickInfoView: UIView {
     
     
     // MARK: - Life Cycle
-    init(for job: Task) {
+    init(for job: TaskClass) {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "EE, MMM d, h:mm a"
