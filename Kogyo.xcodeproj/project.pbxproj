@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		D09C5ED22C0F3F8E002C6F89 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED12C0F3F8E002C6F89 /* Constants.swift */; };
 		D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */; };
-		D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */; };
+		D09C5ED72C0F564D002C6F89 /* TaskCategoryBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C5ED62C0F564D002C6F89 /* TaskCategoryBtnView.swift */; };
 		D0C5CED42C12EEBA002582D4 /* JobKindFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C5CED32C12EEBA002582D4 /* JobKindFormView.swift */; };
 		D0C5CED62C12F3AF002582D4 /* DescriptionFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */; };
 		D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */; };
@@ -18,14 +18,14 @@
 		D0D3A99F2C11B975000DFFB8 /* CreateJobController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */; };
 		D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923D92C0E8D250070977A /* AppDelegate.swift */; };
 		D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DB2C0E8D250070977A /* SceneDelegate.swift */; };
-		D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DD2C0E8D250070977A /* HomeController.swift */; };
+		D0E923DE2C0E8D250070977A /* CustomerHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DD2C0E8D250070977A /* CustomerHomeController.swift */; };
 		D0E923E32C0E8D270070977A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0E923E22C0E8D270070977A /* Assets.xcassets */; };
 		D0E923E62C0E8D270070977A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = D0E923E52C0E8D270070977A /* Base */; };
-		D0E923EF2C0E98420070977A /* CurrentTasksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923EE2C0E98420070977A /* CurrentTasksController.swift */; };
+		D0E923EF2C0E98420070977A /* CustomerMyTasksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923EE2C0E98420070977A /* CustomerMyTasksController.swift */; };
 		D0E923F12C0E98670070977A /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F02C0E98670070977A /* SettingsController.swift */; };
 		D0E923F32C0E98C90070977A /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F22C0E98C90070977A /* TabController.swift */; };
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
-		FF0B76EC2C29CEE70019FD8B /* OpenLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0B76EB2C29CEE70019FD8B /* OpenLoadingController.swift */; };
+		FF0B76EC2C29CEE70019FD8B /* LogoLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0B76EB2C29CEE70019FD8B /* LogoLoadingController.swift */; };
 		FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */; };
 		FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5C2C212BBC00F58D0F /* MediaView.swift */; };
 		FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */; };
@@ -51,7 +51,7 @@
 		FF929AA02C40CB37007B0307 /* AvailableTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */; };
 		FFC07FDC2C141B190040EF03 /* JobDateTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */; };
 		FFD8A9992C15588D009F5C8C /* LoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */; };
-		FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* JobListing.swift */; };
+		FFD8A99B2C157908009F5C8C /* TaskListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* TaskListing.swift */; };
 		FFD8A99D2C157924009F5C8C /* CustomFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */; };
 		FFD8A9A02C157A6E009F5C8C /* CurrentTasksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99F2C157A6E009F5C8C /* CurrentTasksCell.swift */; };
 		FFD8A9A22C15B99F009F5C8C /* JobInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */; };
@@ -85,7 +85,7 @@
 /* Begin PBXFileReference section */
 		D09C5ED12C0F3F8E002C6F89 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobCategoryView.swift; sourceTree = "<group>"; };
-		D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobButtonView.swift; sourceTree = "<group>"; };
+		D09C5ED62C0F564D002C6F89 /* TaskCategoryBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryBtnView.swift; sourceTree = "<group>"; };
 		D0C5CED32C12EEBA002582D4 /* JobKindFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobKindFormView.swift; sourceTree = "<group>"; };
 		D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionFormView.swift; sourceTree = "<group>"; };
 		D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
@@ -95,15 +95,15 @@
 		D0E923D62C0E8D250070977A /* Kogyo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kogyo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0E923D92C0E8D250070977A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0E923DB2C0E8D250070977A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		D0E923DD2C0E8D250070977A /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
+		D0E923DD2C0E8D250070977A /* CustomerHomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerHomeController.swift; sourceTree = "<group>"; };
 		D0E923E22C0E8D270070977A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0E923E52C0E8D270070977A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D0E923E72C0E8D270070977A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D0E923EE2C0E98420070977A /* CurrentTasksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTasksController.swift; sourceTree = "<group>"; };
+		D0E923EE2C0E98420070977A /* CustomerMyTasksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerMyTasksController.swift; sourceTree = "<group>"; };
 		D0E923F02C0E98670070977A /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		D0E923F22C0E98C90070977A /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
-		FF0B76EB2C29CEE70019FD8B /* OpenLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLoadingController.swift; sourceTree = "<group>"; };
+		FF0B76EB2C29CEE70019FD8B /* LogoLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoLoadingController.swift; sourceTree = "<group>"; };
 		FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaScrollView.swift; sourceTree = "<group>"; };
 		FF28AF5C2C212BBC00F58D0F /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayableMediaView.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 		FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableTaskInfoController.swift; sourceTree = "<group>"; };
 		FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDateTimeView.swift; sourceTree = "<group>"; };
 		FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenController.swift; sourceTree = "<group>"; };
-		FFD8A99A2C157908009F5C8C /* JobListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobListing.swift; sourceTree = "<group>"; };
+		FFD8A99A2C157908009F5C8C /* TaskListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListing.swift; sourceTree = "<group>"; };
 		FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFunctions.swift; sourceTree = "<group>"; };
 		FFD8A99F2C157A6E009F5C8C /* CurrentTasksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTasksCell.swift; sourceTree = "<group>"; };
 		FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobInfoController.swift; sourceTree = "<group>"; };
@@ -174,6 +174,8 @@
 		D09C5ECE2C0F3F64002C6F89 /* Models & Other */ = {
 			isa = PBXGroup;
 			children = (
+				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
+				FF919BCC2C275E2700A1FE27 /* DataManager.swift */,
 				FF919BCE2C27601100A1FE27 /* Data */,
 				FFF372CD2C16C44100F8D362 /* Models */,
 				FFF372CC2C16C43300F8D362 /* Constants+Extensions */,
@@ -185,7 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				D09C5ED42C0F49F0002C6F89 /* JobCategoryView.swift */,
-				D09C5ED62C0F564D002C6F89 /* JobButtonView.swift */,
+				D09C5ED62C0F564D002C6F89 /* TaskCategoryBtnView.swift */,
 				D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */,
 				D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */,
 				FFF372F72C16F2B800F8D362 /* CategoriesTableCell.swift */,
@@ -196,10 +198,10 @@
 		D0D3A99B2C11B91B000DFFB8 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D0E923DD2C0E8D250070977A /* HomeController.swift */,
+				D0E923DD2C0E8D250070977A /* CustomerHomeController.swift */,
 				D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */,
 				FF86A0142C1E52BE00E5F675 /* MapController.swift */,
-				D0E923EE2C0E98420070977A /* CurrentTasksController.swift */,
+				D0E923EE2C0E98420070977A /* CustomerMyTasksController.swift */,
 				FFD8A9982C15588D009F5C8C /* LoadingScreenController.swift */,
 				FFD8A9A12C15B99F009F5C8C /* JobInfoController.swift */,
 				D0E923F02C0E98670070977A /* SettingsController.swift */,
@@ -317,9 +319,7 @@
 		FF919BCE2C27601100A1FE27 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				FFD8A99A2C157908009F5C8C /* JobListing.swift */,
-				FF919BCC2C275E2700A1FE27 /* DataManager.swift */,
-				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
+				FFD8A99A2C157908009F5C8C /* TaskListing.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -429,7 +429,7 @@
 		FFF3F21B2C3F036000E20496 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				FF0B76EB2C29CEE70019FD8B /* OpenLoadingController.swift */,
+				FF0B76EB2C29CEE70019FD8B /* LogoLoadingController.swift */,
 				FFF372C92C16C3D000F8D362 /* Authentication Controllers */,
 				FFF372CB2C16C3F500F8D362 /* Authentication Views */,
 			);
@@ -545,7 +545,7 @@
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
 				FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */,
 				FF6045722C4178CB0063176A /* HelperMyTasksController.swift in Sources */,
-				FFD8A99B2C157908009F5C8C /* JobListing.swift in Sources */,
+				FFD8A99B2C157908009F5C8C /* TaskListing.swift in Sources */,
 				FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,
@@ -558,7 +558,7 @@
 				FFF372D92C16C78900F8D362 /* RegisterController.swift in Sources */,
 				FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */,
 				FF879A512C1BB50500922513 /* NotificationSettingsController.swift in Sources */,
-				D09C5ED72C0F564D002C6F89 /* JobButtonView.swift in Sources */,
+				D09C5ED72C0F564D002C6F89 /* TaskCategoryBtnView.swift in Sources */,
 				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
 				D0E923F12C0E98670070977A /* SettingsController.swift in Sources */,
 				FFF3F21D2C3F048100E20496 /* PaymentSettingsController.swift in Sources */,
@@ -566,7 +566,7 @@
 				FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */,
-				D0E923DE2C0E8D250070977A /* HomeController.swift in Sources */,
+				D0E923DE2C0E8D250070977A /* CustomerHomeController.swift in Sources */,
 				FF6045752C417F060063176A /* TaskRequiredEquipmentView.swift in Sources */,
 				FF86A0152C1E52BE00E5F675 /* MapController.swift in Sources */,
 				FF45E4B52C1613BA000F1BE7 /* JobPhotosVideosView.swift in Sources */,
@@ -583,7 +583,7 @@
 				FF6882092C1C790700288618 /* Helper.swift in Sources */,
 				FF919BCB2C274E0F00A1FE27 /* MediaPlayerController.swift in Sources */,
 				D0C5CED62C12F3AF002582D4 /* DescriptionFormView.swift in Sources */,
-				D0E923EF2C0E98420070977A /* CurrentTasksController.swift in Sources */,
+				D0E923EF2C0E98420070977A /* CustomerMyTasksController.swift in Sources */,
 				FFD8A9A52C15B9EB009F5C8C /* JobQuickInfoView.swift in Sources */,
 				D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */,
 				FFF372E92C16C8B800F8D362 /* ForgotPasswordController.swift in Sources */,
@@ -597,7 +597,7 @@
 				FFF372EB2C16C94500F8D362 /* WebViewerController.swift in Sources */,
 				FFF372DE2C16C7E000F8D362 /* LoginUserRequest.swift in Sources */,
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
-				FF0B76EC2C29CEE70019FD8B /* OpenLoadingController.swift in Sources */,
+				FF0B76EC2C29CEE70019FD8B /* LogoLoadingController.swift in Sources */,
 				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
 				FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */,
 				FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */,

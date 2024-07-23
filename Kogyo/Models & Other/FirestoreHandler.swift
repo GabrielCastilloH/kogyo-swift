@@ -18,11 +18,9 @@ class FirestoreHandler {
     
     private init() {}
     
-    
     public func addJob(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let jobsRef = db.collection("users").document(userId).collection("jobs")
 
-        
         var ref: DocumentReference? = nil
         ref = jobsRef.addDocument(data: jobData) { error in
             if let error = error {
@@ -40,21 +38,6 @@ class FirestoreHandler {
         }
     }
     
-    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String) {
-        
-        let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
-        
-        jobRef.updateData(["helper": helperUID]) { error in
-            if let error = error {
-                print("Error assigning helper: \(error.localizedDescription)")
-            } else {
-                // Update helper info on DataManager
-                DataManager.shared.currentJobs[jobId]!.helperUID = helperUID
-                return
-            }
-        }
-    }
-    
     /// Fetches `[Job]`object for a given `userUID`.
     ///
     /// Only to be called in DataManager to set its data when the app is created.
@@ -64,7 +47,6 @@ class FirestoreHandler {
     ///     - completion: A completion handler that will return `([Task], Error)` when done.
     ///
     func fetchJobs(for userId: String, completion: @escaping (Result<[Task], Error>) -> Void) {
-        // TODO: Create documentation for this function.
         guard let userUID = Auth.auth().currentUser?.uid else {
             // Handle the case where the user is not authenticated
             print("User not authenticated")
@@ -77,17 +59,17 @@ class FirestoreHandler {
             if let error = error {
                 completion(.failure(error))
             } else {
-                var jobs: [Task] = []
+                var tasks: [Task] = [] // Returns array of tasks.
+                
                 for document in querySnapshot!.documents {
-                    let data = document.data()
-                    // Add media:
-                    var mediaData: [PlayableMediaView] = []
+                    let data = document.data() // All data.
+                    var mediaData: [PlayableMediaView] = [] // Media Data
                     
                     self.fetchJobMedia(jobId: document.documentID) { media in
                         mediaData = media
                         
-                        // This job object is completely different from the one on firebase, it has more info.
-                        let job = Task(
+                        // This task object is completely different from the one on firebase, it has more info.
+                        let task = Task(
                             jobUID: document.documentID,
                             dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
                             kind: data["kind"] as? String ?? "",
@@ -101,10 +83,27 @@ class FirestoreHandler {
                             equipment: []
                         )
                         
-                        jobs.append(job)
-                        completion(.success(jobs))
+                        tasks.append(task)
+                        completion(.success(tasks))
                     }
                 }
+            }
+        }
+    }
+    
+    
+    // MARK: - Helper Functions
+    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String) {
+        
+        let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
+        
+        jobRef.updateData(["helper": helperUID]) { error in
+            if let error = error {
+                print("Error assigning helper: \(error.localizedDescription)")
+            } else {
+                // Update helper info on DataManager
+                DataManager.shared.currentJobs[jobId]!.helperUID = helperUID
+                return
             }
         }
     }
@@ -139,7 +138,7 @@ class FirestoreHandler {
             
             // Fetch profile image from Firebase Storage
             let profileRef = storageRef.child("profile/\(helperUID).jpeg")
-            profileRef.getData(maxSize: 1 * 1024 * 1024) { imageData, error in
+            profileRef.getData(maxSize: 1 * 2048 * 2048) { imageData, error in
                 if let error = error {
                     // If there's an error fetching the image, return the helper info without image
                     print("Error fetching image: \(error.localizedDescription)")
@@ -162,50 +161,40 @@ class FirestoreHandler {
         }
     }
     
-    public func editNames(userUID: String, firstName: String, lastName: String) {
-        
-        let userRef = db.collection("users").document(userUID)
-        
-        userRef.updateData([
-            "firstName": firstName,
-            "lastName": lastName
-        ]) { error in
-            if let error = error {
-                print("Error updating names: \(error.localizedDescription)")
-            } else {
-                return
-            }
-        }
-    }
-    
+    // MARK: - Images & Videos
+    /// Uploads image to Firebase.
+    ///
+    /// > Warning: the ``imageUID`` is used separately for uploading video thumbnails, do not add a value here!
+    ///
+    /// - Parameters:
+    ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
+    ///     - containerId: the ID of the specific parent folder. Use `jobUID` when storing job data.
+    ///     - image: the image you want to upload as a `UIImage`
+    ///     - imageUID: do not add value. Look at warning!
+    ///
     func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage, imageUID: String?=nil) {
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
-        var storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
-        
-        if let imageUID = imageUID {
-            storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(imageUID).jpeg")
-        }
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
         
         storageRef.putData(imageData, metadata: nil) { (metadata, error) in
             if let error = error {
                 print("Error uploading image: \(error.localizedDescription)")
                 return
             }
-            
-            storageRef.downloadURL { (url, error) in
-                if let error = error {
-                    print("Error getting download URL: \(error.localizedDescription)")
-                    return
-                }
-                guard let downloadURL = url else { return }
-//                print("Download URL: \(downloadURL.absoluteString)")
-            }
         }
     }
     
+    /// Uploads video to Firebase.
+    ///
+    /// - Parameters:
+    ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
+    ///     - containerId: the ID of the specific parent folder. Use `jobUID` when storing job data.
+    ///     - videoURL: the url of the location of the video (in the users device) that you want to upload.
+    ///     - thumbnail: a `UIImage` for the thumbnail of the video.
+    ///
+    /// - Returns: the uniqueUID of the video and the image. They are each .mov and .jpeg respectively to differentiate
     func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL, thumbnail: UIImage?) -> String? {
         let uniqueUID = UUID().uuidString
-        
         let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(uniqueUID).mov")
         
         self.uploadImageToFirebase(parentFolder: "jobs", containerId: "\(containerId)", image: thumbnail ?? UIImage(named: "Cleaning")!, imageUID: uniqueUID)
@@ -216,24 +205,21 @@ class FirestoreHandler {
         }
         
         storageRef.putData(videoData) { metadata, error in
-            guard let _ = metadata, error == nil else {
+            guard let _ = metadata, error == nil else { // metadata here if you would like to see it.
                 print("Error uploading data to firebase storage.")
                 return
             }
-            
-            storageRef.downloadURL { (url, error) in
-                if let error = error {
-                    print("Error getting download URL: \(error.localizedDescription)")
-                    return
-                }
-            }
         }
-        
         return uniqueUID
     }
     
-    // TODO: Fix this.
-    func fetchImageData(from item: StorageReference, completion: @escaping (UIImage?) -> Void) {
+    /// Fetches an image from Firebase storage given a `StorageReference`
+    ///
+    /// - Parameters:
+    ///     - from: `StorageReference` where image is held.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    func fetchFirebaseImage(from item: StorageReference, completion: @escaping (UIImage?) -> Void) {
         item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
             if let error = error {
                 print("Error downloading image data: \(error.localizedDescription)")
@@ -249,11 +235,19 @@ class FirestoreHandler {
         }
     }
     
+    // MARK: - Fetch Media Function
+    /// Fetches all the media for a particular job, given a jobUID.
+    ///
+    /// - Parameters:
+    ///     - jobId: the unique identifier of the job for which you'd like to fetch the media for.
+    ///
+    /// - Returns: `[PlayableMediaView]` through a completion handler. Can throw.
     func fetchJobMedia(jobId: String, completion: @escaping ([PlayableMediaView]) -> Void) {
         let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
         var mediaData: [PlayableMediaView] = []
         let dispatchGroup = DispatchGroup()
         
+        // 1st: Fetch all file names.
         storageRef.listAll { (result, error) in
             if let error = error {
                 print("Error listing files: \(error.localizedDescription)")
@@ -261,11 +255,12 @@ class FirestoreHandler {
                 return
             }
             
-            
             var fileNames: [String] = []
             var videoNames: [String] = []
             
             for item in result!.items {
+                // if fileName is repeated, then that means one is a thumbnail and the other is a video.
+                // NOTE: videoNames is called later.
                 let name = item.name
                 let fileName = (name as NSString).deletingPathExtension
                 
@@ -276,6 +271,7 @@ class FirestoreHandler {
                 }
             }
             
+            // 2nd: For all file names fetch their image (or thumbnail) and create a PlayableMediaView
             for item in result!.items {
                 let fileName = item.name
                 let baseName = (fileName as NSString).deletingPathExtension
@@ -284,38 +280,43 @@ class FirestoreHandler {
                 
                 dispatchGroup.enter() // Enter the dispatch group
                 
-                // Determine if the file is an image or a video
+                // Only go through items that have jpeg (workaround problem where .mov wasn't recognized)
                 if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
                     
-                    // Handle image
-                    item.getData(maxSize: 10 * 1024 * 1024) { (data, error) in
-                        if let error = error {
-                            print("Error downloading image data: \(error.localizedDescription)")
-                            dispatchGroup.leave() // Leave the dispatch group in case of error
-                            return
-                        }
+                    self.fetchFirebaseImage(from: item) { image in
+                        var mediaView = PlayableMediaView(with: image, videoUID: nil)
                         
-                        if let data = data, let image = UIImage(data: data) {
-                            
-                            var mediaView = PlayableMediaView(with: image, videoUID: nil)
-                            
-                            if videoNames.contains(baseName) {
-                                mediaView = PlayableMediaView(with: image, videoUID: baseName)
-                            }
-                            
-                            mediaData.append(mediaView)
+                        if videoNames.contains(baseName) {
+                            mediaView = PlayableMediaView(with: image, videoUID: baseName)
                         }
-                        dispatchGroup.leave() // Leave the dispatch group after processing
+                        mediaData.append(mediaView)
+                        dispatchGroup.leave()
                     }
                 } else {
                     dispatchGroup.leave() // Leave the dispatch group if file type is neither image nor video
                 }
             }
             
-            // Notify when all async operations are completed
-            dispatchGroup.notify(queue: .main) {
-//                print("All operations are completed")
-                completion(mediaData) // Complete with the mediaData array
+            // 3rd: Complete the function and return array of PlayableMediaViews
+            dispatchGroup.notify(queue: .main) { // Notify when all async operations are completed
+                completion(mediaData)
+            }
+        }
+    }
+
+    // MARK: - Other Functions
+    public func editNames(userUID: String, firstName: String, lastName: String) {
+        
+        let userRef = db.collection("users").document(userUID)
+        
+        userRef.updateData([
+            "firstName": firstName,
+            "lastName": lastName
+        ]) { error in
+            if let error = error {
+                print("Error updating names: \(error.localizedDescription)")
+            } else {
+                return
             }
         }
     }

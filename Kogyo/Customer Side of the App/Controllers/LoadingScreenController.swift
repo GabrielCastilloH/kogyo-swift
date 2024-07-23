@@ -151,8 +151,8 @@ class LoadingScreenController: UIViewController {
     }
     
     func presentCurrentJobsController() {
-        if let homeController = self.navigationController?.viewControllers.first(where: { $0 is HomeController }) {
-            // Pop to HomeController if found
+        if let homeController = self.navigationController?.viewControllers.first(where: { $0 is CustomerHomeController }) {
+            // Pop to CustomerHomeController if found
             self.navigationController?.popToViewController(homeController, animated: true)
             AlertManager.showJobAddedAlert(on: homeController)
         }

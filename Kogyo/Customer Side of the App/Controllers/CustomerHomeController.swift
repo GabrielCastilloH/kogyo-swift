@@ -10,8 +10,8 @@ import UIKit
 class CustomerHomeController: UIViewController {
     
     // MARK: - Variables
-    var jobListing = JobListing()
-    var jobSearch: [JobButtonView] = []
+    var taskListing = TaskListing()
+    var taskSearch: [TaskCategoryBtnView] = []
     
     // MARK: - UI Components
     private let searchBar = SearchBarView()
@@ -56,7 +56,7 @@ class CustomerHomeController: UIViewController {
         self.view.backgroundColor = .white
         self.setupNavBar()
         
-        self.jobSearch = jobListing.allJobs
+        self.taskSearch = taskListing.allJobs
         
         setupUI()
         setupSearchTableView()
@@ -122,8 +122,8 @@ class CustomerHomeController: UIViewController {
     // MARK: - Selectors & Functions
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let searchText = textField.text {
-            self.jobSearch = searchText.isEmpty ? jobListing.allJobs :
-                self.jobListing.allJobs.filter{$0.jobLabel.text!.lowercased().contains(searchText.lowercased())}
+            self.taskSearch = searchText.isEmpty ? taskListing.allJobs :
+                self.taskListing.allJobs.filter{$0.jobLabel.text!.lowercased().contains(searchText.lowercased())}
             searchTableView.reloadData()
         }
     }
@@ -145,7 +145,7 @@ extension CustomerHomeController: UITextFieldDelegate {
         self.searchBar.cancelButton.showHideView(0)
         self.searchBar.textField.text = ""
         self.view.endEditing(true) // do this
-        self.jobSearch = self.jobListing.allJobs
+        self.taskSearch = self.taskListing.allJobs
         self.searchTableView.reloadData()
         return true
     }
@@ -161,9 +161,9 @@ extension CustomerHomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         if tableView == self.searchTableView {
-            return self.jobSearch.count
+            return self.taskSearch.count
         } else {
-            return self.jobListing.allCategories.count
+            return self.taskListing.allCategories.count
         }
     }
     
@@ -172,8 +172,8 @@ extension CustomerHomeController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableCell.identifier, for: indexPath) as? SearchTableCell else {
                 fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.") }
 
-            cell.configureCell(with: self.jobSearch[indexPath.row].imageView.image!,
-                               and: self.jobSearch[indexPath.row].jobLabel.text!)
+            cell.configureCell(with: self.taskSearch[indexPath.row].imageView.image!,
+                               and: self.taskSearch[indexPath.row].jobLabel.text!)
             return cell
             
         } else {
@@ -181,7 +181,7 @@ extension CustomerHomeController: UITableViewDelegate, UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoriesTableCell.identifier, for: indexPath) as? CategoriesTableCell else {
                 fatalError("The SearchTableView could not dequeue a CategoriesTableCell in HomeController.") }
             
-            let category = self.jobListing.allCategories[indexPath.row]
+            let category = self.taskListing.allCategories[indexPath.row]
             category.delegate = self
             
             cell.configureCell(with: category)
@@ -199,7 +199,7 @@ extension CustomerHomeController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == self.searchTableView {
-            self.presentCreateJobController(for: self.jobSearch[indexPath.row].jobLabel.text!)
+            self.presentCreateJobController(for: self.taskSearch[indexPath.row].jobLabel.text!)
         }
     }
 }
@@ -212,7 +212,7 @@ extension CustomerHomeController: CustomSearchBarDelegate {
         self.searchBar.cancelButton.showHideView(0)
         self.searchBar.textField.text = ""
         self.view.endEditing(true)
-        self.jobSearch = self.jobListing.allJobs
+        self.taskSearch = self.taskListing.allJobs
         self.searchTableView.reloadData()
     }
 }

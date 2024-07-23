@@ -11,35 +11,35 @@ struct TaskListing {
     
     let allCategories = [
         JobCategoryView(title: "Home", jobButtons: [
-            JobButtonView(title: "Minor Repairs"),
-            JobButtonView(title: "Cleaning"),
-            JobButtonView(title: "Painting"),
+            TaskCategoryBtnView(title: "Minor Repairs"),
+            TaskCategoryBtnView(title: "Cleaning"),
+            TaskCategoryBtnView(title: "Painting"),
         ]),
         JobCategoryView(title: "Personal", jobButtons: [
-            JobButtonView(title: "Baby Sitting"),
-            JobButtonView(title: "Dog Walking"),
-            JobButtonView(title: "Massages"),
+            TaskCategoryBtnView(title: "Baby Sitting"),
+            TaskCategoryBtnView(title: "Dog Walking"),
+            TaskCategoryBtnView(title: "Massages"),
         ]),
         JobCategoryView(title: "Technology", jobButtons: [
-            JobButtonView(title: "IT Support"),
-            JobButtonView(title: "Electrical Work"),
-            JobButtonView(title: "Wi-Fi Help"),
+            TaskCategoryBtnView(title: "IT Support"),
+            TaskCategoryBtnView(title: "Electrical Work"),
+            TaskCategoryBtnView(title: "Wi-Fi Help"),
         ]),
         JobCategoryView(title: "Technology", jobButtons: [
-            JobButtonView(title: "IT Support"),
-            JobButtonView(title: "Electrical Work"),
-            JobButtonView(title: "Wi-Fi Help"),
+            TaskCategoryBtnView(title: "IT Support"),
+            TaskCategoryBtnView(title: "Electrical Work"),
+            TaskCategoryBtnView(title: "Wi-Fi Help"),
         ]),
         JobCategoryView(title: "Technology", jobButtons: [
-            JobButtonView(title: "IT Support"),
-            JobButtonView(title: "Electrical Work"),
-            JobButtonView(title: "Wi-Fi Help"),
+            TaskCategoryBtnView(title: "IT Support"),
+            TaskCategoryBtnView(title: "Electrical Work"),
+            TaskCategoryBtnView(title: "Wi-Fi Help"),
         ]),
     ]
     
-    var allJobs: [JobButtonView] {
+    var allJobs: [TaskCategoryBtnView] {
         // Fetching all the jobs
-        var jobs: [JobButtonView] = []
+        var jobs: [TaskCategoryBtnView] = []
         for category in allCategories {
             for job in category.jobs {
                 jobs.append(job)

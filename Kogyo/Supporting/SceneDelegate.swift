@@ -45,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func presentHomeController() {
         // Presents a loading screen until all data is downloaded.
-        let loadingViewController = OpenLoadingController()
+        let loadingViewController = LogoLoadingController()
         self.window?.rootViewController = loadingViewController
         self.window?.makeKeyAndVisible()
         

@@ -103,7 +103,7 @@ extension AllHelperJobsController: UITableViewDelegate, UITableViewDataSource {
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CurrentTasksCell.identifier, for: indexPath) as? CurrentTasksCell else {
-            fatalError("The SearchTableView could not dequeue a SearchTableCell in HomeController.")
+            fatalError("The SearchTableView could not dequeue a SearchTableCell in CustomerHomeController.")
         }
         
         let currentJob = self.currentTasks[indexPath.row]

@@ -14,7 +14,7 @@ protocol CategoryViewDelegate {
 class JobCategoryView: UIView {
     
     // MARK: - Variables
-    let jobs: [JobButtonView]
+    let jobs: [TaskCategoryBtnView]
     var delegate: CategoryViewDelegate?
     
     // MARK: - UI Components
@@ -43,7 +43,7 @@ class JobCategoryView: UIView {
     
     
     // MARK: - Life Cycle
-    init(title: String, jobButtons: [JobButtonView]) {
+    init(title: String, jobButtons: [TaskCategoryBtnView]) {
         self.jobs = jobButtons
         
         super.init(frame: .zero)

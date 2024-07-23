@@ -11,7 +11,7 @@ class JobKindFormView: UIView {
 
     // MARK: - Variables
     var jobKind: String
-    let allJobs: [JobButtonView]
+    let allJobs: [TaskCategoryBtnView]
     let cf = CustomFunctions()
     
     
@@ -64,7 +64,7 @@ class JobKindFormView: UIView {
     
     // MARK: - Life Cycle
     init(kind: String) {
-        self.allJobs = JobListing().allJobs
+        self.allJobs = TaskListing().allJobs
         self.jobKind = kind
         self.pickerTextField.text = jobKind
         super.init(frame: .zero)
