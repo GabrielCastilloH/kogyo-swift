@@ -18,7 +18,7 @@ class CustomerLoadingScreenController: UIViewController {
     var jobId: String
     var userId: String
     
-    private var jobListener: ListenerRegistration?
+    private var taskListener: ListenerRegistration?
     
     // MARK: - UI Components
     let webView: WKWebView = {
@@ -63,7 +63,7 @@ class CustomerLoadingScreenController: UIViewController {
         super.viewWillDisappear(animated)
         // Remove the listener when the view disappears to avoid memory leaks
         self.tabBarController?.tabBar.isHidden = false
-        jobListener?.remove()
+        taskListener?.remove()
     }
     
     // MARK: - UI Setup
@@ -123,7 +123,7 @@ class CustomerLoadingScreenController: UIViewController {
         let db = Firestore.firestore()
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
         
-        jobListener = jobRef.addSnapshotListener { [weak self] documentSnapshot, error in
+        taskListener = jobRef.addSnapshotListener { [weak self] documentSnapshot, error in
             guard let self = self else { return }
             if let error = error {
                 print("Error listening for job updates: \(error.localizedDescription)")

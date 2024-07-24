@@ -10,6 +10,12 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
+enum UserKind {
+    case user
+    case helper
+    case other
+}
+
 class FirestoreHandler {
     // Handles everything to do with Firebase.
     
@@ -19,6 +25,7 @@ class FirestoreHandler {
     
     private init() {}
     
+    // MARK: - User Functions
     public func addTask(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let jobsRef = db.collection("users").document(userId).collection("jobs")
 
@@ -39,24 +46,33 @@ class FirestoreHandler {
         }
     }
     
-    /// Fetches `[Job]`object for a given `userUID`.
+    /// Fetches `[Task]` for either:  a user `userId`, a helper `helperId`, or all available tasks (both are nil).
     ///
     /// Only to be called in DataManager to set its data when the app is created.
     ///
     /// - Parameters:
-    ///     - for: The UID of the user you want to fetch jobs for.
+    ///     - kind: An enum that is either a `user`, `helper`, or `other` (for all tasks)
+    ///     - helperId?: The UID of the helper you want to fetch jobs for.
     ///     - completion: A completion handler that will return `([Task], Error)` when done.
     ///
-    func fetchJobs(for userId: String) async throws -> [TaskClass] {
-        guard let userUID = Auth.auth().currentUser?.uid else {
+    func fetchTasks(_ kind: UserKind) async throws -> [TaskClass] {
+        
+        guard let currentUserUID = Auth.auth().currentUser?.uid else {
             // Handle the case where the user is not authenticated
             throw NSError(domain: "User not authenticated", code: 401, userInfo: nil)
         }
         
-        let jobsRef = db.collection("users").document(userUID).collection("jobs")
+        // Cases depending on what tasks you want to fetch.
+        var dataRef = db.collection("tasks")
+        
+        if kind == .user {
+            dataRef = db.collection("users").document(currentUserUID).collection("jobs")
+        } else if kind == .helper {
+            dataRef = db.collection("helpers").document(currentUserUID).collection("jobs")
+        }
         
         do {
-            let querySnapshot = try await jobsRef.getDocuments()
+            let querySnapshot = try await dataRef.getDocuments()
             var tasks: [TaskClass] = [] // Returns array of tasks.
             
             for document in querySnapshot.documents {
@@ -86,7 +102,6 @@ class FirestoreHandler {
             throw error
         }
     }
-    
     
     // MARK: - Helper Functions
     public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String) {
