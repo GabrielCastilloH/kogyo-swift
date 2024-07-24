@@ -8,6 +8,8 @@
 import UIKit
 
 class JobQuickInfoView: UIView {
+    // UIView of the important task information: date, hours, payment, location.
+    
     // MARK: - Variables
     let cf = CustomFunctions()
     
@@ -69,16 +71,16 @@ class JobQuickInfoView: UIView {
     
     
     // MARK: - Life Cycle
-    init(for job: TaskClass) {
+    init(for task: TaskClass) {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "EE, MMM d, h:mm a"
-        let dateFormatted = formatter.string(from: job.dateTime)
+        let dateFormatted = formatter.string(from: task.dateTime)
         
         self.dateLabel.text = dateFormatted
-        self.addressLabel.text = job.location
-        self.hoursLabel.text = String(job.expectedHours) + " hours"
-        self.paymentLabel.text = "$" + String(job.payment)
+        self.addressLabel.text = task.location
+        self.hoursLabel.text = String(task.expectedHours) + " hours"
+        self.paymentLabel.text = "$" + String(task.payment)
         
         super.init(frame: .zero)
         self.setupUI()
@@ -172,6 +174,7 @@ class JobQuickInfoView: UIView {
 
     // MARK: - Selectors
     @objc func didTapLocationButton() {
-        print("this should just show an address")
+        // TODO: Show location on a map.
+        print("This should show an address on a map.")
     }
 }

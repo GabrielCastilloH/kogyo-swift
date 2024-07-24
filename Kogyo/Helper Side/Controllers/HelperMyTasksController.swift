@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 
 class HelperMyTasksController: UIViewController {
+    // Table of all tasks accepted by a helper.
     
     // MARK: - Variables
     var myTasks: [TaskClass] = []

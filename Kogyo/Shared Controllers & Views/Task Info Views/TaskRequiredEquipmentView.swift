@@ -8,6 +8,7 @@
 import UIKit
 
 class TaskRequiredEquipmentView: UIView {
+    // UIView showing all the expected required equipment for a job.
 
     // MARK: - Variables
     let cf = CustomFunctions()
@@ -20,8 +21,7 @@ class TaskRequiredEquipmentView: UIView {
         textView.isEditable = false
         textView.isScrollEnabled = true
         textView.layer.cornerRadius = 10
-        textView.backgroundColor = .clear // UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.00)
-//        textView.leftSpace()
+        textView.backgroundColor = .clear
         return textView
     }()
     

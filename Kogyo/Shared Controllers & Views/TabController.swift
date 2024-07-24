@@ -42,7 +42,7 @@ class TabController: UITabBarController {
     private func setupCustomerTabs() {
         let home = self.createNav(with: "Home", and: UIImage(systemName: "house"), vc: CustomerHomeController())
         let allTasks = self.createNav(with: "My Tasks", and: UIImage(systemName: "clock"), vc: CustomerMyTasksController())
-        let settings = self.createNav(with: "Settings", and: UIImage(systemName: "gearshape"), vc: SettingsController())
+        let settings = self.createNav(with: "Settings", and: UIImage(systemName: "gearshape"), vc: CustomerSettingsController())
         
         self.setViewControllers([home, allTasks, settings], animated: true)
     }
@@ -50,7 +50,7 @@ class TabController: UITabBarController {
     private func setupHelperTabs() {
         let home = self.createNav(with: "Dashboard", and: UIImage(systemName: "house"), vc: HelperDashboardController())
         let allJobs = self.createNav(with: "My Tasks", and: UIImage(systemName: "clock"), vc: HelperMyTasksController())
-        let settings = self.createNav(with: "Settings", and: UIImage(systemName: "gearshape"), vc: SettingsController())
+        let settings = self.createNav(with: "Settings", and: UIImage(systemName: "gearshape"), vc: CustomerSettingsController())
         
         self.setViewControllers([home, allJobs, settings], animated: true)
     }

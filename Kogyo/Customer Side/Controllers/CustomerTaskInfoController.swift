@@ -18,7 +18,7 @@ class CustomerTaskInfoController: UIViewController {
     
     
     // MARK: - UI Components
-    var jobPhotosVideosView = JobPhotosVideosView()
+    var taskPhotosVideosView = TaskPhotosVideosView()
     
     private let dateAddedLabel: UILabel = {
         let label = UILabel()
@@ -89,11 +89,11 @@ class CustomerTaskInfoController: UIViewController {
         self.view.addSubview(jobDescriptionView)
         jobDescriptionView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(jobPhotosVideosView)
-        jobPhotosVideosView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(taskPhotosVideosView)
+        taskPhotosVideosView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator2 = UIView()
-        cf.createSeparatorView(for: self, with: separator2, under: jobPhotosVideosView)
+        cf.createSeparatorView(for: self, with: separator2, under: taskPhotosVideosView)
         
         self.view.addSubview(jobHelperInfoView)
         jobHelperInfoView.translatesAutoresizingMaskIntoConstraints = false
@@ -114,10 +114,10 @@ class CustomerTaskInfoController: UIViewController {
             jobDescriptionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobDescriptionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            jobPhotosVideosView.topAnchor.constraint(equalTo: jobDescriptionView.bottomAnchor),
-            jobPhotosVideosView.heightAnchor.constraint(equalToConstant: 120),
-            jobPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            jobPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            taskPhotosVideosView.topAnchor.constraint(equalTo: jobDescriptionView.bottomAnchor),
+            taskPhotosVideosView.heightAnchor.constraint(equalToConstant: 120),
+            taskPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            taskPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
             jobHelperInfoView.topAnchor.constraint(equalTo: separator2.bottomAnchor, constant: 0),
             jobHelperInfoView.heightAnchor.constraint(equalToConstant: 250),
@@ -132,7 +132,7 @@ class CustomerTaskInfoController: UIViewController {
     func configureMediaViews() {
         for media in self.mediaData {
             media.delegate = self
-            self.jobPhotosVideosView.stackView.addArrangedSubview(media)
+            self.taskPhotosVideosView.stackView.addArrangedSubview(media)
             
             NSLayoutConstraint.activate([
                 media.widthAnchor.constraint(equalToConstant: 100),
@@ -145,7 +145,7 @@ extension CustomerTaskInfoController: PlayableMediaViewDelegate {
     func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
         // Play video or zoom in on photo if it is tapped by the user. 
         if videoUID == nil {
-            let viewController = MediaPlayerController(thumbnail: thumbnail)
+            let viewController = PhotoViewController(thumbnail: thumbnail)
             viewController.modalPresentationStyle = .fullScreen
             self.navigationController?.pushViewController(viewController, animated: true)
         } else {

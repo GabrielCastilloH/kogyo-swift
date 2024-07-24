@@ -10,6 +10,7 @@ import AVKit
 import FirebaseStorage
 
 class AcceptedTasksInfoController: UIViewController {
+    // Info about tasks already accepted by the helper. Access messaging feature here. 
     
     // MARK: - Variables
     var selectedTask: TaskClass

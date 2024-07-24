@@ -10,6 +10,7 @@ import AVKit
 import FirebaseStorage
 
 class AvailableTaskInfoController: UIViewController {
+    // Info about an available task. Helpers accept tasks through this screen.
     
     // MARK: - Variables
     var selectedTask: TaskClass

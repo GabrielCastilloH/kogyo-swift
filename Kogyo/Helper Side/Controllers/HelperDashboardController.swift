@@ -8,6 +8,7 @@
 import UIKit
 
 class HelperDashboardController: UIViewController {
+    // Home screen for helpers, presents all available jobs in their are.
 
     // MARK: - Variables
     var availableTasks: [TaskClass] = []

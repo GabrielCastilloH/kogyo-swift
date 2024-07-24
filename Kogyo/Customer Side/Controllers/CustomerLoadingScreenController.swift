@@ -12,13 +12,13 @@ import Firebase
 // And gifs are memory intensive. I will try using a webkit view and a raw css animation.
 
 class CustomerLoadingScreenController: UIViewController {
+    // Loading screen while user waits for someone to accept their job.
 
     // MARK: - Variables
     var jobId: String
     var userId: String
     
     private var jobListener: ListenerRegistration?
-    
     
     // MARK: - UI Components
     let webView: WKWebView = {

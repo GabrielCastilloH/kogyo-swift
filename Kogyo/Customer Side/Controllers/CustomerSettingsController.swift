@@ -8,20 +8,14 @@
 import UIKit
 
 class CustomerSettingsController: UIViewController {
+    // Settings controller.
+    
     // MARK: - Variables
     var settingsOption : [SettingsOption] = [
-        SettingsOption(title: "Personal Information",
-                      icon: UIImage(systemName: "person")
-                     ),
-        SettingsOption(title: "Notifications",
-                      icon: UIImage(systemName: "bell")
-                     ),
-        SettingsOption(title: "Payment",
-                      icon: UIImage(systemName: "person.text.rectangle")
-                     ),
-        SettingsOption(title: "Support",
-                      icon: UIImage(systemName: "questionmark.circle")
-                     ),
+        SettingsOption(title: "Personal Information", icon: UIImage(systemName: "person")),
+        SettingsOption(title: "Notifications", icon: UIImage(systemName: "bell")),
+        SettingsOption(title: "Payment", icon: UIImage(systemName: "person.text.rectangle")),
+        SettingsOption(title: "Support", icon: UIImage(systemName: "questionmark.circle")),
     ]
     
     // MARK: - UI Components

@@ -14,7 +14,6 @@ class CreateJobController: UIViewController {
     // Responsible for creating a new job.
     // Also responsible for the addition of photos and videos.
     
-    
     // MARK: - Variables
     var jobKind: String
     var keyboardHeight: CGFloat = 300
@@ -52,7 +51,7 @@ class CreateJobController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightBlueColor
-        button.addTarget(self, action: #selector(didTapSubmitJob), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapSubmitTask), for: .touchUpInside)
         return button
     }()
     
@@ -107,7 +106,7 @@ class CreateJobController: UIViewController {
             object: nil
         )
         
-        addMedia(nil)
+        self.addMedia(nil)
     }
     
     // MARK: - UI Setup
@@ -232,7 +231,7 @@ class CreateJobController: UIViewController {
     
     // MARK: - Selectors & Functions
     private func presentLoadingScreen(jobUID: String, userId: String) {
-        let loadingScreenController = LoadingScreenController(jobId: jobUID, userId: userId)
+        let loadingScreenController = CustomerLoadingScreenController(jobId: jobUID, userId: userId)
         self.navigationController?.pushViewController(loadingScreenController, animated: true)
     }
     
@@ -244,7 +243,7 @@ class CreateJobController: UIViewController {
         }
     }
     
-    @objc func didTapSubmitJob() {
+    @objc func didTapSubmitTask() { // Submits the task
         let dateAdded = Date()
         let kind = self.jobKindView.pickerTextField.text ?? ""
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
@@ -255,9 +254,8 @@ class CreateJobController: UIViewController {
         
         if kind == "" || description == "" || expectedHours == 0 || location == "" || payment == 0 || location == "Click to set location" {
             AlertManager.showMissingJobInfoAlert(on: self)
-            
         } else {
-            let jobData: [String: Any] = [
+            let taskData: [String: Any] = [
                 "dateAdded": dateAdded,
                 "kind": kind,
                 "description": description,
@@ -267,8 +265,8 @@ class CreateJobController: UIViewController {
                 "payment": payment,
             ]
             
-            guard let userUID = Auth.auth().currentUser?.uid else { return }
-            FirestoreHandler.shared.addJob(with: jobData, for: userUID) { result in
+            guard let userUID = Auth.auth().currentUser?.uid else { return } // Double check wifi!
+            FirestoreHandler.shared.addTask(with: taskData, for: userUID) { result in
                 switch result {
                 case .success(let jobUID):
                     // The job was added successfully (no media yet).
@@ -433,7 +431,7 @@ extension CreateJobController: UIImagePickerControllerDelegate & UINavigationCon
         
         AVAsset(url: videoURL).generateThumbnail { thumbnail in
             DispatchQueue.main.async {
-                self.addMedia(thumbnail, videoURL: videoURL) // Make sure that you add a play button on top left corner so they know its a video.
+                self.addMedia(thumbnail, videoURL: videoURL)
             }
         }
     }

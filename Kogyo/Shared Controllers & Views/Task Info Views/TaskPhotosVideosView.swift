@@ -8,9 +8,11 @@
 import UIKit
 
 class TaskPhotosVideosView: UIView {
+    // UIView responsible for presenting task media.
+    
+    
     // MARK: - Variables
     let cf = CustomFunctions()
-//    var mediaData: [PlayableMediaView]
     
     // MARK: - UI Components
     private let mediaBackgroundView: UIView = {
@@ -87,6 +89,4 @@ class TaskPhotosVideosView: UIView {
             stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
         ])
     }
-
-    // MARK: - Selectors & Functions
 }

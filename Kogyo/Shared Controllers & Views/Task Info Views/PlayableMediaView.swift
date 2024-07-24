@@ -12,6 +12,8 @@ protocol PlayableMediaViewDelegate {
 }
 
 class PlayableMediaView: UIView {
+    // Small view of a specific photo or video of a task.
+    
     // MARK: - Variables
     var thumbnail: UIImage?
     var videoUID: String?

@@ -8,6 +8,7 @@
 import UIKit
 
 class HelperCurrentTasksCell: UITableViewCell {
+    // Table cell of a task accepted by a helper.
     
     static let identifier = "HelperCurrentTasksCell"
 

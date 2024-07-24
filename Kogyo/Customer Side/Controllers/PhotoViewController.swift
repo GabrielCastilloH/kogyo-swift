@@ -8,6 +8,7 @@
 import UIKit
 
 class PhotoViewController: UIViewController {
+    // View presented when a photo is clicked on the media view.
     
     // MARK: - UI Components
     private let imageView: UIImageView = {

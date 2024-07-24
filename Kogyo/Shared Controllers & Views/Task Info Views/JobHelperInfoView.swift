@@ -10,6 +10,7 @@ import FirebaseStorage
 import FirebaseFirestore
 
 class JobHelperInfoView: UIView {
+    // UIView responsible for showing information about the Helper responsible for a task.
     
     // MARK: - Variables
     let cf = CustomFunctions()

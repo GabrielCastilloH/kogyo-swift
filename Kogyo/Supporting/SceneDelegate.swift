@@ -69,7 +69,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     
                 } else {
                     // TODO: Add button or login attribute to make them login as workers.
-                    self?.window?.rootViewController = TabController(isWorker: false)
+                    self?.window?.rootViewController = TabController(isWorker: true)
                 }
                 
                 UIView.animate(withDuration: 0.25) {

@@ -4,13 +4,14 @@
 //
 //  Created by Gabriel Castillo on 6/15/24.
 // TODO: Add location to the database.
-// TODO: Allow user to change their name in the settings controller. 
 
 import UIKit
 import MapKit
 import CoreLocation
 
 class MapController: UIViewController {
+    // Allows user to specify task location on a map.
+    
     // MARK: - Variables
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 10000
@@ -104,14 +105,13 @@ class MapController: UIViewController {
         }
     }
     
-    
     func checkLocationServices() {
         DispatchQueue.global().async {
             if CLLocationManager.locationServicesEnabled() {
                 self.setupLocationManager()
                 self.checkLocationAuthorization()
             } else {
-                // Show alert letting the user know they have to turn this on.
+                // TODO: Show alert letting the user know they have to turn this on.
             }
         }
     }
@@ -153,7 +153,6 @@ class MapController: UIViewController {
         if let createJobController = self.navigationController?.viewControllers.first(where: { $0 is CreateJobController }) as? CreateJobController {
             createJobController.jobDateTimeView.addressLabel.text = self.addressLabel.text
         }
-        
         self.navigationController?.popViewController(animated: true)
     }
 }
@@ -172,19 +171,18 @@ extension MapController: MKMapViewDelegate {
         
         guard let previousLocation = self.previousLocation else { return }
         
-        guard center.distance(from: previousLocation) > 50 else { return }
+        guard center.distance(from: previousLocation) > 50 else { return } // Distance req to update.
         self.previousLocation = center
         
         geoCoder.reverseGeocodeLocation(center) { [weak self] (placemarks, error) in
             guard let self = self else { return }
             
-            if let _ = error {
-                //TODO: Show alert informing the user
+            if let error = error {
+                print("Error getting reverse geocode in MapController: \(error)")
                 return
             }
             
             guard let placemark = placemarks?.first else {
-                //TODO: Show alert informing the user
                 return
             }
             

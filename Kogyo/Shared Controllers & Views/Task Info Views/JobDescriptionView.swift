@@ -8,6 +8,8 @@
 import UIKit
 
 class JobDescriptionView: UIView {
+    // UIView responsible for showing task description
+    
     // MARK: - Variables
     let cf = CustomFunctions()
     
