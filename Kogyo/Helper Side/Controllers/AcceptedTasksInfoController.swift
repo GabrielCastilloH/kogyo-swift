@@ -1,15 +1,15 @@
 //
-//  AvailableTaskInfoController.swift
+//  AcceptedTasksInfoController.swift
 //  App1
 //
-//  Created by Gabriel Castillo on 7/11/24.
+//  Created by Gabriel Castillo on 7/12/24.
 //
 
 import UIKit
 import AVKit
 import FirebaseStorage
 
-class AvailableTaskInfoController: UIViewController {
+class AcceptedTasksInfoController: UIViewController {
     
     // MARK: - Variables
     var selectedTask: TaskClass
@@ -18,7 +18,7 @@ class AvailableTaskInfoController: UIViewController {
     
     
     // MARK: - UI Components
-    var jobPhotosVideosView = JobPhotosVideosView()
+    var jobPhotosVideosView = TaskPhotosVideosView()
     
     private let postedOnLabel: UILabel = {
         let label = UILabel()
@@ -31,13 +31,24 @@ class AvailableTaskInfoController: UIViewController {
         return label
     }()
     
-    private lazy var acceptJobButton: UIButton = {
+    private lazy var chatButton: UIButton = {
         let button = UIButton()
         button.tintColor = .white
-        button.setTitle("Accept Job", for: .normal)
+        button.setTitle("Open Chat", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightBlueColor
+        button.addTarget(self, action: #selector(didTapAcceptJob), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var optionsButton: UIButton = {
+        let button = UIButton()
+        button.tintColor = .white
+        button.setTitle("Options", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
+        button.layer.cornerRadius = 15
+        button.backgroundColor = Constants().lightGrayColor
         button.addTarget(self, action: #selector(didTapAcceptJob), for: .touchUpInside)
         return button
     }()
@@ -109,8 +120,11 @@ class AvailableTaskInfoController: UIViewController {
         self.view.addSubview(taskRequiredEquipmentView)
         taskRequiredEquipmentView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(acceptJobButton)
-        acceptJobButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(chatButton)
+        chatButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(optionsButton)
+        optionsButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             postedOnLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
@@ -138,10 +152,15 @@ class AvailableTaskInfoController: UIViewController {
             taskRequiredEquipmentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             taskRequiredEquipmentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            acceptJobButton.topAnchor.constraint(equalTo: taskRequiredEquipmentView.bottomAnchor, constant: 5),
-            acceptJobButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            acceptJobButton.heightAnchor.constraint(equalToConstant: 50),
-            acceptJobButton.widthAnchor.constraint(equalToConstant: 180),
+            chatButton.topAnchor.constraint(equalTo: taskRequiredEquipmentView.bottomAnchor, constant: 5),
+            chatButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -55),
+            chatButton.heightAnchor.constraint(equalToConstant: 50),
+            chatButton.widthAnchor.constraint(equalToConstant: 180),
+            
+            optionsButton.topAnchor.constraint(equalTo: taskRequiredEquipmentView.bottomAnchor, constant: 5),
+            optionsButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 95),
+            optionsButton.heightAnchor.constraint(equalToConstant: 50),
+            optionsButton.widthAnchor.constraint(equalToConstant: 100),
         ])
     }
     
@@ -165,12 +184,12 @@ class AvailableTaskInfoController: UIViewController {
     }
 }
 
-extension AvailableTaskInfoController: PlayableMediaViewDelegate {
+extension AcceptedTasksInfoController: PlayableMediaViewDelegate {
     // TODO: Move this to custom functions.
     func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
         // Play video or zoom in on photo if it is tapped by the user.
         if videoUID == nil {
-            let viewController = MediaPlayerController(thumbnail: thumbnail)
+            let viewController = PhotoViewController(thumbnail: thumbnail)
             viewController.modalPresentationStyle = .fullScreen
             self.navigationController?.pushViewController(viewController, animated: true)
         } else {
@@ -208,3 +227,4 @@ extension AvailableTaskInfoController: PlayableMediaViewDelegate {
         }
     }
 }
+

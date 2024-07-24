@@ -11,6 +11,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 class FirestoreHandler {
+    // Handles everything to do with Firebase.
     
     // Used to register, sign in, sign out, and check authentication for the user.
     public static let shared = FirestoreHandler()
@@ -18,7 +19,7 @@ class FirestoreHandler {
     
     private init() {}
     
-    public func addJob(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func addTask(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let jobsRef = db.collection("users").document(userId).collection("jobs")
 
         var ref: DocumentReference? = nil

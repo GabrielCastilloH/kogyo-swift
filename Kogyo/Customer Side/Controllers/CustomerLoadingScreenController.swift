@@ -1,5 +1,5 @@
 //
-//  LoadingScreenController.swift
+//  CustomerLoadingScreenController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/9/24.
@@ -11,7 +11,7 @@ import Firebase
 // There are no good raw swift loading animations. I don't want to install third party plug ins.
 // And gifs are memory intensive. I will try using a webkit view and a raw css animation.
 
-class LoadingScreenController: UIViewController {
+class CustomerLoadingScreenController: UIViewController {
 
     // MARK: - Variables
     var jobId: String

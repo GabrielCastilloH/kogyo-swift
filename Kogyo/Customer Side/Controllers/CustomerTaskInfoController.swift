@@ -1,18 +1,18 @@
 //
-//  AcceptedTasksInfoController.swift
+//  CustomerTaskInfoController.swift
 //  App1
 //
-//  Created by Gabriel Castillo on 7/12/24.
+//  Created by Gabriel Castillo on 6/9/24.
 //
 
 import UIKit
 import AVKit
 import FirebaseStorage
 
-class AcceptedTasksInfoController: UIViewController {
+class CustomerTaskInfoController: UIViewController {
     
     // MARK: - Variables
-    var selectedTask: TaskClass
+    var currentJob: TaskClass
     var cf = CustomFunctions()
     var mediaData: [PlayableMediaView] = []
     
@@ -20,7 +20,7 @@ class AcceptedTasksInfoController: UIViewController {
     // MARK: - UI Components
     var jobPhotosVideosView = JobPhotosVideosView()
     
-    private let postedOnLabel: UILabel = {
+    private let dateAddedLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
@@ -31,32 +31,10 @@ class AcceptedTasksInfoController: UIViewController {
         return label
     }()
     
-    private lazy var chatButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .white
-        button.setTitle("Open Chat", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
-        button.layer.cornerRadius = 15
-        button.backgroundColor = Constants().lightBlueColor
-        button.addTarget(self, action: #selector(didTapAcceptJob), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var optionsButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .white
-        button.setTitle("Options", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
-        button.layer.cornerRadius = 15
-        button.backgroundColor = Constants().lightGrayColor
-        button.addTarget(self, action: #selector(didTapAcceptJob), for: .touchUpInside)
-        return button
-    }()
-    
     
     // MARK: - Life Cycle
     init(for job: TaskClass, jobUID: String) {
-        self.selectedTask = job
+        self.currentJob = job
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -72,15 +50,14 @@ class AcceptedTasksInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        print("configuring media for: \(self.selectedTask.jobUID)")
-        self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.jobUID]!.media
+        self.mediaData = DataManager.shared.currentJobs[self.currentJob.jobUID]!.media
         self.configureMediaViews()
         
-        let dateNotFormatted = self.selectedTask.dateAdded
+        let dateNotFormatted = self.currentJob.dateAdded
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM d 'at' h:mm a"
         let formattedDate = dateFormatter.string(from: dateNotFormatted)
-        self.postedOnLabel.text = "Posted on: \(formattedDate)"
+        self.dateAddedLabel.text = "Created on: \(formattedDate)"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,16 +68,17 @@ class AcceptedTasksInfoController: UIViewController {
     private func setupNavBar() {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = self.selectedTask.kind
+        self.navigationItem.title = self.currentJob.kind
     }
     
     private func setupUI() {
-        self.view.addSubview(postedOnLabel)
-        postedOnLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(dateAddedLabel)
+        dateAddedLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let jobQuickInfoView = JobQuickInfoView(for: self.selectedTask)
-        let jobDescriptionView = JobDescriptionView(for: self.selectedTask)
-        let taskRequiredEquipmentView = TaskRequiredEquipmentView(for: self.selectedTask)
+        let jobQuickInfoView = JobQuickInfoView(for: self.currentJob)
+        let jobDescriptionView = JobDescriptionView(for: self.currentJob)
+        
+        let jobHelperInfoView = JobHelperInfoView(for: self.currentJob)
         
         self.view.addSubview(jobQuickInfoView)
         jobQuickInfoView.translatesAutoresizingMaskIntoConstraints = false
@@ -117,22 +95,16 @@ class AcceptedTasksInfoController: UIViewController {
         let separator2 = UIView()
         cf.createSeparatorView(for: self, with: separator2, under: jobPhotosVideosView)
         
-        self.view.addSubview(taskRequiredEquipmentView)
-        taskRequiredEquipmentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(chatButton)
-        chatButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(optionsButton)
-        optionsButton.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(jobHelperInfoView)
+        jobHelperInfoView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            postedOnLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
-            postedOnLabel.heightAnchor.constraint(equalToConstant: 30),
-            postedOnLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            postedOnLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            dateAddedLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
+            dateAddedLabel.heightAnchor.constraint(equalToConstant: 30),
+            dateAddedLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            dateAddedLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            jobQuickInfoView.topAnchor.constraint(equalTo: self.postedOnLabel.bottomAnchor, constant: 10),
+            jobQuickInfoView.topAnchor.constraint(equalTo: self.dateAddedLabel.bottomAnchor, constant: 10),
             jobQuickInfoView.heightAnchor.constraint(equalToConstant: 120),
             jobQuickInfoView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobQuickInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -147,33 +119,18 @@ class AcceptedTasksInfoController: UIViewController {
             jobPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            taskRequiredEquipmentView.topAnchor.constraint(equalTo: separator2.bottomAnchor, constant: 15),
-            taskRequiredEquipmentView.heightAnchor.constraint(equalToConstant: 120),
-            taskRequiredEquipmentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            taskRequiredEquipmentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            
-            chatButton.topAnchor.constraint(equalTo: taskRequiredEquipmentView.bottomAnchor, constant: 5),
-            chatButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -55),
-            chatButton.heightAnchor.constraint(equalToConstant: 50),
-            chatButton.widthAnchor.constraint(equalToConstant: 180),
-            
-            optionsButton.topAnchor.constraint(equalTo: taskRequiredEquipmentView.bottomAnchor, constant: 5),
-            optionsButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 95),
-            optionsButton.heightAnchor.constraint(equalToConstant: 50),
-            optionsButton.widthAnchor.constraint(equalToConstant: 100),
+            jobHelperInfoView.topAnchor.constraint(equalTo: separator2.bottomAnchor, constant: 0),
+            jobHelperInfoView.heightAnchor.constraint(equalToConstant: 250),
+            jobHelperInfoView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            jobHelperInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
     }
     
     
     // MARK: - Selectors & Functions
-    @objc private func didTapAcceptJob() {
-        print("touched me.")
-    }
-    
     // Its better to put the configure function here to keep everything in the view.
     func configureMediaViews() {
         for media in self.mediaData {
-            print("configuring media. for \(self.selectedTask)")
             media.delegate = self
             self.jobPhotosVideosView.stackView.addArrangedSubview(media)
             
@@ -184,10 +141,9 @@ class AcceptedTasksInfoController: UIViewController {
     }
 }
 
-extension AcceptedTasksInfoController: PlayableMediaViewDelegate {
-    // TODO: Move this to custom functions.
+extension CustomerTaskInfoController: PlayableMediaViewDelegate {
     func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
-        // Play video or zoom in on photo if it is tapped by the user.
+        // Play video or zoom in on photo if it is tapped by the user. 
         if videoUID == nil {
             let viewController = MediaPlayerController(thumbnail: thumbnail)
             viewController.modalPresentationStyle = .fullScreen
@@ -195,7 +151,7 @@ extension AcceptedTasksInfoController: PlayableMediaViewDelegate {
         } else {
             // Fetch video from Firestore and present AV controller.
             let videoFileName = "\(videoUID!).mov"
-            let videoRef = Storage.storage().reference().child("jobs/\(self.selectedTask.jobUID)/\(videoFileName)")
+            let videoRef = Storage.storage().reference().child("jobs/\(self.currentJob.jobUID)/\(videoFileName)")
             
             // Fetch the download URL
             videoRef.downloadURL { url, error in
@@ -227,4 +183,3 @@ extension AcceptedTasksInfoController: PlayableMediaViewDelegate {
         }
     }
 }
-

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class JobPhotosVideosView: UIView {
+class TaskPhotosVideosView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
 //    var mediaData: [PlayableMediaView]

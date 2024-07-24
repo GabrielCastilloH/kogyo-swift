@@ -1,5 +1,5 @@
 //
-//  SettingsController.swift
+//  CustomerSettingsController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/4/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SettingsController: UIViewController {
+class CustomerSettingsController: UIViewController {
     // MARK: - Variables
     var settingsOption : [SettingsOption] = [
         SettingsOption(title: "Personal Information",
@@ -146,7 +146,7 @@ class SettingsController: UIViewController {
         case "Support":
             viewController = SupportController()
         default:
-            viewController = SettingsController() // Default option
+            viewController = CustomerSettingsController() // Default option
         }
         
         viewController.modalPresentationStyle = .fullScreen
@@ -155,7 +155,7 @@ class SettingsController: UIViewController {
 }
 
 // MARK: -  Settings Table Delegate
-extension SettingsController: UITableViewDelegate, UITableViewDataSource {
+extension CustomerSettingsController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection selection: Int) -> Int {
         return settingsOption.count
     }

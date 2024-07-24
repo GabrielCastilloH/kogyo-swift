@@ -1,5 +1,5 @@
 //
-//  MediaPlayerController.swift
+//  PhotoViewController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/22/24.
@@ -7,10 +7,7 @@
 
 import UIKit
 
-class MediaPlayerController: UIViewController {
-    
-    // MARK: - Variables
-    
+class PhotoViewController: UIViewController {
     
     // MARK: - UI Components
     private let imageView: UIImageView = {
@@ -68,6 +65,4 @@ class MediaPlayerController: UIViewController {
             ])
         }
     }
-    
-    // MARK: - Selectors
 }
