@@ -50,7 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.makeKeyAndVisible()
         
         Task {
-            await DataManager.shared.fetchDatabaseData()
+            await DataManager.shared.fetchDatabaseData(asWorker: true)
             self.animateTransition(to: nil)
         }
     }

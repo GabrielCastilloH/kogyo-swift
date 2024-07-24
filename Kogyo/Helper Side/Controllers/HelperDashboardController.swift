@@ -192,32 +192,33 @@ class HelperDashboardController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    private func listenForAvailableTasks() {
-        let db = Firestore.firestore()
-        let taskRef = db.collection("tasks")
-        
-        taskListener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error listening for task updates: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let querySnapshot = querySnapshot else {
-                print("No snapshot data available")
-                return
-            }
-            
-            for documentChange in querySnapshot.documentChanges {
-                if documentChange.type == .added {
-                    let document = documentChange.document
-                    let data = document.data()
-                    print("added fucker")
-//                    DataManager.shared.
-                }
-            }
-        }
-    }
+    // TODO: finish this function.
+//    private func listenForAvailableTasks() {
+//        let db = Firestore.firestore()
+//        let taskRef = db.collection("tasks")
+//        
+//        taskListener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
+//            guard let self = self else { return }
+//            if let error = error {
+//                print("Error listening for task updates: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            guard let querySnapshot = querySnapshot else {
+//                print("No snapshot data available")
+//                return
+//            }
+//            
+//            for documentChange in querySnapshot.documentChanges {
+//                if documentChange.type == .added {
+//                    let document = documentChange.document
+//                    let data = document.data()
+//                    print("added fucker")
+////                    DataManager.shared.
+//                }
+//            }
+//        }
+//    }
 }
 
 extension HelperDashboardController: UITableViewDelegate, UITableViewDataSource {

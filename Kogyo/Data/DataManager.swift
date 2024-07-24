@@ -13,28 +13,57 @@ class DataManager {
     
     static let shared = DataManager()
     
+    // HELPER & USER DATA
+    var currentUserUID: String?
+    
     // USER DATA:
-    var currentJobs: [String: TaskClass] = [:]
-    var userData: User?
+    var userData: User? // TODO: Fix user data.
+    var currentJobs: [String: TaskClass] = [:] // TODO: See if you change this to only a list
+    var helpers: [String: Helper] = [:]
     
     // HELPER DATA
-    var helperAvailableTasks: [String: TaskClass] = [:]
+    var helperData: Helper?
+    var helperAvailableTasks:[String: TaskClass] = [:]
     var helperMyTasks: [String: TaskClass] = [:]
-    var helpers: [String: Helper] = [:]
     
     func fetchDatabaseData(asWorker: Bool = false) async {
         // Fetches all the data when loading Kogyo.
         
-//        if asWorker {
-//            do {
-//                var availableTasks = try await FirestoreHandler.shared.fetchTasks()
-//                availableTasks.sort { $0.dateAdded > $1.dateAdded }
-//                
-//            } catch {
-//                print("Error fetching available tasks: \(error.localizedDescription)")
-//            }
-//            
-//        } else {
+        guard let currentUserUID = Auth.auth().currentUser?.uid else {
+            // TODO: make sure current user UID is accessed from data manager.
+            print("User not authenticated")
+            return
+        }
+        
+        self.currentUserUID = currentUserUID
+        
+        if asWorker {
+            do {
+                // Get data for current user (in this case the helper).
+                self.helperData = try await FirestoreHandler.shared.fetchHelper(for: currentUserUID)
+                
+                // Get data for available tasks.
+                var availableTasks = try await FirestoreHandler.shared.fetchTasks(.other)
+                availableTasks.sort { $0.dateAdded > $1.dateAdded }
+                for task in availableTasks {
+                    self.helperAvailableTasks[task.jobUID] = task
+                }
+                
+                // Get data for tasks accepted by the helper.
+                var helperTasks = try await FirestoreHandler.shared.fetchTasks(.helper)
+                helperTasks.sort { $0.dateAdded > $1.dateAdded }
+                for task in helperTasks {
+                    print("tasskk")
+                    self.helperMyTasks[task.jobUID] = task
+                }
+                
+                print(self.helperAvailableTasks)
+                
+            } catch {
+                print("Error fetching available tasks: \(error.localizedDescription)")
+            }
+            
+        } else {
             
             do {
                 var jobs = try await FirestoreHandler.shared.fetchTasks(.user)
@@ -55,7 +84,7 @@ class DataManager {
             } catch {
                 print("Error fetching jobs: \(error.localizedDescription)")
             }
-//        }
+        }
     }
     
     func printValues() {

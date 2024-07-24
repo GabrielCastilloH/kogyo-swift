@@ -27,21 +27,21 @@ class FirestoreHandler {
     
     // MARK: - User Functions
     public func addTask(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let jobsRef = db.collection("users").document(userId).collection("jobs")
+        let dbRef = db.collection("tasks")
 
         var ref: DocumentReference? = nil
-        ref = jobsRef.addDocument(data: jobData) { error in
+        ref = dbRef.addDocument(data: jobData) { error in
             if let error = error {
                 completion(.failure(error))
             } else if let documentID = ref?.documentID {
                 completion(.success(documentID))
                 
-                // TODO: Delete this.
-                // Simulate assigning a helper 10 seconds after job creation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-                    let helperId = "imgayster"
-                    self.assignHelper(helperId, toJob: documentID, forUser: userId)
-                }
+                // TODO: Delete this. (also see if you can get rid of userId)
+//                // Simulate assigning a helper 10 seconds after job creation
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+//                    let helperId = "imgayster"
+//                    self.assignHelper(helperId, toJob: documentID, forUser: userId)
+//                }
             }
         }
     }
@@ -57,10 +57,7 @@ class FirestoreHandler {
     ///
     func fetchTasks(_ kind: UserKind) async throws -> [TaskClass] {
         
-        guard let currentUserUID = Auth.auth().currentUser?.uid else {
-            // Handle the case where the user is not authenticated
-            throw NSError(domain: "User not authenticated", code: 401, userInfo: nil)
-        }
+        let currentUserUID = DataManager.shared.currentUserUID! // This runs after load data
         
         // Cases depending on what tasks you want to fetch.
         var dataRef = db.collection("tasks")
