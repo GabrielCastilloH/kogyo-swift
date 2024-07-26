@@ -10,7 +10,7 @@ import FirebaseAuth
 import Photos
 import FirebaseStorage
 
-class CreateJobController: UIViewController {
+class CustomerCreateTaskController: UIViewController {
     // Responsible for creating a new job.
     // Also responsible for the addition of photos and videos.
     
@@ -299,7 +299,7 @@ class CreateJobController: UIViewController {
                     }
                     
                     DataManager.shared.currentJobs[jobUID] = TaskClass(
-                        jobUID: jobUID,
+                        taskUID: jobUID,
                         dateAdded: dateAdded,
                         kind: kind,
                         description: description,
@@ -323,7 +323,7 @@ class CreateJobController: UIViewController {
     }
 }
 
-extension CreateJobController: JobPaymentViewDelegate {
+extension CustomerCreateTaskController: JobPaymentViewDelegate {
     func paymentTextFieldPressed() {
         self.navigationController?.navigationBar.backgroundColor = .white
         DispatchQueue.main.async {
@@ -357,7 +357,7 @@ extension CreateJobController: JobPaymentViewDelegate {
     }
 }
 
-extension CreateJobController: JobDateTimeViewDelegate {
+extension CustomerCreateTaskController: JobDateTimeViewDelegate {
     func pressedLocationButton() {
         let addressPickerController = MapController()
         addressPickerController.modalPresentationStyle = .fullScreen
@@ -366,7 +366,7 @@ extension CreateJobController: JobDateTimeViewDelegate {
 }
 
 // MARK: - Media View Functions and Delegate
-extension CreateJobController: MediaViewDelegate {
+extension CustomerCreateTaskController: MediaViewDelegate {
     
     public func addMedia(_ image: UIImage?, videoURL: URL? = nil) {
         var newMediaView = MediaView(with: image, and: self.idCounter)
@@ -404,7 +404,7 @@ extension CreateJobController: MediaViewDelegate {
     }
 }
 
-extension CreateJobController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+extension CustomerCreateTaskController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         let mediaType = info[.mediaType] as? String
