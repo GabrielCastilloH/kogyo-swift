@@ -10,7 +10,7 @@ import Firebase
 
 class HelperDashboardController: UIViewController {
     // Home screen for helpers, presents all available jobs in their are.
-
+    
     // MARK: - Variables
     var availableTasks: [TaskClass] = []
     
@@ -110,7 +110,6 @@ class HelperDashboardController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         
         self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values).sorted { $0.dateAdded > $1.dateAdded }
-        print(self.availableTasks)
         self.availableTasksTable.reloadData()
         
         if self.availableTasks.count == 0 {
@@ -124,6 +123,7 @@ class HelperDashboardController: UIViewController {
         self.availableTasksTable.delegate = self
         self.availableTasksTable.dataSource = self
         self.setupUI()
+        self.listenForAvailableTasks()
     }
     
     // MARK: - UI Setup
@@ -141,13 +141,13 @@ class HelperDashboardController: UIViewController {
         
         self.view.addSubview(moneyTodayLabel)
         moneyTodayLabel.translatesAutoresizingMaskIntoConstraints = false
-
+        
         self.view.addSubview(moneyWeekLabel)
         moneyWeekLabel.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(moneyMonthLabel)
         moneyMonthLabel.translatesAutoresizingMaskIntoConstraints = false
-
+        
         self.view.addSubview(availableTasksLabel)
         availableTasksLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -166,7 +166,7 @@ class HelperDashboardController: UIViewController {
             
             moneyEarnedLabel.topAnchor.constraint(equalTo: quoteLabel.bottomAnchor, constant: 15),
             moneyEarnedLabel.leadingAnchor.constraint(equalTo: quoteLabel.leadingAnchor),
-
+            
             moneyTodayLabel.topAnchor.constraint(equalTo: moneyEarnedLabel.bottomAnchor, constant: 4),
             moneyTodayLabel.leadingAnchor.constraint(equalTo: moneyEarnedLabel.leadingAnchor),
             
@@ -193,32 +193,60 @@ class HelperDashboardController: UIViewController {
     
     // MARK: - Selectors & Functions
     // TODO: finish this function.
-//    private func listenForAvailableTasks() {
-//        let db = Firestore.firestore()
-//        let taskRef = db.collection("tasks")
-//        
-//        taskListener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
-//            guard let self = self else { return }
-//            if let error = error {
-//                print("Error listening for task updates: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            guard let querySnapshot = querySnapshot else {
-//                print("No snapshot data available")
-//                return
-//            }
-//            
-//            for documentChange in querySnapshot.documentChanges {
-//                if documentChange.type == .added {
-//                    let document = documentChange.document
-//                    let data = document.data()
-//                    print("added fucker")
-////                    DataManager.shared.
-//                }
-//            }
-//        }
-//    }
+    private func listenForAvailableTasks() {
+        let db = Firestore.firestore()
+        let taskRef = db.collection("tasks")
+        
+        taskListener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error listening for task updates: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let querySnapshot = querySnapshot else {
+                print("No snapshot data available")
+                return
+            }
+            
+            for documentChange in querySnapshot.documentChanges {
+                if documentChange.type == .added {
+                    let document = documentChange.document
+                    let data = document.data()
+                    
+                    // Fetch media data asynchronously
+                    Task {
+                        let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(jobId: document.documentID) // Fetch media data
+                        
+                        let newTask = TaskClass(
+                            jobUID: document.documentID,
+                            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
+                            kind: data["kind"] as? String ?? "",
+                            description: data["description"] as? String ?? "",
+                            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
+                            expectedHours: data["expectedHours"] as? Int ?? 0,
+                            location: data["location"] as? String ?? "",
+                            payment: data["payment"] as? Int ?? 0,
+                            helperUID: data["helper"] as? String,
+                            media: mediaData ?? [],
+                            equipment: []
+                        )
+                        
+                        // Update DataManager
+                        DataManager.shared.helperAvailableTasks[document.documentID] = newTask
+                        
+                        // Update local availableTasks and reload the table
+                        self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values)
+                            .sorted { $0.dateAdded > $1.dateAdded }
+                        self.availableTasksTable.reloadData()
+                        
+                        // Update noTasksLabel visibility
+                        self.noTasksLabel.isHidden = self.availableTasks.count > 0
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension HelperDashboardController: UITableViewDelegate, UITableViewDataSource {
@@ -246,9 +274,9 @@ extension HelperDashboardController: UITableViewDelegate, UITableViewDataSource 
         // Present available task info controller.
         let task = self.availableTasks[indexPath.row]
         let taskID = task.jobUID
-
+        
         let taskInfoController = AvailableTaskInfoController(for: task, jobUID: taskID)
-
+        
         taskInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(taskInfoController, animated: true)
     }
