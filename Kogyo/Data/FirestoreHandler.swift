@@ -10,6 +10,11 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
+
+// TODO: 2. All tasks should include a userUID.
+// TODO: 3. Ability to accept tasks and move them to the users db.
+// TODO: 4. Ability to cancel tasks and delete them and their data from the db.
+
 enum UserKind {
     case user
     case helper
@@ -25,23 +30,98 @@ class FirestoreHandler {
     
     private init() {}
     
+    // MARK: - General Functions
+    
+    /// Returns a `TaskClass` object given task data.
+    ///
+    /// ```
+    /// // Data must be structed as follows:
+    /// let taskData: [String : Any] = [
+    ///     "dateAdded": dateAdded,
+    ///     "kind": kind,
+    ///     "description": description,
+    ///     "dateTime": dateTime,
+    ///     "expectedHours": expectedHours,
+    ///     "location": location,
+    ///     "payment": payment,
+    /// ]
+    /// ```
+    ///
+    /// - Parameters:
+    ///     - for: the taskUID of the task.
+    ///     - data: the actual task data.
+    ///     - media: an array of `PlayableMediaView`, all the images and videos of the task.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]) -> TaskClass {
+        // This task object is completely different from the one on firebase, it has more info.
+        let task = TaskClass(
+            taskUID: taskUID,
+            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
+            kind: data["kind"] as? String ?? "",
+            description: data["description"] as? String ?? "",
+            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
+            expectedHours: data["expectedHours"] as? Int ?? 0,
+            location: data["location"] as? String ?? "",
+            payment: data["payment"] as? Int ?? 0,
+            helperUID: data["helper"] as? String,
+            media: media,
+            equipment: []
+        )
+        
+        return task
+    }
+    
     // MARK: - User Functions
-    public func addTask(with jobData: [String: Any], for userId: String, completion: @escaping (Result<String, Error>) -> Void) {
+    /// Uploads a task to Firebase.
+    ///
+    /// ```
+    /// // Data must be structured as in the function `taskFromData` #ihateduplicatedcode
+    /// ```
+    ///
+    /// - Parameters:
+    ///     - taskData: all the data for the task.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    public func uploadTask(taskData: [String : Any], mediaData: [MediaView], completion: @escaping (Result<String, Error>) -> Void) {
+        
         let dbRef = db.collection("tasks")
-
         var ref: DocumentReference? = nil
-        ref = dbRef.addDocument(data: jobData) { error in
+        
+        ref = dbRef.addDocument(data: taskData) { error in
             if let error = error {
                 completion(.failure(error))
-            } else if let documentID = ref?.documentID {
-                completion(.success(documentID))
+            } else if let taskUID = ref?.documentID { // Once task data has been uploaded, upload all task media.
                 
-                // TODO: Delete this. (also see if you can get rid of userId)
-//                // Simulate assigning a helper 10 seconds after job creation
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-//                    let helperId = "imgayster"
-//                    self.assignHelper(helperId, toJob: documentID, forUser: userId)
-//                }
+                var mediaArray: [PlayableMediaView] = []
+                
+                for media in mediaData {
+                    if media != mediaData[0] {
+                        
+                        if let videoURL = media.videoURL {
+                            // Upload video to database.
+                            let videoToUploadURL = videoURL
+                            let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: taskUID, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
+                            
+                            // Append media view to media in DataManager
+                            let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
+                            mediaArray.append(playableMediaView)
+                            
+                        } else {
+                            // Upload image to database.
+                            let imageToUpload = media.mediaImageView.image
+                            FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: taskUID, image: imageToUpload!)
+                            
+                            // Append media view to media in DataManager.
+                            let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
+                            mediaArray.append(playableMediaView)
+                        }
+                    }
+                }
+                
+                let newTask = self.taskFromData(for: taskUID, data: taskData, media: mediaArray)
+                DataManager.shared.currentJobs[taskUID] = newTask
+                completion(.success(taskUID))
             }
         }
     }
@@ -74,11 +154,11 @@ class FirestoreHandler {
             
             for document in querySnapshot.documents {
                 let data = document.data() // All data.
-                let mediaData = try await fetchJobMedia(jobId: document.documentID) // Fetch media data
+                let mediaData = try await fetchJobMedia(taskId: document.documentID) // Fetch media data
                 
                 // This task object is completely different from the one on firebase, it has more info.
                 let task = TaskClass(
-                    jobUID: document.documentID,
+                    taskUID: document.documentID,
                     dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
                     kind: data["kind"] as? String ?? "",
                     description: data["description"] as? String ?? "",
@@ -162,7 +242,7 @@ class FirestoreHandler {
     ///
     /// - Parameters:
     ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
-    ///     - containerId: the ID of the specific parent folder. Use `jobUID` when storing job data.
+    ///     - containerId: the ID of the specific parent folder. Use `taskUID` when storing job data.
     ///     - image: the image you want to upload as a `UIImage`
     ///     - imageUID: do not add value. Look at warning!
     ///
@@ -182,7 +262,7 @@ class FirestoreHandler {
     ///
     /// - Parameters:
     ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
-    ///     - containerId: the ID of the specific parent folder. Use `jobUID` when storing job data.
+    ///     - containerId: the ID of the specific parent folder. Use `taskUID` when storing job data.
     ///     - videoURL: the url of the location of the video (in the users device) that you want to upload.
     ///     - thumbnail: a `UIImage` for the thumbnail of the video.
     ///
@@ -229,14 +309,14 @@ class FirestoreHandler {
     }
     
     // MARK: - Fetch Media Function
-    /// Fetches all the media for a particular job, given a jobUID.
+    /// Fetches all the media for a particular job, given a taskUID.
     ///
     /// - Parameters:
     ///     - jobId: the unique identifier of the job for which you'd like to fetch the media for.
     ///
     /// - Returns: `[PlayableMediaView]` through a completion handler. Can throw.
-    func fetchJobMedia(jobId: String) async throws -> [PlayableMediaView] {
-        let storageRef = Storage.storage().reference().child("jobs/\(jobId)/")
+    func fetchJobMedia(taskId: String) async throws -> [PlayableMediaView] {
+        let storageRef = Storage.storage().reference().child("jobs/\(taskId)/")
         var mediaData: [PlayableMediaView] = []
         
         do {

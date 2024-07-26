@@ -1,5 +1,5 @@
 //
-//  CreateJobController.swift
+//  CustomerCreateTaskController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/6/24.
@@ -248,70 +248,29 @@ class CustomerCreateTaskController: UIViewController {
         let kind = self.jobKindView.pickerTextField.text ?? ""
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
         let dateTime = self.jobDateTimeView.datePicker.date
-        let expectedHours = Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0
+        let expHours = Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0
         let location = self.jobDateTimeView.addressLabel.text ?? "Click to set location"
         let payment = Int(self.jobPaymentView.paymentTextField.text ?? "") ?? 0
         
-        if kind == "" || description == "" || expectedHours == 0 || location == "" || payment == 0 || location == "Click to set location" {
+        if kind == "" || description == "" || expHours == 0 || location == "" || payment == 0 || location == "Click to set location" {
             AlertManager.showMissingJobInfoAlert(on: self)
         } else {
-            let taskData: [String: Any] = [
+            let taskData: [String : Any] = [
                 "dateAdded": dateAdded,
                 "kind": kind,
                 "description": description,
                 "dateTime": dateTime,
-                "expectedHours": expectedHours,
+                "expectedHours": expHours,
                 "location": location,
                 "payment": payment,
             ]
             
-            guard let userUID = Auth.auth().currentUser?.uid else { return } // Double check wifi!
-            FirestoreHandler.shared.addTask(with: taskData, for: userUID) { result in
+            // Upload task to database.
+            FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData) { result in
                 switch result {
-                case .success(let jobUID):
-                    // The job was added successfully (no media yet).
-                    self.presentLoadingScreen(jobUID: jobUID, userId: userUID)
-                    
-                    var mediaArray: [PlayableMediaView] = []
-                    
-                    for media in self.mediaData {
-                        if media != self.mediaData[0] {
-                            
-                            if let videoURL = media.videoURL {
-                                // Upload video to database.
-                                let videoToUploadURL = videoURL
-                                let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: jobUID, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
-                                
-                                // Append media view to media in DataManager
-                                let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
-                                mediaArray.append(playableMediaView)
-                                
-                            } else {
-                                // Upload image to database.
-                                let imageToUpload = media.mediaImageView.image
-                                FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: jobUID, image: imageToUpload!)
-                                
-                                // Append media view to media in DataManager.
-                                let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
-                                mediaArray.append(playableMediaView)
-                            }
-                        }
-                    }
-                    
-                    DataManager.shared.currentJobs[jobUID] = TaskClass(
-                        taskUID: jobUID,
-                        dateAdded: dateAdded,
-                        kind: kind,
-                        description: description,
-                        dateTime: dateTime,
-                        expectedHours: expectedHours,
-                        location: location,
-                        payment: payment,
-                        helperUID: nil,
-                        media: mediaArray,
-                        equipment: []
-                    )
-                    
+                case .success(let taskUID):
+                    guard let userUID = Auth.auth().currentUser?.uid else { return } // Double check wifi!
+                    self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
                 case .failure(let error):
                     print("Error adding job: \(error.localizedDescription)")
                 }

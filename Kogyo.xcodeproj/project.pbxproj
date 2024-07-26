@@ -15,7 +15,7 @@
 		D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */; };
 		D0D3A9982C117C29000DFFB8 /* SearchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */; };
 		D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A9992C11A868000DFFB8 /* Extensions.swift */; };
-		D0D3A99F2C11B975000DFFB8 /* CreateJobController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */; };
+		D0D3A99F2C11B975000DFFB8 /* CustomerCreateTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A99E2C11B975000DFFB8 /* CustomerCreateTaskController.swift */; };
 		D0E923DA2C0E8D250070977A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923D92C0E8D250070977A /* AppDelegate.swift */; };
 		D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DB2C0E8D250070977A /* SceneDelegate.swift */; };
 		D0E923DE2C0E8D250070977A /* CustomerHomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923DD2C0E8D250070977A /* CustomerHomeController.swift */; };
@@ -90,7 +90,7 @@
 		D0D3A9952C11537C000DFFB8 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D0D3A9972C117C29000DFFB8 /* SearchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableCell.swift; sourceTree = "<group>"; };
 		D0D3A9992C11A868000DFFB8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateJobController.swift; sourceTree = "<group>"; };
+		D0D3A99E2C11B975000DFFB8 /* CustomerCreateTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerCreateTaskController.swift; sourceTree = "<group>"; };
 		D0E923D62C0E8D250070977A /* Kogyo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kogyo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0E923D92C0E8D250070977A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0E923DB2C0E8D250070977A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -172,6 +172,7 @@
 		D09C5ECE2C0F3F64002C6F89 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				FFF372CE2C16C45A00F8D362 /* TaskClass.swift */,
 				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
 				FF919BCC2C275E2700A1FE27 /* DataManager.swift */,
 				FFD8A99A2C157908009F5C8C /* TaskListing.swift */,
@@ -195,7 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				D0E923DD2C0E8D250070977A /* CustomerHomeController.swift */,
-				D0D3A99E2C11B975000DFFB8 /* CreateJobController.swift */,
+				D0D3A99E2C11B975000DFFB8 /* CustomerCreateTaskController.swift */,
 				FF86A0142C1E52BE00E5F675 /* MapController.swift */,
 				D0E923EE2C0E98420070977A /* CustomerMyTasksController.swift */,
 				FFD8A9982C15588D009F5C8C /* CustomerLoadingScreenController.swift */,
@@ -369,7 +370,6 @@
 		FFF372CD2C16C44100F8D362 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				FFF372CE2C16C45A00F8D362 /* TaskClass.swift */,
 				FF879A482C1B2CBF00922513 /* SettingsOption.swift */,
 				FF6882082C1C790600288618 /* Helper.swift */,
 			);
@@ -577,7 +577,7 @@
 				FFF372E92C16C8B800F8D362 /* ForgotPasswordController.swift in Sources */,
 				FFF372E52C16C84800F8D362 /* AlertManager.swift in Sources */,
 				FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */,
-				D0D3A99F2C11B975000DFFB8 /* CreateJobController.swift in Sources */,
+				D0D3A99F2C11B975000DFFB8 /* CustomerCreateTaskController.swift in Sources */,
 				FF45E4B32C161047000F1BE7 /* JobDescriptionView.swift in Sources */,
 				FFF372E72C16C87400F8D362 /* AuthService.swift in Sources */,
 				FFF3F21A2C3F01FD00E20496 /* HelperDashboardController.swift in Sources */,

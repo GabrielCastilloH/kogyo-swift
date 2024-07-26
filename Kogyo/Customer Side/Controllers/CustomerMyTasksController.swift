@@ -117,7 +117,7 @@ extension CustomerMyTasksController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let job = self.currentTasks[indexPath.row]
-        let jobId = job.jobUID
+        let jobId = job.taskUID
         
         let jobInfoController = CustomerTaskInfoController(for: job, jobUID: jobId)
         

@@ -123,9 +123,9 @@ extension HelperMyTasksController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Change appearance when tapped.
         let task = self.myTasks[indexPath.row]
-        let jobId = task.jobUID
+        let jobId = task.taskUID
 
-        let taskInfoController = AcceptedTasksInfoController(for: task, jobUID: jobId)
+        let taskInfoController = AcceptedTasksInfoController(for: task, taskUID: jobId)
 
         taskInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(taskInfoController, animated: true)

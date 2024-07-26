@@ -56,7 +56,7 @@ class AcceptedTasksInfoController: UIViewController {
     
     
     // MARK: - Life Cycle
-    init(for job: TaskClass, jobUID: String) {
+    init(for job: TaskClass, taskUID: String) {
         self.selectedTask = job
         super.init(nibName: nil, bundle: nil)
     }
@@ -73,8 +73,8 @@ class AcceptedTasksInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        print("configuring media for: \(self.selectedTask.jobUID)")
-        self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.jobUID]!.media
+        print("configuring media for: \(self.selectedTask.taskUID)")
+        self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.taskUID]!.media
         self.configureMediaViews()
         
         let dateNotFormatted = self.selectedTask.dateAdded
@@ -196,7 +196,7 @@ extension AcceptedTasksInfoController: PlayableMediaViewDelegate {
         } else {
             // Fetch video from Firestore and present AV controller.
             let videoFileName = "\(videoUID!).mov"
-            let videoRef = Storage.storage().reference().child("jobs/\(self.selectedTask.jobUID)/\(videoFileName)")
+            let videoRef = Storage.storage().reference().child("jobs/\(self.selectedTask.taskUID)/\(videoFileName)")
             
             // Fetch the download URL
             videoRef.downloadURL { url, error in

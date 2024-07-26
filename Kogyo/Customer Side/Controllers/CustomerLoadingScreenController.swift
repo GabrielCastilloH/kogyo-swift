@@ -145,7 +145,7 @@ class CustomerLoadingScreenController: UIViewController {
     }
     
     func popToCreateJob() {
-        if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CreateJobController }).first {
+        if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CustomerCreateTaskController }).first {
             self.navigationController?.popToViewController(createJobVC, animated: true)
         }
     }

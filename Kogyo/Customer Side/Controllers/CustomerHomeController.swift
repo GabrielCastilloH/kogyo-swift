@@ -129,7 +129,7 @@ class CustomerHomeController: UIViewController {
     }
     
     private func presentCreateJobController(for jobKind: String) {
-        let createJobController = CreateJobController(kind: jobKind)
+        let createJobController = CustomerCreateTaskController(kind: jobKind)
         createJobController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(createJobController, animated: true)
     }

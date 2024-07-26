@@ -46,7 +46,7 @@ class DataManager {
                 var availableTasks = try await FirestoreHandler.shared.fetchTasks(.other)
                 availableTasks.sort { $0.dateAdded > $1.dateAdded }
                 for task in availableTasks {
-                    self.helperAvailableTasks[task.jobUID] = task
+                    self.helperAvailableTasks[task.taskUID] = task
                 }
                 
                 // Get data for tasks accepted by the helper.
@@ -54,7 +54,7 @@ class DataManager {
                 helperTasks.sort { $0.dateAdded > $1.dateAdded }
                 for task in helperTasks {
                     print("tasskk")
-                    self.helperMyTasks[task.jobUID] = task
+                    self.helperMyTasks[task.taskUID] = task
                 }
                 
                 print(self.helperAvailableTasks)
@@ -70,7 +70,7 @@ class DataManager {
                 jobs.sort { $0.dateAdded > $1.dateAdded }
                 
                 for job in jobs {
-                    self.currentJobs[job.jobUID] = job
+                    self.currentJobs[job.taskUID] = job
                     
                     if let helperUID = job.helperUID {
                         do {

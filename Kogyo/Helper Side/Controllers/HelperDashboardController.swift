@@ -109,7 +109,8 @@ class HelperDashboardController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
         
-        self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values).sorted { $0.dateAdded > $1.dateAdded }
+        self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values)
+            .sorted { $0.dateAdded > $1.dateAdded }
         self.availableTasksTable.reloadData()
         
         if self.availableTasks.count == 0 {
@@ -192,7 +193,6 @@ class HelperDashboardController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    // TODO: finish this function.
     private func listenForAvailableTasks() {
         let db = Firestore.firestore()
         let taskRef = db.collection("tasks")
@@ -216,10 +216,10 @@ class HelperDashboardController: UIViewController {
                     
                     // Fetch media data asynchronously
                     Task {
-                        let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(jobId: document.documentID) // Fetch media data
+                        let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(taskId: document.documentID) // Fetch media data
                         
                         let newTask = TaskClass(
-                            jobUID: document.documentID,
+                            taskUID: document.documentID,
                             dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
                             kind: data["kind"] as? String ?? "",
                             description: data["description"] as? String ?? "",
@@ -236,14 +236,22 @@ class HelperDashboardController: UIViewController {
                         DataManager.shared.helperAvailableTasks[document.documentID] = newTask
                         
                         // Update local availableTasks and reload the table
+                        // TODO: Set the data manager as the data source for table data!
                         self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values)
                             .sorted { $0.dateAdded > $1.dateAdded }
                         self.availableTasksTable.reloadData()
                         
-                        // Update noTasksLabel visibility
-                        self.noTasksLabel.isHidden = self.availableTasks.count > 0
                     }
+                } else if documentChange.type == .removed {
+                    let taskUID = documentChange.document.documentID
+                    DataManager.shared.helperAvailableTasks[taskUID] = nil
+                    self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values)
+                        .sorted { $0.dateAdded > $1.dateAdded }
+                    self.availableTasksTable.reloadData()
                 }
+                
+                // Update noTasksLabel visibility
+                self.noTasksLabel.isHidden = self.availableTasks.count > 0
             }
         }
     }
@@ -273,11 +281,12 @@ extension HelperDashboardController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Present available task info controller.
         let task = self.availableTasks[indexPath.row]
-        let taskID = task.jobUID
+        let taskID = task.taskUID
         
-        let taskInfoController = AvailableTaskInfoController(for: task, jobUID: taskID)
+        let taskInfoController = AvailableTaskInfoController(for: task, taskUID: taskID)
         
         taskInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(taskInfoController, animated: true)
     }
 }
+

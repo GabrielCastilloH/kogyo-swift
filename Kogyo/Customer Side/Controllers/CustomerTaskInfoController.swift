@@ -50,7 +50,7 @@ class CustomerTaskInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        self.mediaData = DataManager.shared.currentJobs[self.currentJob.jobUID]!.media
+        self.mediaData = DataManager.shared.currentJobs[self.currentJob.taskUID]!.media
         self.configureMediaViews()
         
         let dateNotFormatted = self.currentJob.dateAdded
@@ -151,7 +151,7 @@ extension CustomerTaskInfoController: PlayableMediaViewDelegate {
         } else {
             // Fetch video from Firestore and present AV controller.
             let videoFileName = "\(videoUID!).mov"
-            let videoRef = Storage.storage().reference().child("jobs/\(self.currentJob.jobUID)/\(videoFileName)")
+            let videoRef = Storage.storage().reference().child("jobs/\(self.currentJob.taskUID)/\(videoFileName)")
             
             // Fetch the download URL
             videoRef.downloadURL { url, error in
