@@ -62,7 +62,6 @@ class AvailableTaskInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        print("configuring media for: \(self.selectedTask.taskUID)")
         self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.taskUID]!.media
         self.configureMediaViews()
         
@@ -149,13 +148,27 @@ class AvailableTaskInfoController: UIViewController {
     
     // MARK: - Selectors & Functions
     @objc private func didTapAcceptJob() {
-        print("touched me.")
+        let helperUID = DataManager.shared.currentUser!.userUID
+        FirestoreHandler.shared.assignHelper(helperUID, toJob: self.selectedTask.taskUID, forUser: self.selectedTask.userUID) { error in
+            if let error = error {
+                print("Error assigning helper: \(error.localizedDescription)")
+            } else {
+                self.presentMyTasksController()
+            }
+        }
+    }
+    
+    func presentMyTasksController() {
+        if let homeController = self.navigationController?.viewControllers.first(where: { $0 is HelperDashboardController }) {
+            // Pop to CustomerHomeController if found
+            self.navigationController?.popToViewController(homeController, animated: true)
+            AlertManager.showTaskAcceptedAlert(on: homeController)
+        }
     }
     
     // Its better to put the configure function here to keep everything in the view.
     func configureMediaViews() {
         for media in self.mediaData {
-            print("configuring media. for \(self.selectedTask)")
             media.delegate = self
             self.jobPhotosVideosView.stackView.addArrangedSubview(media)
             

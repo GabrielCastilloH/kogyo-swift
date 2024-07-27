@@ -106,7 +106,11 @@ extension AlertManager {
 // MARK: - Show Other Alerts
 extension AlertManager {
     public static func showJobAddedAlert(on vc: UIViewController) {
-        showBasicAlert(on: vc, title: "Task Added", message: "Please go to \"Jobs\" to see your current jobs.")
+        showBasicAlert(on: vc, title: "Task Added", message: "Please go to \"Tasks\" to see your current tasks.")
+    }
+    
+    public static func showTaskAcceptedAlert(on vc: UIViewController) {
+        showBasicAlert(on: vc, title: "Task Accepted", message: "Please go to \"My Tasks\" to see your accepted tasks.")
     }
     
     public static func showNameChangedAlert(on vc: UIViewController) {

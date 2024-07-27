@@ -73,7 +73,6 @@ class AcceptedTasksInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        print("configuring media for: \(self.selectedTask.taskUID)")
         self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.taskUID]!.media
         self.configureMediaViews()
         
@@ -174,7 +173,6 @@ class AcceptedTasksInfoController: UIViewController {
     // Its better to put the configure function here to keep everything in the view.
     func configureMediaViews() {
         for media in self.mediaData {
-            print("configuring media. for \(self.selectedTask)")
             media.delegate = self
             self.jobPhotosVideosView.stackView.addArrangedSubview(media)
             

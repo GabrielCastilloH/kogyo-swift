@@ -10,7 +10,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
-// TODO: 3. Ability to accept tasks and move them to the users db.
 // TODO: 4. Ability to cancel tasks and delete them and their data from the db.
 
 enum UserKind {
@@ -127,17 +126,21 @@ class FirestoreHandler {
         
         // Cases depending on what tasks you want to fetch.
         var dataRef = db.collection("tasks")
+        var query: Query? // Query for data ref.
         
         if kind == .user {
             dataRef = db.collection("users").document(currentUserUID).collection("jobs")
         } else if kind == .helper {
-            dataRef = db.collection("helpers").document(currentUserUID).collection("jobs")
+            query = db.collectionGroup("jobs").whereField("helperUID", isEqualTo: currentUserUID)
+            print("fetching jobs for helper!")
         }
         
         do {
-            let querySnapshot = try await dataRef.getDocuments()
-            var tasks: [TaskClass] = [] // Returns array of tasks.
+            let querySnapshot = try await (query != nil ? query!.getDocuments() : dataRef.getDocuments())
             
+            var tasks: [TaskClass] = [] // Returns array of tasks.
+            print("total of \(querySnapshot.documents.count) documents!")
+                  
             for document in querySnapshot.documents {
                 let data = document.data() // All data.
                 let mediaData = try await fetchJobMedia(taskId: document.documentID) // Fetch media data
@@ -158,20 +161,44 @@ class FirestoreHandler {
     }
     
     // MARK: - Helper Functions
-    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String) {
-        
+    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping(Error?) -> Void) {
+        let taskRef = db.collection("tasks").document(jobId)
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
         
-        jobRef.updateData(["helper": helperUID]) { error in
-            if let error = error {
-                print("Error assigning helper: \(error.localizedDescription)")
-            } else {
-                // Update helper info on DataManager
-                DataManager.shared.currentJobs[jobId]!.helperUID = helperUID
+        taskRef.getDocument { (document, error) in
+            guard let document = document, document.exists, let taskData = document.data() else {
+                completion(error)
                 return
+            }
+            
+            jobRef.setData(taskData) { error in
+                guard error == nil else {
+                    completion(error)
+                    return
+                }
+                
+                taskRef.delete { error in
+                    guard error == nil else {
+                        completion(error)
+                        return
+                    }
+                    
+                    jobRef.updateData(["helperUID": helperUID]) { error in
+                        if let error = error {
+                            completion(error)
+                        } else {
+                            // Update DataManager
+                            let task = DataManager.shared.helperAvailableTasks[jobId]
+                            DataManager.shared.helperMyTasks[jobId] = task
+                            DataManager.shared.helperAvailableTasks[jobId] = nil
+                            completion(nil)
+                        }
+                    }
+                }
             }
         }
     }
+
     
     /// Fetches a `Helper`object for a given `helperUID`.
     ///

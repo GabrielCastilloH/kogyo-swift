@@ -138,14 +138,33 @@ class CustomerLoadingScreenController: UIViewController {
             let data = document.data()
             let helper = data?["helper"] as? String
             
-            if helper != nil {
+            if let helperUID = helper {
+                // Update DataManager. If it's a new helper, fetch their data
+                DataManager.shared.currentJobs[jobId]?.helperUID = helperUID
+                
+                if DataManager.shared.helpers[helperUID] == nil {
+                    self.fetchHelperIfNeeded(for: helperUID) // Call async outside of listener
+                }
                 self.presentCurrentJobsController()
+            }
+        }
+    }
+
+    // Helper function to perform the async fetch
+    private func fetchHelperIfNeeded(for helperUID: String) {
+        Task {
+            do {
+                let helper = try await FirestoreHandler.shared.fetchHelper(for: helperUID)
+                DataManager.shared.helpers[helper.helperUID] = helper
+            } catch {
+                print("Error fetching helper: \(error)")
             }
         }
     }
     
     func popToCreateJob() {
         if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CustomerCreateTaskController }).first {
+            // TODO: DELETE the job from the database when going back to edit the job. 
             self.navigationController?.popToViewController(createJobVC, animated: true)
         }
     }
