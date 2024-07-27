@@ -27,17 +27,10 @@ class PersonalInfoController: UIViewController {
         
         firstLastNameForm.firstNameTextField.delegate = self
         
-        AuthService.shared.fetchUser { [weak self] user, error in
-            guard let self = self else { return }
-            if let error = error {
-                AlertManager.showFetchingUserError(on: self, with: error)
-                return
-            } else if let user = user {
-                print(user)
-                self.firstLastNameForm.firstNameTextField.text = user.firstName
-                self.firstLastNameForm.lastNameTextField.text = user.lastName
-            }
-        }
+        let user = DataManager.shared.currentUser!
+        
+        self.firstLastNameForm.firstNameTextField.text = user.firstName
+        self.firstLastNameForm.lastNameTextField.text = user.lastName
     }
     
     // MARK: - UI Setup

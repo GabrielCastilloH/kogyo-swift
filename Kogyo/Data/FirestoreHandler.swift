@@ -10,8 +10,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
-
-// TODO: 2. All tasks should include a userUID.
 // TODO: 3. Ability to accept tasks and move them to the users db.
 // TODO: 4. Ability to cancel tasks and delete them and their data from the db.
 
@@ -31,45 +29,29 @@ class FirestoreHandler {
     private init() {}
     
     // MARK: - General Functions
-    
-    /// Returns a `TaskClass` object given task data.
-    ///
-    /// ```
-    /// // Data must be structed as follows:
-    /// let taskData: [String : Any] = [
-    ///     "dateAdded": dateAdded,
-    ///     "kind": kind,
-    ///     "description": description,
-    ///     "dateTime": dateTime,
-    ///     "expectedHours": expectedHours,
-    ///     "location": location,
-    ///     "payment": payment,
-    /// ]
-    /// ```
-    ///
-    /// - Parameters:
-    ///     - for: the taskUID of the task.
-    ///     - data: the actual task data.
-    ///     - media: an array of `PlayableMediaView`, all the images and videos of the task.
-    ///
-    /// - Returns: A greeting for the given `subject`.
-    public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]) -> TaskClass {
-        // This task object is completely different from the one on firebase, it has more info.
-        let task = TaskClass(
-            taskUID: taskUID,
-            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
-            kind: data["kind"] as? String ?? "",
-            description: data["description"] as? String ?? "",
-            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
-            expectedHours: data["expectedHours"] as? Int ?? 0,
-            location: data["location"] as? String ?? "",
-            payment: data["payment"] as? Int ?? 0,
-            helperUID: data["helper"] as? String,
-            media: media,
-            equipment: []
-        )
-        
-        return task
+    public func fetchUser() async throws -> User {
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "No current user"])
+        }
+
+        let db = Firestore.firestore()
+        let document = db.collection("users").document(userUID)
+
+        do {
+            let snapshot = try await document.getDocument()
+            
+            guard let snapshotData = snapshot.data(),
+                  let firstName = snapshotData["firstName"] as? String,
+                  let lastName = snapshotData["lastName"] as? String,
+                  let email = snapshotData["email"] as? String else {
+                throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid data in snapshot"])
+            }
+
+            let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email)
+            return user
+        } catch {
+            throw error
+        }
     }
     
     // MARK: - User Functions
@@ -119,7 +101,11 @@ class FirestoreHandler {
                     }
                 }
                 
-                let newTask = self.taskFromData(for: taskUID, data: taskData, media: mediaArray)
+                let newTask = CustomFunctions.shared.taskFromData(
+                    for: taskUID,
+                    data: taskData,
+                    media: mediaArray
+                )
                 DataManager.shared.currentJobs[taskUID] = newTask
                 completion(.success(taskUID))
             }
@@ -137,7 +123,7 @@ class FirestoreHandler {
     ///
     func fetchTasks(_ kind: UserKind) async throws -> [TaskClass] {
         
-        let currentUserUID = DataManager.shared.currentUserUID! // This runs after load data
+        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
         
         // Cases depending on what tasks you want to fetch.
         var dataRef = db.collection("tasks")
@@ -156,19 +142,10 @@ class FirestoreHandler {
                 let data = document.data() // All data.
                 let mediaData = try await fetchJobMedia(taskId: document.documentID) // Fetch media data
                 
-                // This task object is completely different from the one on firebase, it has more info.
-                let task = TaskClass(
-                    taskUID: document.documentID,
-                    dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
-                    kind: data["kind"] as? String ?? "",
-                    description: data["description"] as? String ?? "",
-                    dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
-                    expectedHours: data["expectedHours"] as? Int ?? 0,
-                    location: data["location"] as? String ?? "",
-                    payment: data["payment"] as? Int ?? 0,
-                    helperUID: data["helper"] as? String,
-                    media: mediaData,
-                    equipment: []
+                let task = CustomFunctions.shared.taskFromData(
+                    for: document.documentID,
+                    data: data,
+                    media: mediaData
                 )
                 
                 tasks.append(task)
@@ -371,6 +348,10 @@ class FirestoreHandler {
             if let error = error {
                 print("Error updating names: \(error.localizedDescription)")
             } else {
+                // Update data manager.
+                DataManager.shared.currentUser?.firstName = firstName
+                DataManager.shared.currentUser?.lastName = lastName
+                
                 return
             }
         }

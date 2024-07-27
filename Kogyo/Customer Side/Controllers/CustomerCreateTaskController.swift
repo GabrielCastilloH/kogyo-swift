@@ -256,6 +256,7 @@ class CustomerCreateTaskController: UIViewController {
             AlertManager.showMissingJobInfoAlert(on: self)
         } else {
             let taskData: [String : Any] = [
+                "userUID": DataManager.shared.currentUser!.userUID,
                 "dateAdded": dateAdded,
                 "kind": kind,
                 "description": description,
@@ -269,7 +270,7 @@ class CustomerCreateTaskController: UIViewController {
             FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData) { result in
                 switch result {
                 case .success(let taskUID):
-                    guard let userUID = Auth.auth().currentUser?.uid else { return } // Double check wifi!
+                    let userUID = DataManager.shared.currentUser!.userUID
                     self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
                 case .failure(let error):
                     print("Error adding job: \(error.localizedDescription)")

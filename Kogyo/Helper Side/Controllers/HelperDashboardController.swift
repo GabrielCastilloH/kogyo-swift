@@ -218,18 +218,10 @@ class HelperDashboardController: UIViewController {
                     Task {
                         let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(taskId: document.documentID) // Fetch media data
                         
-                        let newTask = TaskClass(
-                            taskUID: document.documentID,
-                            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
-                            kind: data["kind"] as? String ?? "",
-                            description: data["description"] as? String ?? "",
-                            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
-                            expectedHours: data["expectedHours"] as? Int ?? 0,
-                            location: data["location"] as? String ?? "",
-                            payment: data["payment"] as? Int ?? 0,
-                            helperUID: data["helper"] as? String,
-                            media: mediaData ?? [],
-                            equipment: []
+                        let newTask = CustomFunctions.shared.taskFromData(
+                            for: document.documentID, 
+                            data: data,
+                            media: mediaData ?? []
                         )
                         
                         // Update DataManager

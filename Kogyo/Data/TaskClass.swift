@@ -9,6 +9,7 @@ import UIKit
 
 struct TaskClass {
     let taskUID: String
+    let userUID: String
     let dateAdded: Date
     let kind: String
     let description: String

@@ -36,18 +36,8 @@ class CustomerHomeController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
-        // TODO: Move this to Firebase handler.
-        
-        AuthService.shared.fetchUser { [weak self] user, error in
-            guard let self = self else { return }
-            if let error = error {
-                print("Error getting user: \(error.localizedDescription)")
-                AlertManager.showFetchingUserError(on: self, with: error)
-                return
-            } else if let user = user {
-                self.navigationItem.title = "Welcome, \(user.firstName)"
-            }
-        }
+        let user = DataManager.shared.currentUser!
+        self.navigationItem.title = "Welcome, \(user.firstName)"
     }
     
     override func viewDidLoad() {

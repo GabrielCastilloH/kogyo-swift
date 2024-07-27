@@ -96,27 +96,4 @@ class AuthService {
             completion(error)
         }
     }
-    
-    public func fetchUser(completion: @escaping(User?, Error?)->Void) {
-        guard let userUID = Auth.auth().currentUser?.uid else { return }
-        
-        let db = Firestore.firestore()
-        db.collection("users")
-            .document(userUID)
-            .getDocument { snapshot, error in
-                if let error = error {
-                    completion(nil, error)
-                    return
-                }
-                if let snapshot = snapshot,
-                   let snapshotData = snapshot.data(),
-                   let firstName = snapshotData["firstName"] as? String,
-                   let lastName = snapshotData["lastName"] as? String,
-                   let email = snapshotData["email"] as? String {
-                    let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email)
-                    completion(user, nil)
-                }
-                   
-            }
-    }
 }

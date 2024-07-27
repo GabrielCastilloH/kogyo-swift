@@ -12,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Variables & Default Functions
     var window: UIWindow?
+    let isWorker = true // TODO: Change this crap.
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Setup window, clear DataManager, check authentication.
@@ -37,7 +38,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // If not logged in present LoginController, otherwise go to present home controller.
         if Auth.auth().currentUser == nil {
-            self.animateTransition(to: LoginController())
+            self.animateTransition(to: LoginController(), isWorker: self.isWorker)
         } else {
             self.presentHomeController()
         }
@@ -50,12 +51,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.makeKeyAndVisible()
         
         Task {
-            await DataManager.shared.fetchDatabaseData(asWorker: true)
-            self.animateTransition(to: nil)
+            await DataManager.shared.fetchDatabaseData(asWorker: self.isWorker)
+            self.animateTransition(to: nil, isWorker: self.isWorker)
         }
     }
     
-    private func animateTransition(to viewController: UIViewController?) {
+    private func animateTransition(to viewController: UIViewController?, isWorker: Bool) {
         // If viewController is nil then the TabController is presented.
         DispatchQueue.main.async { [weak self] in // Change opacity animation of 0.25 seconds.
             UIView.animate(withDuration: 0.25) {
@@ -68,8 +69,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     self?.window?.rootViewController = nav
                     
                 } else {
-                    // TODO: Add button or login attribute to make them login as workers.
-                    self?.window?.rootViewController = TabController(isWorker: true)
+                    self?.window?.rootViewController = TabController(isWorker: isWorker)
                 }
                 
                 UIView.animate(withDuration: 0.25) {

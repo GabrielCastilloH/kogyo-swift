@@ -9,7 +9,7 @@ import Foundation
 
 struct User {
     let userUID: String
-    let firstName: String
-    let lastName: String
+    var firstName: String
+    var lastName: String
     let email: String
 }

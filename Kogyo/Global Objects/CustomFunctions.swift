@@ -6,10 +6,53 @@
 //
 
 import UIKit
+import Firebase
 
 struct CustomFunctions {
     
     public static let shared = CustomFunctions()
+    
+    /// Returns a `TaskClass` object given task data.
+    ///
+    /// ```
+    /// // Data must be structed as follows:
+    /// let taskData: [String : Any] = [
+    ///     "userUID": userUID,
+    ///     "dateAdded": dateAdded,
+    ///     "kind": kind,
+    ///     "description": description,
+    ///     "dateTime": dateTime,
+    ///     "expectedHours": expectedHours,
+    ///     "location": location,
+    ///     "payment": payment,
+    /// ]
+    /// ```
+    ///
+    /// - Parameters:
+    ///     - for: the taskUID of the task.
+    ///     - data: the actual task data.
+    ///     - media: an array of `PlayableMediaView`, all the images and videos of the task.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]) -> TaskClass {
+        // This task object is completely different from the one on firebase, it has more info.
+        let task = TaskClass(
+            taskUID: taskUID,
+            userUID: DataManager.shared.currentUser!.userUID,
+            dateAdded: (data["dateAdded"] as? Timestamp)?.dateValue() ?? Date(),
+            kind: data["kind"] as? String ?? "",
+            description: data["description"] as? String ?? "",
+            dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
+            expectedHours: data["expectedHours"] as? Int ?? 0,
+            location: data["location"] as? String ?? "",
+            payment: data["payment"] as? Int ?? 0,
+            helperUID: data["helper"] as? String,
+            media: media,
+            equipment: []
+        )
+        
+        return task
+    }
     
     func createPlaceholder(for text: String) -> NSAttributedString {
         return NSAttributedString(
