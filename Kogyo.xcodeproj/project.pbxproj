@@ -26,6 +26,8 @@
 		D0E923F32C0E98C90070977A /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E923F22C0E98C90070977A /* TabController.swift */; };
 		FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */; };
 		FF0B76EC2C29CEE70019FD8B /* LogoLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0B76EB2C29CEE70019FD8B /* LogoLoadingController.swift */; };
+		FF1D4CFC2C55D4580034C830 /* HelperTaskOptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1D4CFB2C55D4580034C830 /* HelperTaskOptionsController.swift */; };
+		FF1D4CFF2C55DF890034C830 /* CancelTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1D4CFE2C55DF890034C830 /* CancelTaskController.swift */; };
 		FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */; };
 		FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF28AF5C2C212BBC00F58D0F /* MediaView.swift */; };
 		FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */; };
@@ -103,6 +105,8 @@
 		D0E923F22C0E98C90070977A /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobPaymentView.swift; sourceTree = "<group>"; };
 		FF0B76EB2C29CEE70019FD8B /* LogoLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoLoadingController.swift; sourceTree = "<group>"; };
+		FF1D4CFB2C55D4580034C830 /* HelperTaskOptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperTaskOptionsController.swift; sourceTree = "<group>"; };
+		FF1D4CFE2C55DF890034C830 /* CancelTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelTaskController.swift; sourceTree = "<group>"; };
 		FF28AF5A2C2129DB00F58D0F /* MediaScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaScrollView.swift; sourceTree = "<group>"; };
 		FF28AF5C2C212BBC00F58D0F /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		FF3E57BC2C2294EE0040F617 /* PlayableMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayableMediaView.swift; sourceTree = "<group>"; };
@@ -276,6 +280,14 @@
 			path = Supporting;
 			sourceTree = "<group>";
 		};
+		FF1D4CFD2C55DF6B0034C830 /* Task Options Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FF1D4CFE2C55DF890034C830 /* CancelTaskController.swift */,
+			);
+			path = "Task Options Controllers";
+			sourceTree = "<group>";
+		};
 		FF28AF572C21258D00F58D0F /* AddMediaView */ = {
 			isa = PBXGroup;
 			children = (
@@ -433,6 +445,8 @@
 				FFF3F2192C3F01FD00E20496 /* HelperDashboardController.swift */,
 				FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */,
 				FF6045762C4184F20063176A /* AcceptedTasksInfoController.swift */,
+				FF1D4CFB2C55D4580034C830 /* HelperTaskOptionsController.swift */,
+				FF1D4CFD2C55DF6B0034C830 /* Task Options Controllers */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -550,6 +564,7 @@
 				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
 				D0E923F12C0E98670070977A /* CustomerSettingsController.swift in Sources */,
 				FFF3F21D2C3F048100E20496 /* PaymentSettingsController.swift in Sources */,
+				FF1D4CFF2C55DF890034C830 /* CancelTaskController.swift in Sources */,
 				FFD8A9A02C157A6E009F5C8C /* CurrentTasksCell.swift in Sources */,
 				FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
@@ -582,6 +597,7 @@
 				FFF372E72C16C87400F8D362 /* AuthService.swift in Sources */,
 				FFF3F21A2C3F01FD00E20496 /* HelperDashboardController.swift in Sources */,
 				FFF372DC2C16C7D100F8D362 /* RegisterUserRequest.swift in Sources */,
+				FF1D4CFC2C55D4580034C830 /* HelperTaskOptionsController.swift in Sources */,
 				FFF372EB2C16C94500F8D362 /* WebViewerController.swift in Sources */,
 				FFF372DE2C16C7E000F8D362 /* LoginUserRequest.swift in Sources */,
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,

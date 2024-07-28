@@ -101,6 +101,10 @@ extension AlertManager {
     public static func showMissingJobInfoAlert(on vc: UIViewController) {
         showBasicAlert(on: vc, title: "Missing Information", message: "Please fill out all fields.")
     }
+    
+    public static func showInvalidCancelReason(on vc: UIViewController) {
+        showBasicAlert(on: vc, title: "Error", message: "Please select a valid reason for cancellation.")
+    }
 }
 
 // MARK: - Show Other Alerts
@@ -115,6 +119,10 @@ extension AlertManager {
     
     public static func showNameChangedAlert(on vc: UIViewController) {
         showBasicAlert(on: vc, title: "Name Changed", message: "Your name was successfully changed!")
+    }
+    
+    public static func showCanceledTaskAlert(on vc: UIViewController) {
+        showBasicAlert(on: vc, title: "Task Canceled", message: "Your task was successfully canceled.")
     }
 }
 

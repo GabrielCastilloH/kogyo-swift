@@ -12,7 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Variables & Default Functions
     var window: UIWindow?
-    let isWorker = false // TODO: Change this crap.
+    let isWorker = true // TODO: Change this crap.
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Setup window, clear DataManager, check authentication.

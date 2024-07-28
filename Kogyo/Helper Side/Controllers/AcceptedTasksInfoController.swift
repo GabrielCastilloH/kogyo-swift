@@ -39,7 +39,7 @@ class AcceptedTasksInfoController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightBlueColor
-        button.addTarget(self, action: #selector(didTapAcceptJob), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapChatBtn), for: .touchUpInside)
         return button
     }()
     
@@ -50,7 +50,7 @@ class AcceptedTasksInfoController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightGrayColor
-        button.addTarget(self, action: #selector(didTapAcceptJob), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapOptionsBtn), for: .touchUpInside)
         return button
     }()
     
@@ -166,8 +166,14 @@ class AcceptedTasksInfoController: UIViewController {
     
     
     // MARK: - Selectors & Functions
-    @objc private func didTapAcceptJob() {
-        print("touched me.")
+    @objc private func didTapChatBtn() {
+        print("touched me harder.")
+    }
+    
+    @objc private func didTapOptionsBtn() {
+        let optionsController = HelperTaskOptionsController(selectedTask: self.selectedTask)
+        optionsController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(optionsController, animated: true)
     }
     
     // Its better to put the configure function here to keep everything in the view.

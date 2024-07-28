@@ -40,7 +40,6 @@ class HelperMyTasksController: UIViewController {
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
-        print(DataManager.shared.helperMyTasks)
         self.myTasks = Array(DataManager.shared.helperMyTasks.values).sorted { $0.dateAdded > $1.dateAdded }
         self.myTasksTableView.reloadData()
         
@@ -66,6 +65,8 @@ class HelperMyTasksController: UIViewController {
     
     // MARK: - UI Setup
     private func noJobsSetup() {
+        self.noJobsLabel.isHidden = false
+        
         self.view.addSubview(noJobsLabel)
         noJobsLabel.translatesAutoresizingMaskIntoConstraints = false
         

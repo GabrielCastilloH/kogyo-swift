@@ -10,8 +10,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
-// TODO: 4. Ability to cancel tasks and delete them and their data from the db.
-
 enum UserKind {
     case user
     case helper
@@ -232,6 +230,17 @@ class FirestoreHandler {
             throw error
         }
     }
+
+    func deleteTask(taskUID: String, userUID: String) async throws {
+        let taskRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
+        do {
+            try await taskRef.delete()
+        } catch {
+            print("Error deleting task: \(error)")
+            throw error
+        }
+    }
+
     
     // MARK: - Images & Videos
     /// Uploads image to Firebase.
