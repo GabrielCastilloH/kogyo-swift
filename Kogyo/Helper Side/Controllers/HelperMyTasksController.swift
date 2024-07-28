@@ -40,7 +40,7 @@ class HelperMyTasksController: UIViewController {
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
-        
+        print(DataManager.shared.helperMyTasks)
         self.myTasks = Array(DataManager.shared.helperMyTasks.values).sorted { $0.dateAdded > $1.dateAdded }
         self.myTasksTableView.reloadData()
         

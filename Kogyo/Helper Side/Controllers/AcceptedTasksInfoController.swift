@@ -73,7 +73,7 @@ class AcceptedTasksInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.taskUID]!.media
+        self.mediaData = DataManager.shared.helperMyTasks[self.selectedTask.taskUID]!.media
         self.configureMediaViews()
         
         let dateNotFormatted = self.selectedTask.dateAdded

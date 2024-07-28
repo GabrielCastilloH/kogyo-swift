@@ -17,7 +17,7 @@ class DataManager {
     var currentUser: User?
     
     // USER DATA:
-    var currentJobs: [String: TaskClass] = [:] // TODO: See if you change this to only a list
+    var currentJobs: [String: TaskClass] = [:]
     var helpers: [String: Helper] = [:]
     
     // HELPER DATA
@@ -57,10 +57,8 @@ class DataManager {
                     self.helperMyTasks[task.taskUID] = task
                 }
             } else {
-                print("hello!")
                 var jobs = try await FirestoreHandler.shared.fetchTasks(.user)
                 jobs.sort { $0.dateAdded > $1.dateAdded }
-                print("fetching user tasks.")
                 for job in jobs {
                     self.currentJobs[job.taskUID] = job
                     
@@ -68,6 +66,7 @@ class DataManager {
                         do {
                             let helper = try await FirestoreHandler.shared.fetchHelper(for: helperUID)
                             self.helpers[helper.helperUID] = helper
+                            print(helper)
                         }
                     }
                 }

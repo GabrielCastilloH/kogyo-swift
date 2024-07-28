@@ -26,7 +26,7 @@ class FirestoreHandler {
     private let db = Firestore.firestore()
     
     private init() {}
-    
+     
     // MARK: - General Functions
     public func fetchUser() async throws -> User {
         guard let userUID = Auth.auth().currentUser?.uid else {
@@ -132,14 +132,12 @@ class FirestoreHandler {
             dataRef = db.collection("users").document(currentUserUID).collection("jobs")
         } else if kind == .helper {
             query = db.collectionGroup("jobs").whereField("helperUID", isEqualTo: currentUserUID)
-            print("fetching jobs for helper!")
         }
         
         do {
             let querySnapshot = try await (query != nil ? query!.getDocuments() : dataRef.getDocuments())
             
             var tasks: [TaskClass] = [] // Returns array of tasks.
-            print("total of \(querySnapshot.documents.count) documents!")
                   
             for document in querySnapshot.documents {
                 let data = document.data() // All data.
@@ -150,7 +148,6 @@ class FirestoreHandler {
                     data: data,
                     media: mediaData
                 )
-                
                 tasks.append(task)
             }
             
@@ -164,31 +161,28 @@ class FirestoreHandler {
     public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping(Error?) -> Void) {
         let taskRef = db.collection("tasks").document(jobId)
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
+        let task = DataManager.shared.helperAvailableTasks[jobId]! // Task needs to be stored here.
         
         taskRef.getDocument { (document, error) in
             guard let document = document, document.exists, let taskData = document.data() else {
                 completion(error)
                 return
             }
-            
             jobRef.setData(taskData) { error in
                 guard error == nil else {
                     completion(error)
                     return
                 }
-                
                 taskRef.delete { error in
                     guard error == nil else {
                         completion(error)
                         return
                     }
-                    
                     jobRef.updateData(["helperUID": helperUID]) { error in
                         if let error = error {
                             completion(error)
                         } else {
                             // Update DataManager
-                            let task = DataManager.shared.helperAvailableTasks[jobId]
                             DataManager.shared.helperMyTasks[jobId] = task
                             DataManager.shared.helperAvailableTasks[jobId] = nil
                             completion(nil)
