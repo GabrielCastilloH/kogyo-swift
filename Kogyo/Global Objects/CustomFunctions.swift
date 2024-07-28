@@ -46,7 +46,7 @@ struct CustomFunctions {
             expectedHours: data["expectedHours"] as? Int ?? 0,
             location: data["location"] as? String ?? "",
             payment: data["payment"] as? Int ?? 0,
-            helperUID: data["helper"] as? String,
+            helperUID: data["helperUID"] as? String,
             media: media,
             equipment: []
         )
