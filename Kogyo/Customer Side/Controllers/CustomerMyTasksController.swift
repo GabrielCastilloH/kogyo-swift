@@ -60,9 +60,8 @@ class CustomerMyTasksController: UIViewController {
     
     // MARK: - UI Setup
     private func noJobsSetup() {
-        if self.view.contains(noTasksLabel) {
-            self.noTasksLabel.isHidden = true
-        } else {
+        if self.view.contains(noTasksLabel) != true {
+            
             self.view.addSubview(noTasksLabel)
             noTasksLabel.translatesAutoresizingMaskIntoConstraints = false
             
@@ -72,6 +71,8 @@ class CustomerMyTasksController: UIViewController {
                 noTasksLabel.widthAnchor.constraint(equalToConstant: 200),
             ])
         }
+        
+        self.noTasksLabel.isHidden = false
     }
     
     private func setupNavBar() {
@@ -129,21 +130,6 @@ class CustomerMyTasksController: UIViewController {
                             DataManager.shared.customerMyTasks[taskUID] = nil
                             AlertManager.showCancelAlertCustomer(on: self, helper: helper, task: deletedTask)
                             self.reloadTaskData()
-                        }
-                    }
-                } else if documentChange.type == .added {
-                    Task {
-                        let taskUID = documentChange.document.documentID
-                        if let newTask = try? await FirestoreHandler.shared.fetchCustomerTask(taskUID: taskUID) {
-                            DataManager.shared.customerMyTasks[taskUID] = newTask
-                            self.reloadTaskData()
-                            let helperUID = newTask.helperUID! // Only be nil if there is a problem assigning helper before this.
-                            print(helperUID)
-                            
-                            if DataManager.shared.helpers[helperUID] == nil {
-                                let newHelper = try? await FirestoreHandler.shared.fetchHelper(for: helperUID)
-                                DataManager.shared.helpers[helperUID]
-                            }
                         }
                     }
                 }

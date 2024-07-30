@@ -11,9 +11,9 @@ import FirebaseFirestore
 import FirebaseStorage
 
 
-// TODO: C canceled task bug.
+
+// TODO: 1. Add a global listener when tasks get deleted.
 // TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
-// TODO: D. Add listener on avilable task controller (to ensure that the task is not deleted while on that screen). OR find if you can add a global listener that pops to parent if on available task controller or just stays on the screen and shows an alert. OR just add a nil checker when clicking accept task!
 // TODO: 3. Add ability to see task history, completed tasks, for the user.
 // TODO: 4. Add chat feature between customer and helper.
 // TODO: 5. Add payment feature between customer & helper (set it up with 10% comission fee later).
@@ -214,34 +214,36 @@ class FirestoreHandler {
     }
     
     // MARK: - Helper Functions
-    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping(Error?) -> Void) {
+    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping (Error?) -> Void) {
         let taskRef = db.collection("tasks").document(jobId)
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
-        let task = DataManager.shared.helperAvailableTasks[jobId]! // Task needs to be stored here.
+        var task = DataManager.shared.helperAvailableTasks[jobId]!
+        task.helperUID = helperUID
 
-        // Update the helperUID in the task document first
-        taskRef.updateData(["helperUID": helperUID]) { error in
-            guard error == nil else {
+        taskRef.getDocument { (document, error) in
+            guard let document = document, document.exists, var taskData = document.data() else {
                 completion(error)
                 return
             }
 
-            taskRef.getDocument { (document, error) in
-                guard let document = document, document.exists, let taskData = document.data() else {
+            jobRef.setData(taskData) { error in
+                guard error == nil else {
                     completion(error)
                     return
                 }
-                jobRef.setData(taskData) { error in
+
+                taskRef.delete { error in
                     guard error == nil else {
                         completion(error)
                         return
                     }
-                    taskRef.delete { error in
-                        guard error == nil else {
+
+                    jobRef.updateData(["helperUID": helperUID]) { error in
+                        if let error = error {
                             completion(error)
                             return
                         }
-                        // Update DataManager
+
                         DataManager.shared.helperMyTasks[jobId] = task
                         DataManager.shared.helperAvailableTasks[jobId] = nil
                         completion(nil)
@@ -250,6 +252,8 @@ class FirestoreHandler {
             }
         }
     }
+
+
 
 
     

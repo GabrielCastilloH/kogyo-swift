@@ -66,7 +66,6 @@ class DataManager {
                         do {
                             let helper = try await FirestoreHandler.shared.fetchHelper(for: helperUID)
                             self.helpers[helper.helperUID] = helper
-                            print(helper)
                         }
                     }
                 }

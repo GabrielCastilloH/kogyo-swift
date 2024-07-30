@@ -68,11 +68,12 @@ class CustomerLoadingScreenController: UIViewController {
     
     // MARK: - UI Setup
     init(jobId: String, userId: String) {
-            self.jobId = jobId
-            self.userId = userId
-            super.init(nibName: nil, bundle: nil)
-        }
-        
+        print("job ID:", jobId)
+        self.jobId = jobId
+        self.userId = userId
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -119,52 +120,42 @@ class CustomerLoadingScreenController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
+    
     private func listenForJobUpdates() {
         let db = Firestore.firestore()
-        let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
-        
+        let jobRef = db.collection("users").document(userId).collection("jobs").document(self.jobId)
+
         taskListener = jobRef.addSnapshotListener { [weak self] documentSnapshot, error in
             guard let self = self else { return }
             if let error = error {
                 print("Error listening for job updates: \(error.localizedDescription)")
                 return
             }
-            
-            guard let document = documentSnapshot, document.exists else {
-                print("Task document does not exist")
+
+            guard let document = documentSnapshot, document.exists, let data = document.data() else {
+                print("Document does not exist")
                 return
             }
-            
-            let data = document.data()
-            let helper = data?["helper"] as? String
-            
-            if let helperUID = helper {
-                // Update DataManager. If it's a new helper, fetch their data
-                DataManager.shared.customerMyTasks[jobId]?.helperUID = helperUID
-                
-                if DataManager.shared.helpers[helperUID] == nil {
-                    self.fetchHelperIfNeeded(for: helperUID) // Call async outside of listener
-                }
-                self.presentCurrentJobsController()
-            }
-        }
-    }
 
-    // Helper function to perform the async fetch
-    private func fetchHelperIfNeeded(for helperUID: String) {
-        Task {
-            do {
-                let helper = try await FirestoreHandler.shared.fetchHelper(for: helperUID)
-                DataManager.shared.helpers[helper.helperUID] = helper
-            } catch {
-                print("Error fetching helper: \(error)")
+            if let helperUID = data["helperUID"] as? String {
+
+                Task {
+                    if let newTask = try? await FirestoreHandler.shared.fetchCustomerTask(taskUID: self.jobId) {
+                        DataManager.shared.customerMyTasks[self.jobId] = newTask
+
+                        if DataManager.shared.helpers[helperUID] == nil {
+                            let newHelper = try? await FirestoreHandler.shared.fetchHelper(for: helperUID)
+                            DataManager.shared.helpers[helperUID] = newHelper
+                        }
+                        self.presentCurrentJobsController()
+                    }
+                }
             }
         }
     }
     
     func popToCreateJob() {
-        if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CustomerCreateTaskController }).first {
-            // TODO: DELETE the job from the database when going back to edit the job. 
+        if let createJobVC = self.navigationController?.viewControllers.filter({ $0 is CustomerCreateTaskController }).first { 
             self.navigationController?.popToViewController(createJobVC, animated: true)
         }
     }
