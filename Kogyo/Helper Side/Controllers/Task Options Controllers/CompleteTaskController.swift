@@ -78,6 +78,7 @@ class CompleteTaskController: UIViewController {
         self.imagePickerController.delegate = self
         self.imagePickerController.allowsEditing = false
         self.imagePickerController.mediaTypes = ["public.image", "public.movie"]
+        self.addMedia(nil)
         
         setupUI()
     }

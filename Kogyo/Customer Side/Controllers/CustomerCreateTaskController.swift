@@ -220,7 +220,6 @@ class CustomerCreateTaskController: UIViewController {
         self.navigationController?.pushViewController(loadingScreenController, animated: true)
     }
     
-    
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
