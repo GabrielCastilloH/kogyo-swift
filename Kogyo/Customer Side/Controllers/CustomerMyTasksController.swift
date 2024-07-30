@@ -41,12 +41,6 @@ class CustomerMyTasksController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         
         self.reloadTaskData()
-        
-        if self.currentTasks.count == 0 {
-            self.noJobsSetup()
-        } else {
-            self.noTasksLabel.isHidden = true
-        }
     }
     
     override func viewDidLoad() {
@@ -60,20 +54,24 @@ class CustomerMyTasksController: UIViewController {
         self.setupNavBar()
         self.setupUI()
         
-        self.listenForCanceledTasks()
+        self.listenForTasks()
         
     }
     
     // MARK: - UI Setup
     private func noJobsSetup() {
-        self.view.addSubview(noTasksLabel)
-        noTasksLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            noTasksLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            noTasksLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            noTasksLabel.widthAnchor.constraint(equalToConstant: 200),
-        ])
+        if self.view.contains(noTasksLabel) {
+            self.noTasksLabel.isHidden = true
+        } else {
+            self.view.addSubview(noTasksLabel)
+            noTasksLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                noTasksLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+                noTasksLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+                noTasksLabel.widthAnchor.constraint(equalToConstant: 200),
+            ])
+        }
     }
     
     private func setupNavBar() {
@@ -99,37 +97,60 @@ class CustomerMyTasksController: UIViewController {
     private func reloadTaskData() {
         self.currentTasks = Array(DataManager.shared.customerMyTasks.values).sorted { $0.dateAdded > $1.dateAdded }
         self.currentTasksTableView.reloadData()
+        
+        if self.currentTasks.count == 0 {
+            self.noJobsSetup()
+        } else {
+            self.noTasksLabel.isHidden = true
+        }
     }
-    private func listenForCanceledTasks() {
+    
+    private func listenForTasks() {
         let db = Firestore.firestore()
         let taskRef = db.collection("users").document(DataManager.shared.currentUser!.userUID).collection("jobs")
 
-        
         listener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self else { return }
             if let error = error {
                 print("Error listening for task updates: \(error.localizedDescription)")
                 return
             }
-            
+
             guard let querySnapshot = querySnapshot else {
                 print("No snapshot data available")
                 return
             }
-            
+
             for documentChange in querySnapshot.documentChanges {
                 if documentChange.type == .removed {
-                    
                     let taskUID = documentChange.document.documentID
-                    let deletedTask: TaskClass = DataManager.shared.customerMyTasks[taskUID]!
-                    let helper = DataManager.shared.helpers[deletedTask.helperUID!]!
-                    DataManager.shared.customerMyTasks[taskUID] = nil
-                    AlertManager.showCancelAlertCustomer(on: self, helper: helper, task: deletedTask)
-                    self.reloadTaskData()
+                    if let deletedTask = DataManager.shared.customerMyTasks[taskUID] {
+                        if let helper = DataManager.shared.helpers[deletedTask.helperUID ?? ""] {
+                            DataManager.shared.customerMyTasks[taskUID] = nil
+                            AlertManager.showCancelAlertCustomer(on: self, helper: helper, task: deletedTask)
+                            self.reloadTaskData()
+                        }
+                    }
+                } else if documentChange.type == .added {
+                    Task {
+                        let taskUID = documentChange.document.documentID
+                        if let newTask = try? await FirestoreHandler.shared.fetchCustomerTask(taskUID: taskUID) {
+                            DataManager.shared.customerMyTasks[taskUID] = newTask
+                            self.reloadTaskData()
+                            let helperUID = newTask.helperUID! // Only be nil if there is a problem assigning helper before this.
+                            print(helperUID)
+                            
+                            if DataManager.shared.helpers[helperUID] == nil {
+                                let newHelper = try? await FirestoreHandler.shared.fetchHelper(for: helperUID)
+                                DataManager.shared.helpers[helperUID]
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
     
     // TODO: Finish this function
     @objc public func findAnotherHelper() {

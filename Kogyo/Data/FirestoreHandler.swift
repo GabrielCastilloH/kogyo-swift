@@ -12,9 +12,8 @@ import FirebaseStorage
 
 
 // TODO: C canceled task bug.
-// TODO: 1. Add a listener in CustomerMyTasksController to see if any tasks were canceled.
 // TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
-// TODO: D. Add listener on avilable task controller (to ensure that the task is not deleted while on that screen). OR find if you can add a global listener that pops to parent if on available task controller or just stays on the screen and shows an alert.
+// TODO: D. Add listener on avilable task controller (to ensure that the task is not deleted while on that screen). OR find if you can add a global listener that pops to parent if on available task controller or just stays on the screen and shows an alert. OR just add a nil checker when clicking accept task!
 // TODO: 3. Add ability to see task history, completed tasks, for the user.
 // TODO: 4. Add chat feature between customer and helper.
 // TODO: 5. Add payment feature between customer & helper (set it up with 10% comission fee later).
@@ -133,6 +132,41 @@ class FirestoreHandler {
         }
     }
     
+    /// Fetches a specific `Task` for a user.
+    ///
+    /// - Parameters:
+    ///     - taskUID: The UID of the task to fetch.
+    /// - Returns: A `TaskClass` object representing the task.
+    /// - Throws: An error if the task is not found or if there are issues during the fetching process.
+    func fetchCustomerTask(taskUID: String) async throws -> TaskClass {
+        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
+        let taskRef = db.collection("users").document(currentUserUID).collection("jobs").document(taskUID)
+        
+        do {
+            let documentSnapshot = try await taskRef.getDocument()
+            
+            guard documentSnapshot.exists else {
+                throw NSError(domain: "Task not found", code: 404, userInfo: nil)
+            }
+            
+            let data = documentSnapshot.data() ?? [:]
+            print(data)
+            let mediaData = try await fetchJobMedia(taskId: documentSnapshot.documentID)
+            
+            let task = CustomFunctions.shared.taskFromData(
+                for: documentSnapshot.documentID,
+                data: data,
+                media: mediaData
+            )
+            
+            return task
+        } catch {
+            throw error
+        }
+    }
+
+
+    
     /// Fetches `[Task]` for either:  a user `userId`, a helper `helperId`, or all available tasks (both are nil).
     ///
     /// Only to be called in DataManager to set its data when the app is created.
@@ -184,36 +218,39 @@ class FirestoreHandler {
         let taskRef = db.collection("tasks").document(jobId)
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
         let task = DataManager.shared.helperAvailableTasks[jobId]! // Task needs to be stored here.
-        
-        taskRef.getDocument { (document, error) in
-            guard let document = document, document.exists, let taskData = document.data() else {
+
+        // Update the helperUID in the task document first
+        taskRef.updateData(["helperUID": helperUID]) { error in
+            guard error == nil else {
                 completion(error)
                 return
             }
-            jobRef.setData(taskData) { error in
-                guard error == nil else {
+
+            taskRef.getDocument { (document, error) in
+                guard let document = document, document.exists, let taskData = document.data() else {
                     completion(error)
                     return
                 }
-                taskRef.delete { error in
+                jobRef.setData(taskData) { error in
                     guard error == nil else {
                         completion(error)
                         return
                     }
-                    jobRef.updateData(["helperUID": helperUID]) { error in
-                        if let error = error {
+                    taskRef.delete { error in
+                        guard error == nil else {
                             completion(error)
-                        } else {
-                            // Update DataManager
-                            DataManager.shared.helperMyTasks[jobId] = task
-                            DataManager.shared.helperAvailableTasks[jobId] = nil
-                            completion(nil)
+                            return
                         }
+                        // Update DataManager
+                        DataManager.shared.helperMyTasks[jobId] = task
+                        DataManager.shared.helperAvailableTasks[jobId] = nil
+                        completion(nil)
                     }
                 }
             }
         }
     }
+
 
     
     /// Fetches a `Helper`object for a given `helperUID`.
