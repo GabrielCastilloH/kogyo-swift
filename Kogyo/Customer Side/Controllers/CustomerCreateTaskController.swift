@@ -63,12 +63,6 @@ class CustomerCreateTaskController: UIViewController {
         return view
     }()
     
-    private let navbarBackgroundView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        return view
-    }()
-    
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         self.submitJobBtn.isUserInteractionEnabled = true
@@ -90,6 +84,8 @@ class CustomerCreateTaskController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.backgroundColor = .white
         
         self.imagePickerController.delegate = self
         imagePickerController.allowsEditing = false
@@ -111,18 +107,15 @@ class CustomerCreateTaskController: UIViewController {
     
     // MARK: - UI Setup
     private func setupNavbar() {
-        self.view.backgroundColor = .white
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.tabBarController?.tabBar.isHidden = false
         self.navigationController?.navigationBar.backgroundColor = .clear
+        self.tabBarController?.tabBar.isHidden = false
         self.navigationItem.title = "Create a New Task"
     }
     
     private func setupUI() {
-        self.view.addSubview(navbarBackgroundView)
-        navbarBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(jobKindView)
         jobKindView.translatesAutoresizingMaskIntoConstraints = false
@@ -168,11 +161,6 @@ class CustomerCreateTaskController: UIViewController {
         submitJobBtn.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            navbarBackgroundView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: keyboardHeight - 200),
-            navbarBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            navbarBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            navbarBackgroundView.heightAnchor.constraint(equalToConstant: 250),
-            
             jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
             jobKindView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobKindView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -224,9 +212,6 @@ class CustomerCreateTaskController: UIViewController {
             submitJobBtn.heightAnchor.constraint(equalToConstant: 50),
             submitJobBtn.widthAnchor.constraint(equalToConstant: 180),
         ])
-        
-        view.bringSubviewToFront(navbarBackgroundView)
-        navbarBackgroundView.isHidden = true
     }
     
     // MARK: - Selectors & Functions
@@ -286,32 +271,27 @@ class CustomerCreateTaskController: UIViewController {
 extension CustomerCreateTaskController: JobPaymentViewDelegate {
     func paymentTextFieldPressed() {
         self.navigationController?.navigationBar.backgroundColor = .white
-        DispatchQueue.main.async {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        let seconds = 0.05
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
             UIView.transition(
-                with: self.view, duration: 0.4,
+                with: self.view, duration: 0.2,
                 options: .curveLinear,
                 animations: {
                     self.view.frame.origin.y = -self.keyboardHeight + 50
-                })
-            
-            UIView.transition(
-                with: self.view, duration: 0.4,
-                options: .transitionCrossDissolve,
-                animations: {
-                    self.navbarBackgroundView.isHidden = false
                 })
         }
     }
     
     func paymentTextFieldDismissed() {
         self.navigationController?.navigationBar.backgroundColor = .clear
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         DispatchQueue.main.async {
             UIView.transition(
                 with: self.view, duration: 0.1,
                 options: .curveLinear,
                 animations: {
                     self.view.frame.origin.y = 0
-                    self.navbarBackgroundView.isHidden = true
                 })
         }
     }
@@ -395,5 +375,4 @@ extension CustomerCreateTaskController: UIImagePickerControllerDelegate & UINavi
             }
         }
     }
-    
 }

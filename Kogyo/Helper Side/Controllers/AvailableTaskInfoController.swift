@@ -156,6 +156,9 @@ class AvailableTaskInfoController: UIViewController {
                 self.presentMyTasksController()
             }
         }
+        
+        self.acceptJobButton.isUserInteractionEnabled = false
+        self.acceptJobButton.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
     }
     
     func presentMyTasksController() {

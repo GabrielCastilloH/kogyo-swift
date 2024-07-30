@@ -50,7 +50,7 @@ class CustomerTaskInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        self.mediaData = DataManager.shared.currentJobs[self.currentJob.taskUID]!.media
+        self.mediaData = DataManager.shared.customerMyTasks[self.currentJob.taskUID]!.media
         self.configureMediaViews()
         
         let dateNotFormatted = self.currentJob.dateAdded

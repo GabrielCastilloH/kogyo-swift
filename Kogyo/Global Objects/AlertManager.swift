@@ -107,6 +107,32 @@ extension AlertManager {
     }
 }
 
+// MARK: - Cancel Alerts
+extension AlertManager {
+    public static func showCanceledTaskAlert(on vc: UIViewController) {
+        showBasicAlert(on: vc, title: "Task Canceled", message: "Your task was successfully canceled.")
+    }
+    
+    public static func showCancelAlertCustomer(on vc: CustomerMyTasksController, helper: Helper, task: TaskClass) {
+        let title = "Task Canceled"
+        let message = "\(helper.firstName) \(helper.lastName) has canceled your \(task.kind) task: \(task.description.prefix(40))... If you'd like to find another helper click \"Find Helper\" below or go to your task history."
+        
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let findHelperAction = UIAlertAction(title: "Find Helper", style: .default) { _ in
+                vc.findAnotherHelper()
+            }
+            alertController.addAction(findHelperAction)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            vc.present(alertController, animated: true, completion: nil)
+        }
+    }
+}
+
+
+
+
 // MARK: - Show Other Alerts
 extension AlertManager {
     public static func showJobAddedAlert(on vc: UIViewController) {
@@ -119,10 +145,6 @@ extension AlertManager {
     
     public static func showNameChangedAlert(on vc: UIViewController) {
         showBasicAlert(on: vc, title: "Name Changed", message: "Your name was successfully changed!")
-    }
-    
-    public static func showCanceledTaskAlert(on vc: UIViewController) {
-        showBasicAlert(on: vc, title: "Task Canceled", message: "Your task was successfully canceled.")
     }
 }
 

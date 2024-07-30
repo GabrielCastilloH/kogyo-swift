@@ -52,6 +52,7 @@
 		FF919BCD2C275E2700A1FE27 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF919BCC2C275E2700A1FE27 /* DataManager.swift */; };
 		FF929AA02C40CB37007B0307 /* AvailableTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */; };
 		FFC07FDC2C141B190040EF03 /* JobDateTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */; };
+		FFC08B1C2C57FFE900B4B1E2 /* CompleteTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC08B1B2C57FFE900B4B1E2 /* CompleteTaskController.swift */; };
 		FFD8A9992C15588D009F5C8C /* CustomerLoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9982C15588D009F5C8C /* CustomerLoadingScreenController.swift */; };
 		FFD8A99B2C157908009F5C8C /* TaskListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* TaskListing.swift */; };
 		FFD8A99D2C157924009F5C8C /* CustomFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */; };
@@ -131,6 +132,7 @@
 		FF919BCC2C275E2700A1FE27 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableTaskInfoController.swift; sourceTree = "<group>"; };
 		FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDateTimeView.swift; sourceTree = "<group>"; };
+		FFC08B1B2C57FFE900B4B1E2 /* CompleteTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteTaskController.swift; sourceTree = "<group>"; };
 		FFD8A9982C15588D009F5C8C /* CustomerLoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerLoadingScreenController.swift; sourceTree = "<group>"; };
 		FFD8A99A2C157908009F5C8C /* TaskListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListing.swift; sourceTree = "<group>"; };
 		FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFunctions.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				FF1D4CFE2C55DF890034C830 /* CancelTaskController.swift */,
+				FFC08B1B2C57FFE900B4B1E2 /* CompleteTaskController.swift */,
 			);
 			path = "Task Options Controllers";
 			sourceTree = "<group>";
@@ -582,6 +585,7 @@
 				D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */,
 				FFD8A9A22C15B99F009F5C8C /* CustomerTaskInfoController.swift in Sources */,
 				D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */,
+				FFC08B1C2C57FFE900B4B1E2 /* CompleteTaskController.swift in Sources */,
 				FFF372CF2C16C45A00F8D362 /* TaskClass.swift in Sources */,
 				FF6882092C1C790700288618 /* Helper.swift in Sources */,
 				FF919BCB2C274E0F00A1FE27 /* PhotoViewController.swift in Sources */,

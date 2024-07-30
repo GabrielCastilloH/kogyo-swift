@@ -79,7 +79,7 @@ class HelperTaskOptionsController: UIViewController {
         case "Cancel Task":
             viewController = CancelTaskController(selectedTask: self.selectedTask)
         case "Complete Task":
-            viewController = PersonalInfoController()
+            viewController = CompleteTaskController(selectedTask: self.selectedTask)
         default:
             viewController = PersonalInfoController() // Default option
         }

@@ -140,7 +140,7 @@ class CustomerLoadingScreenController: UIViewController {
             
             if let helperUID = helper {
                 // Update DataManager. If it's a new helper, fetch their data
-                DataManager.shared.currentJobs[jobId]?.helperUID = helperUID
+                DataManager.shared.customerMyTasks[jobId]?.helperUID = helperUID
                 
                 if DataManager.shared.helpers[helperUID] == nil {
                     self.fetchHelperIfNeeded(for: helperUID) // Call async outside of listener
@@ -178,6 +178,17 @@ class CustomerLoadingScreenController: UIViewController {
     }
     
     @objc func didTapEditJob() {
-        self.popToCreateJob()
+        Task {
+            do {
+                try await FirestoreHandler.shared.deleteTask(
+                    taskUID: self.jobId,
+                    userUID: self.userId,
+                    collection: .tasks
+                )
+                self.popToCreateJob()
+            } catch {
+                print("Error Removing the Task From Database: \(error.localizedDescription)")
+            }
+        }
     }
 }

@@ -142,7 +142,8 @@ class CancelTaskController: UIViewController {
             do {
                 try await FirestoreHandler.shared.deleteTask(
                     taskUID: self.selectedTask.taskUID,
-                    userUID: self.selectedTask.userUID
+                    userUID: self.selectedTask.userUID,
+                    collection: .users
                 )
                 DataManager.shared.helperMyTasks[self.selectedTask.taskUID] = nil
                 

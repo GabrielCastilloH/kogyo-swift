@@ -17,7 +17,7 @@ class DataManager {
     var currentUser: User?
     
     // USER DATA:
-    var currentJobs: [String: TaskClass] = [:]
+    var customerMyTasks: [String: TaskClass] = [:]
     var helpers: [String: Helper] = [:]
     
     // HELPER DATA
@@ -60,7 +60,7 @@ class DataManager {
                 var jobs = try await FirestoreHandler.shared.fetchTasks(.user)
                 jobs.sort { $0.dateAdded > $1.dateAdded }
                 for job in jobs {
-                    self.currentJobs[job.taskUID] = job
+                    self.customerMyTasks[job.taskUID] = job
                     
                     if let helperUID = job.helperUID {
                         do {
@@ -77,7 +77,7 @@ class DataManager {
     }
     
     func printValues() {
-        print("Current Jobs: \(self.currentJobs)")
+        print("Current Jobs: \(self.customerMyTasks)")
         print("Helpers: \(self.helpers)")
     }
 }

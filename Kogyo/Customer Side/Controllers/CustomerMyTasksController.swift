@@ -6,13 +6,14 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 
 class CustomerMyTasksController: UIViewController {
     // Screen with all the tasks the user currently has active.
     
     // MARK: - Variables
     var currentTasks: [TaskClass] = []
+    var listener: ListenerRegistration?
     
     // MARK: - UI Components
     private let currentTasksTableView: UITableView = {
@@ -39,8 +40,7 @@ class CustomerMyTasksController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
         
-        self.currentTasks = Array(DataManager.shared.currentJobs.values).sorted { $0.dateAdded > $1.dateAdded } // Add this to sort the jobs from newest to oldest, if needed.
-        self.currentTasksTableView.reloadData()
+        self.reloadTaskData()
         
         if self.currentTasks.count == 0 {
             self.noJobsSetup()
@@ -59,6 +59,8 @@ class CustomerMyTasksController: UIViewController {
         
         self.setupNavBar()
         self.setupUI()
+        
+        self.listenForCanceledTasks()
         
     }
     
@@ -91,6 +93,47 @@ class CustomerMyTasksController: UIViewController {
             currentTasksTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             currentTasksTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+    
+    // MARK: - Selectors & Functions
+    private func reloadTaskData() {
+        self.currentTasks = Array(DataManager.shared.customerMyTasks.values).sorted { $0.dateAdded > $1.dateAdded }
+        self.currentTasksTableView.reloadData()
+    }
+    private func listenForCanceledTasks() {
+        let db = Firestore.firestore()
+        let taskRef = db.collection("users").document(DataManager.shared.currentUser!.userUID).collection("jobs")
+
+        
+        listener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("Error listening for task updates: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let querySnapshot = querySnapshot else {
+                print("No snapshot data available")
+                return
+            }
+            
+            for documentChange in querySnapshot.documentChanges {
+                if documentChange.type == .removed {
+                    
+                    let taskUID = documentChange.document.documentID
+                    let deletedTask: TaskClass = DataManager.shared.customerMyTasks[taskUID]!
+                    let helper = DataManager.shared.helpers[deletedTask.helperUID!]!
+                    DataManager.shared.customerMyTasks[taskUID] = nil
+                    AlertManager.showCancelAlertCustomer(on: self, helper: helper, task: deletedTask)
+                    self.reloadTaskData()
+                }
+            }
+        }
+    }
+    
+    // TODO: Finish this function
+    @objc public func findAnotherHelper() {
+        print("looking for more helpers lol.")
     }
 }
 

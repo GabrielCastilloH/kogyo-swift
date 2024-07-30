@@ -12,12 +12,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Variables & Default Functions
     var window: UIWindow?
-    let isWorker = true // TODO: Change this crap.
+    let isWorker = false // TODO: Change this crap.
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Setup window, clear DataManager, check authentication.
         self.setupWindow(with: scene)
-        DataManager.shared.currentJobs = [:]
+        DataManager.shared.customerMyTasks = [:]
         self.checkAuthentication()
     }
     

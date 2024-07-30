@@ -10,10 +10,34 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
+
+// TODO: C canceled task bug.
+// TODO: 1. Add a listener in CustomerMyTasksController to see if any tasks were canceled.
+// TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
+// TODO: D. Add listener on avilable task controller (to ensure that the task is not deleted while on that screen). OR find if you can add a global listener that pops to parent if on available task controller or just stays on the screen and shows an alert.
+// TODO: 3. Add ability to see task history, completed tasks, for the user.
+// TODO: 4. Add chat feature between customer and helper.
+// TODO: 5. Add payment feature between customer & helper (set it up with 10% comission fee later).
+// TODO: 6. Setup equipment button.
+// TODO: 7. Find a way to store location in firestore and calculate km away in HelperDashboard.
+// TODO: 8. Setup login as helper or customer
+// TODO: 9. Setup sign up as a helper (you must submit data and be approved by me), also set your work area.
+// TODO: 10. Add daily, weekly and monthly earning data for helpers.
+// TODO: 11. (HARD) Setup a schedule for helpers according to all the tasks they have accepted.
+// TODO: 12. Setup notifications whenever a new task is posted or a task is cancelled.
+// TODO: 13. Ensure anything uploaded doesn't exceed 50mb and there is a max number of images and videos. 
+// TODO: 69420. Add "Hire" feature.
+
 enum UserKind {
     case user
     case helper
     case other
+}
+
+enum DataCollection {
+    case helpers
+    case users
+    case tasks
 }
 
 class FirestoreHandler {
@@ -103,7 +127,7 @@ class FirestoreHandler {
                     data: taskData,
                     media: mediaArray
                 )
-                DataManager.shared.currentJobs[taskUID] = newTask
+                DataManager.shared.customerMyTasks[taskUID] = newTask
                 completion(.success(taskUID))
             }
         }
@@ -231,8 +255,17 @@ class FirestoreHandler {
         }
     }
 
-    func deleteTask(taskUID: String, userUID: String) async throws {
-        let taskRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
+    func deleteTask(taskUID: String, userUID: String, collection: DataCollection) async throws {
+        let taskRef: DocumentReference
+        switch collection {
+        case .helpers:
+            throw "No tasks under the collection: 'helpers'."
+        case .users:
+            taskRef = db.collection("tasks").document(userUID).collection("jobs").document(taskUID)
+        case .tasks:
+            taskRef = db.collection("tasks").document(taskUID)
+        }
+        
         do {
             try await taskRef.delete()
         } catch {
