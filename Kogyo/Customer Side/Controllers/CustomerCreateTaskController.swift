@@ -248,6 +248,7 @@ class CustomerCreateTaskController: UIViewController {
                 "expectedHours": expHours,
                 "location": location,
                 "payment": payment,
+                "completionStatus": "notComplete",
             ]
             
             // Upload task to database.

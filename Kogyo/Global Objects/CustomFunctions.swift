@@ -25,6 +25,7 @@ struct CustomFunctions {
     ///     "expectedHours": expectedHours,
     ///     "location": location,
     ///     "payment": payment,
+    ///     "completionStatus": String, // Either: "complete", "notComplete", "inReview"
     /// ]
     /// ```
     ///
@@ -48,7 +49,8 @@ struct CustomFunctions {
             payment: data["payment"] as? Int ?? 0,
             helperUID: data["helperUID"] as? String,
             media: media,
-            equipment: []
+            equipment: [],
+            completionStatus: data["completion"] as? String ?? "notComplete"
         )
         
         return task

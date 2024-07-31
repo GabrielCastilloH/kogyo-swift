@@ -13,6 +13,10 @@ class CompleteTaskController: UIViewController {
     // MARK: - Variables
     let selectedTask: TaskClass
     var idCounter = 0
+    // MEDIA:
+    var mediaData: [MediaView] = []
+    var mediaScrollView: MediaScrollView
+    let imagePickerController = UIImagePickerController()
     
     // MARK: - UI Components
     private let infoLabel: UILabel = {
@@ -28,7 +32,7 @@ class CompleteTaskController: UIViewController {
     lazy var completeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Complete Task", for: .normal)
-        button.backgroundColor = UIColor(red: 0.27, green: 0.96, blue: 0.31, alpha: 1.00)
+        button.backgroundColor = UIColor(red: 0.10, green: 0.50, blue: 0.35, alpha: 1.00)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         button.layer.cornerRadius = 5
@@ -37,10 +41,6 @@ class CompleteTaskController: UIViewController {
     }()
     
     // MEDIA:
-    var mediaData: [MediaView] = []
-    var mediaScrollView: MediaScrollView
-    let imagePickerController = UIImagePickerController()
-    
     let mediaTitleView: UITextView = {
         let textView = UITextView()
         textView.isUserInteractionEnabled = false
@@ -110,9 +110,8 @@ class CompleteTaskController: UIViewController {
             mediaTitleView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 20),
             mediaTitleView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             mediaTitleView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            mediaTitleView.heightAnchor.constraint(equalToConstant: 70),
             
-            mediaBackgroundView.topAnchor.constraint(equalTo: mediaTitleView.bottomAnchor, constant: 5),
+            mediaBackgroundView.topAnchor.constraint(equalTo: mediaTitleView.topAnchor, constant: 35),
             mediaBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             mediaBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
             mediaBackgroundView.heightAnchor.constraint(equalToConstant: 70),
@@ -131,7 +130,8 @@ class CompleteTaskController: UIViewController {
     
     // MARK: - Selectors & Functions
     @objc private func handleComplete() {
-        // Setup an isComplete version of task view, where it is just awaiting an approval from a customer.
+        
+        // Call firestore function. 
     }
     
     func presentMyTasksController() {

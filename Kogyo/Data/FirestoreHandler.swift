@@ -37,6 +37,12 @@ enum DataCollection {
     case tasks
 }
 
+enum CompletionStatus {
+    case complete
+    case notComplete
+    case inReview
+}
+
 class FirestoreHandler {
     // Handles everything to do with Firebase.
     
@@ -130,6 +136,8 @@ class FirestoreHandler {
         }
     }
     
+    
+    
     /// Fetches a specific `Task` for a user.
     ///
     /// - Parameters:
@@ -162,7 +170,6 @@ class FirestoreHandler {
             throw error
         }
     }
-
 
     
     /// Fetches `[Task]` for either:  a user `userId`, a helper `helperId`, or all available tasks (both are nil).
@@ -212,6 +219,29 @@ class FirestoreHandler {
     }
     
     // MARK: - Helper Functions
+    public func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) {
+        let db = Firestore.firestore()
+        let dataRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
+        
+        let statusString: String
+        switch completionStatus {
+        case .complete:
+            statusString = "complete"
+        case .notComplete:
+            statusString = "notComplete"
+        case .inReview:
+            statusString = "inReview"
+        }
+        
+        dataRef.updateData(["completionStatus": statusString]) { error in
+            if let error = error {
+                print("Error updating task completion status: \(error.localizedDescription)")
+            } else {
+                print("Task completion status successfully updated to \(statusString)")
+            }
+        }
+    }
+    
     public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping (Error?) -> Void) {
         let taskRef = db.collection("tasks").document(jobId)
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
@@ -219,7 +249,7 @@ class FirestoreHandler {
         task.helperUID = helperUID
 
         taskRef.getDocument { (document, error) in
-            guard let document = document, document.exists, var taskData = document.data() else {
+            guard let document = document, document.exists, let taskData = document.data() else {
                 completion(error)
                 return
             }
@@ -250,9 +280,6 @@ class FirestoreHandler {
             }
         }
     }
-
-
-
 
     
     /// Fetches a `Helper`object for a given `helperUID`.
