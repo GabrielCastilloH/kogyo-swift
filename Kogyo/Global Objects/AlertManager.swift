@@ -113,7 +113,8 @@ extension AlertManager {
         showBasicAlert(on: vc, title: "Task Canceled", message: "Your task was successfully canceled.")
     }
     
-    public static func showCancelAlertCustomer(on vc: CustomerMyTasksController, helper: Helper, task: TaskClass) {
+    
+    public static func showCancelAlertCustomer(on vc: CustomerMyTasksController, helper: Helper, task: TaskClass, completion: @escaping () -> Void) {
         let title = "Task Canceled"
         let message = "\(helper.firstName) \(helper.lastName) has canceled your \(task.kind) task: \(task.description.prefix(40))... If you'd like to find another helper click \"Find Helper\" below or go to your task history."
         
@@ -121,15 +122,17 @@ extension AlertManager {
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             let findHelperAction = UIAlertAction(title: "Find Helper", style: .default) { _ in
                 vc.findAnotherHelper()
+                completion()
             }
             alertController.addAction(findHelperAction)
-            let cancelAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: .cancel) { _ in
+                completion()
+            }
             alertController.addAction(cancelAction)
             vc.present(alertController, animated: true, completion: nil)
         }
     }
 }
-
 
 
 

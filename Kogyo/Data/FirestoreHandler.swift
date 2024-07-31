@@ -11,8 +11,6 @@ import FirebaseFirestore
 import FirebaseStorage
 
 
-
-// TODO: 1. Add a global listener when tasks get deleted.
 // TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
 // TODO: 3. Add ability to see task history, completed tasks, for the user.
 // TODO: 4. Add chat feature between customer and helper.
@@ -302,7 +300,7 @@ class FirestoreHandler {
         case .helpers:
             throw "No tasks under the collection: 'helpers'."
         case .users:
-            taskRef = db.collection("tasks").document(userUID).collection("jobs").document(taskUID)
+            taskRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
         case .tasks:
             taskRef = db.collection("tasks").document(taskUID)
         }

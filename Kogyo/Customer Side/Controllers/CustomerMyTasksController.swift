@@ -14,6 +14,8 @@ class CustomerMyTasksController: UIViewController {
     // MARK: - Variables
     var currentTasks: [TaskClass] = []
     var listener: ListenerRegistration?
+    private var alertQueue: [UIAlertController] = []
+    private var isPresentingAlert = false
     
     // MARK: - UI Components
     private let currentTasksTableView: UITableView = {
@@ -58,6 +60,17 @@ class CustomerMyTasksController: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presentNextAlert()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isPresentingAlert = false
+    }
+    
+    
     // MARK: - UI Setup
     private func noJobsSetup() {
         if self.view.contains(noTasksLabel) != true {
@@ -81,7 +94,7 @@ class CustomerMyTasksController: UIViewController {
         self.navigationItem.title = "Current Jobs"
     }
     
-        
+    
     private func setupUI() {
         self.view.addSubview(currentTasksTableView)
         currentTasksTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,34 +122,48 @@ class CustomerMyTasksController: UIViewController {
     private func listenForTasks() {
         let db = Firestore.firestore()
         let taskRef = db.collection("users").document(DataManager.shared.currentUser!.userUID).collection("jobs")
-
+        
         listener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self else { return }
             if let error = error {
                 print("Error listening for task updates: \(error.localizedDescription)")
                 return
             }
-
+            
             guard let querySnapshot = querySnapshot else {
                 print("No snapshot data available")
                 return
             }
-
+            
             for documentChange in querySnapshot.documentChanges {
                 if documentChange.type == .removed {
                     let taskUID = documentChange.document.documentID
                     if let deletedTask = DataManager.shared.customerMyTasks[taskUID] {
-                        if let helper = DataManager.shared.helpers[deletedTask.helperUID ?? ""] {
-                            DataManager.shared.customerMyTasks[taskUID] = nil
-                            AlertManager.showCancelAlertCustomer(on: self, helper: helper, task: deletedTask)
-                            self.reloadTaskData()
-                        }
+                        DataManager.shared.customerMyTasks[taskUID] = nil
+                        DataManager.shared.deletedJobs.append(deletedTask)
                     }
                 }
             }
+            self.reloadTaskData()
+            self.presentNextAlert()
         }
     }
-
+    
+    private func presentNextAlert() {
+        guard isViewLoaded && view.window != nil else { return }
+        guard !isPresentingAlert else { return }
+        guard !DataManager.shared.deletedJobs.isEmpty else { return }
+        
+        let deletedTask = DataManager.shared.deletedJobs.removeFirst()
+        if let helper = DataManager.shared.helpers[deletedTask.helperUID ?? ""] {
+            isPresentingAlert = true
+            AlertManager.showCancelAlertCustomer(on: self, helper: helper, task: deletedTask) {
+                self.isPresentingAlert = false
+                self.presentNextAlert()
+            }
+        }
+    }
+    
     
     // TODO: Finish this function
     @objc public func findAnotherHelper() {

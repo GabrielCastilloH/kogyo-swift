@@ -12,6 +12,7 @@ class DataManager {
     // Stores all data to prevent having to reload everything.
     
     static let shared = DataManager()
+    var deletedJobs: [TaskClass] = []
     
     // HELPER & USER DATA:
     var currentUser: User?
