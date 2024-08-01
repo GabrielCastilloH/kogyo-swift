@@ -18,7 +18,7 @@ struct TaskClass {
     let location: String // change later
     let payment: Int
     var helperUID: String?
-    let media: [PlayableMediaView] // [(UIImage?, String?)]
+    var media: [PlayableMediaView]? // [(UIImage?, String?)]
     let equipment: [String]
     var completionStatus: CompletionStatus
     var completionMedia: [PlayableMediaView]?

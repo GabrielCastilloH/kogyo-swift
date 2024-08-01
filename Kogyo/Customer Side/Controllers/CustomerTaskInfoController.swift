@@ -12,9 +12,8 @@ import FirebaseStorage
 class CustomerTaskInfoController: UIViewController {
     
     // MARK: - Variables
-    var currentJob: TaskClass
+    var selectedTask: TaskClass
     var cf = CustomFunctions()
-    var mediaData: [PlayableMediaView] = []
     
     
     // MARK: - UI Components
@@ -34,7 +33,7 @@ class CustomerTaskInfoController: UIViewController {
     
     // MARK: - Life Cycle
     init(for job: TaskClass, jobUID: String) {
-        self.currentJob = job
+        self.selectedTask = job
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,11 +48,26 @@ class CustomerTaskInfoController: UIViewController {
         self.setupNavBar()
         self.setupUI()
         
-        // Configure media once the view loads.
-        self.mediaData = DataManager.shared.customerMyTasks[self.currentJob.taskUID]!.media
-        self.configureMediaViews()
         
-        let dateNotFormatted = self.currentJob.dateAdded
+        // Configure media once the view loads.
+        if let media = selectedTask.media {
+            self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+        } else {
+            Task {
+                do {
+                    let media = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.selectedTask.taskUID, parentFolder: .jobs)
+                    self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+                    
+                    // Update DataManager
+                    DataManager.shared.customerMyTasks[self.selectedTask.taskUID]?.media = media
+                    
+                } catch {
+                    print("Failed to fetch media for the current task.")
+                }
+            }
+        }
+        
+        let dateNotFormatted = self.selectedTask.dateAdded
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM d 'at' h:mm a"
         let formattedDate = dateFormatter.string(from: dateNotFormatted)
@@ -68,17 +82,17 @@ class CustomerTaskInfoController: UIViewController {
     private func setupNavBar() {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = self.currentJob.kind
+        self.navigationItem.title = self.selectedTask.kind
     }
     
     private func setupUI() {
         self.view.addSubview(dateAddedLabel)
         dateAddedLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let jobQuickInfoView = JobQuickInfoView(for: self.currentJob)
-        let jobDescriptionView = JobDescriptionView(for: self.currentJob)
+        let jobQuickInfoView = JobQuickInfoView(for: self.selectedTask)
+        let jobDescriptionView = JobDescriptionView(for: self.selectedTask)
         
-        let jobHelperInfoView = JobHelperInfoView(for: self.currentJob)
+        let jobHelperInfoView = JobHelperInfoView(for: self.selectedTask)
         
         self.view.addSubview(jobQuickInfoView)
         jobQuickInfoView.translatesAutoresizingMaskIntoConstraints = false
@@ -125,20 +139,6 @@ class CustomerTaskInfoController: UIViewController {
             jobHelperInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         ])
     }
-    
-    
-    // MARK: - Selectors & Functions
-    // Its better to put the configure function here to keep everything in the view.
-    func configureMediaViews() {
-        for media in self.mediaData {
-            media.delegate = self
-            self.taskPhotosVideosView.stackView.addArrangedSubview(media)
-            
-            NSLayoutConstraint.activate([
-                media.widthAnchor.constraint(equalToConstant: 100),
-            ])
-        }
-    }
 }
 
 extension CustomerTaskInfoController: PlayableMediaViewDelegate {
@@ -151,7 +151,7 @@ extension CustomerTaskInfoController: PlayableMediaViewDelegate {
         } else {
             // Fetch video from Firestore and present AV controller.
             let videoFileName = "\(videoUID!).mov"
-            let videoRef = Storage.storage().reference().child("jobs/\(self.currentJob.taskUID)/\(videoFileName)")
+            let videoRef = Storage.storage().reference().child("jobs/\(self.selectedTask.taskUID)/\(videoFileName)")
             
             // Fetch the download URL
             videoRef.downloadURL { url, error in

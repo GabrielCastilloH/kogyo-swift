@@ -103,7 +103,7 @@ class PlayableMediaView: UIView {
         ])
     }
     
-    // MARK: - Selectors
+    // MARK: - Selectors & Functions
     @objc func mediaViewTapped() {
         if self.thumbnail != nil {
             self.delegate?.didTapMedia(thumbnail: self.thumbnail, videoUID: self.videoUID)

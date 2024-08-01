@@ -261,12 +261,13 @@ class FirestoreHandler {
                   
             for document in querySnapshot.documents {
                 let data = document.data() // All data.
-                let mediaData = try await fetchJobMedia(taskId: document.documentID, parentFolder: .jobs) // Fetch media data
+                
+                // NO LONGER FETCHING MEDIA
                 
                 let task = CustomFunctions.shared.taskFromData(
                     for: document.documentID,
                     data: data,
-                    media: mediaData
+                    media: nil
                 )
                 tasks.append(task)
             }

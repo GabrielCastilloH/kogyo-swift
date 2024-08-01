@@ -35,7 +35,7 @@ struct CustomFunctions {
     ///     - media: an array of `PlayableMediaView`, all the images and videos of the task.
     ///
     /// - Returns: A greeting for the given `subject`.
-    public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]) -> TaskClass {
+    public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]?) -> TaskClass {
         // This task object is completely different from the one on firebase, it has more info.
         let taskCompletion: CompletionStatus
         switch data["completionStatus"] as? String {

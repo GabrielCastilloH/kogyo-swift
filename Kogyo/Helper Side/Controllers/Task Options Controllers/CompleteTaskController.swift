@@ -176,7 +176,7 @@ class CompleteTaskController: UIViewController {
                     self.mediaPlayableViews = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.taskUID, parentFolder: .completion)
                     self.configureMediaViews() // Configure taskphotoviedoesviews
                 } catch {
-                    print("Failed...")
+                    print("Failed to fetch media for the current task.")
                 }
             }
             

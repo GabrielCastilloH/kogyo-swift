@@ -15,11 +15,10 @@ class AvailableTaskInfoController: UIViewController {
     // MARK: - Variables
     var selectedTask: TaskClass
     var cf = CustomFunctions()
-    var mediaData: [PlayableMediaView] = []
     
     
     // MARK: - UI Components
-    var jobPhotosVideosView = TaskPhotosVideosView()
+    var taskPhotosVideosView = TaskPhotosVideosView()
     
     private let postedOnLabel: UILabel = {
         let label = UILabel()
@@ -62,8 +61,22 @@ class AvailableTaskInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        self.mediaData = DataManager.shared.helperAvailableTasks[self.selectedTask.taskUID]!.media
-        self.configureMediaViews()
+        if let media = selectedTask.media {
+            self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+        } else {
+            Task {
+                do {
+                    let media = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.selectedTask.taskUID, parentFolder: .jobs)
+                    self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+                    
+                    // Update DataManager
+                    DataManager.shared.helperAvailableTasks[self.selectedTask.taskUID]?.media = media
+                    
+                } catch {
+                    print("Failed to fetch media for the current task.")
+                }
+            }
+        }
         
         let dateNotFormatted = self.selectedTask.dateAdded
         let dateFormatter = DateFormatter()
@@ -100,11 +113,11 @@ class AvailableTaskInfoController: UIViewController {
         self.view.addSubview(jobDescriptionView)
         jobDescriptionView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(jobPhotosVideosView)
-        jobPhotosVideosView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(taskPhotosVideosView)
+        taskPhotosVideosView.translatesAutoresizingMaskIntoConstraints = false
         
         let separator2 = UIView()
-        cf.createSeparatorView(for: self, with: separator2, under: jobPhotosVideosView)
+        cf.createSeparatorView(for: self, with: separator2, under: taskPhotosVideosView)
         
         self.view.addSubview(taskRequiredEquipmentView)
         taskRequiredEquipmentView.translatesAutoresizingMaskIntoConstraints = false
@@ -128,10 +141,10 @@ class AvailableTaskInfoController: UIViewController {
             jobDescriptionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobDescriptionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
-            jobPhotosVideosView.topAnchor.constraint(equalTo: jobDescriptionView.bottomAnchor),
-            jobPhotosVideosView.heightAnchor.constraint(equalToConstant: 120),
-            jobPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            jobPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            taskPhotosVideosView.topAnchor.constraint(equalTo: jobDescriptionView.bottomAnchor),
+            taskPhotosVideosView.heightAnchor.constraint(equalToConstant: 120),
+            taskPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            taskPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
             taskRequiredEquipmentView.topAnchor.constraint(equalTo: separator2.bottomAnchor, constant: 15),
             taskRequiredEquipmentView.heightAnchor.constraint(equalToConstant: 120),
@@ -167,19 +180,6 @@ class AvailableTaskInfoController: UIViewController {
             self.navigationController?.popToViewController(homeController, animated: true)
             AlertManager.showTaskAcceptedAlert(on: homeController)
         }
-    }
-    
-    // Its better to put the configure function here to keep everything in the view.
-    func configureMediaViews() {
-        for media in self.mediaData {
-            media.delegate = self
-            self.jobPhotosVideosView.stackView.addArrangedSubview(media)
-            
-            NSLayoutConstraint.activate([
-                media.widthAnchor.constraint(equalToConstant: 100),
-            ])
-        }
-        self.jobPhotosVideosView.setLoading(false) // finish loading
     }
 }
 

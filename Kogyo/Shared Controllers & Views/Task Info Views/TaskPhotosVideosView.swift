@@ -114,4 +114,17 @@ class TaskPhotosVideosView: UIView {
             loadingView.trailingAnchor.constraint(equalTo: mediaBackgroundView.trailingAnchor, constant: 0),
         ])
     }
+    
+    // MARK: - Selectors & Functions
+    func configureMediaViews(mediaData: [PlayableMediaView], delegate: PlayableMediaViewDelegate) {
+        for media in mediaData {
+            media.delegate = delegate
+            self.stackView.addArrangedSubview(media)
+            
+            NSLayoutConstraint.activate([
+                media.widthAnchor.constraint(equalToConstant: 100),
+            ])
+        }
+        self.setLoading(false) // finish loading
+    }
 }

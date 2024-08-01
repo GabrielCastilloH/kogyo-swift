@@ -15,7 +15,6 @@ class AcceptedTasksInfoController: UIViewController {
     // MARK: - Variables
     var selectedTask: TaskClass
     var cf = CustomFunctions()
-    var mediaData: [PlayableMediaView] = []
     
     
     // MARK: - UI Components
@@ -73,8 +72,22 @@ class AcceptedTasksInfoController: UIViewController {
         self.setupUI()
         
         // Configure media once the view loads.
-        self.mediaData = DataManager.shared.helperMyTasks[self.selectedTask.taskUID]!.media
-        self.configureMediaViews()
+        if let media = selectedTask.media {
+            self.jobPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+        } else {
+            Task {
+                do {
+                    let media = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.selectedTask.taskUID, parentFolder: .jobs)
+                    self.jobPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+                    
+                    // Update DataManager
+                    DataManager.shared.helperMyTasks[self.selectedTask.taskUID]?.media = media
+                    
+                } catch {
+                    print("Failed to fetch media for the current task.")
+                }
+            }
+        }
         
         let dateNotFormatted = self.selectedTask.dateAdded
         let dateFormatter = DateFormatter()
@@ -174,19 +187,6 @@ class AcceptedTasksInfoController: UIViewController {
         let optionsController = HelperTaskOptionsController(selectedTask: self.selectedTask)
         optionsController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(optionsController, animated: true)
-    }
-    
-    // Its better to put the configure function here to keep everything in the view.
-    func configureMediaViews() {
-        for media in self.mediaData {
-            media.delegate = self
-            self.jobPhotosVideosView.stackView.addArrangedSubview(media)
-            
-            NSLayoutConstraint.activate([
-                media.widthAnchor.constraint(equalToConstant: 100),
-            ])
-        }
-        self.jobPhotosVideosView.setLoading(false) // finish loading
     }
 }
 
