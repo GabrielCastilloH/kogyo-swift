@@ -168,16 +168,17 @@ class CompleteTaskController: UIViewController {
             self.mediaScrollView.isHidden = true
             self.mediaBackgroundView.isHidden = true
             self.completeButton.isHidden = true
-            
-            self.configureMediaViews()
             self.taskPhotosVideosView.isHidden = false
             self.cancelButton.isHidden = false
             
             
+            self.taskPhotosVideosView.isLoading(true)
             
             Task {
                 do {
                     self.mediaPlayableViews = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.taskUID, parentFolder: .completion)
+                    self.taskPhotosVideosView.isLoading(false)
+                    self.configureMediaViews() // Configure taskphotoviedoesviews
                 } catch {
                     print("Failed...")
                 }

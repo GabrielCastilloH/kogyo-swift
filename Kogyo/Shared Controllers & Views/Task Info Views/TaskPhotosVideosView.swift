@@ -42,6 +42,13 @@ class TaskPhotosVideosView: UIView {
         return stackView
     }()
     
+    private let loadingView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    
     
     // MARK: - Life Cycle
     init() {
@@ -54,7 +61,18 @@ class TaskPhotosVideosView: UIView {
     }
     
     // MARK: - UI Setup
+    public func isLoading(_ isLoading: Bool) {
+        if isLoading {
+            self.loadingView.isHidden = true
+        } else {
+            self.loadingView.isHidden = false
+        }
+    }
+    
     private func setupUI() {
+        self.addSubview(loadingView)
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        
         let photoVideoTitle = cf.createFormLabel(for: "Photos & Videos")
         
         self.addSubview(photoVideoTitle)
@@ -72,7 +90,7 @@ class TaskPhotosVideosView: UIView {
         NSLayoutConstraint.activate([
             photoVideoTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
             photoVideoTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
-
+            
             mediaBackgroundView.topAnchor.constraint(equalTo: photoVideoTitle.bottomAnchor, constant: 5),
             mediaBackgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             mediaBackgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
@@ -87,6 +105,13 @@ class TaskPhotosVideosView: UIView {
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+            
+            loadingView.topAnchor.constraint(equalTo: mediaBackgroundView.topAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: mediaBackgroundView.bottomAnchor),
+            loadingView.leadingAnchor.constraint(equalTo: mediaBackgroundView.leadingAnchor, constant: 0),
+            loadingView.trailingAnchor.constraint(equalTo: mediaBackgroundView.trailingAnchor, constant: 0),
         ])
+        
+        loadingView.isHidden = true
     }
 }

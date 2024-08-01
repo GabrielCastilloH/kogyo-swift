@@ -216,7 +216,8 @@ class HelperDashboardController: UIViewController {
                     
                     // Fetch media data asynchronously
                     Task {
-                        let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(taskId: document.documentID) // Fetch media data
+                        // NOTE: CHANGED THIS TO JOBS! AS PARENT FOLDER
+                        let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(taskId: document.documentID, parentFolder: .jobs) // Fetch media data
                         
                         let newTask = CustomFunctions.shared.taskFromData(
                             for: document.documentID, 
