@@ -20,5 +20,6 @@ struct TaskClass {
     var helperUID: String?
     let media: [PlayableMediaView] // [(UIImage?, String?)]
     let equipment: [String]
-    var completionStatus: String
+    var completionStatus: CompletionStatus
+    var completionMedia: [PlayableMediaView]?
 }

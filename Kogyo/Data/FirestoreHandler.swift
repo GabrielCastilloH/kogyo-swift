@@ -12,7 +12,15 @@ import FirebaseStorage
 
 
 // TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
+// FOR USERS: a listener must be added to when a task is marked as complete. alerts presented as if it was deleted.
+// Then: they should have the ability to review the completion and then accept it.
+
+
 // TODO: 3. Add ability to see task history, completed tasks, for the user.
+// TODO: 4. fix bug with fetching (or uploading videos), where the app thinks its an image. 
+// TODO: 5. Make it so not all the data is loaded when the app is started, only essential data. And all media is loaded once the specific view is loaded. And once its loaded its stored, that way it doesn't have to load again!
+
+
 // TODO: 4. Add chat feature between customer and helper.
 // TODO: 5. Add payment feature between customer & helper (set it up with 10% comission fee later).
 // TODO: 6. Setup equipment button.
@@ -41,6 +49,12 @@ enum CompletionStatus {
     case complete
     case notComplete
     case inReview
+}
+
+enum StorageFolder {
+    case completion
+    case jobs
+    case profile
 }
 
 class FirestoreHandler {
@@ -78,7 +92,31 @@ class FirestoreHandler {
         }
     }
     
+    /// Updates the completion status of a task in Firestore.
+    ///
+    /// - Parameters:
+    ///   - userUID: The unique identifier of the user.
+    ///   - taskUID: The unique identifier of the task.
+    ///   - completionStatus: The new completion status to be set.
+    /// - Throws: An error if the Firestore update fails.
+    func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) async throws {
+        let dataRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
+        
+        let status: String
+        switch completionStatus {
+        case .complete:
+            status = "complete"
+        case .notComplete:
+            status = "notComplete"
+        case .inReview:
+            status = "inReview"
+        }
+        
+        try await dataRef.updateData(["completionStatus": status])
+    }
+    
     // MARK: - User Functions
+    
     /// Uploads a task to Firebase.
     ///
     /// ```
@@ -99,31 +137,7 @@ class FirestoreHandler {
                 completion(.failure(error))
             } else if let taskUID = ref?.documentID { // Once task data has been uploaded, upload all task media.
                 
-                var mediaArray: [PlayableMediaView] = []
-                
-                for media in mediaData {
-                    if media != mediaData[0] {
-                        
-                        if let videoURL = media.videoURL {
-                            // Upload video to database.
-                            let videoToUploadURL = videoURL
-                            let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(parentFolder: "jobs", containerId: taskUID, videoURL: videoToUploadURL, thumbnail: media.mediaImageView.image)
-                            
-                            // Append media view to media in DataManager
-                            let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
-                            mediaArray.append(playableMediaView)
-                            
-                        } else {
-                            // Upload image to database.
-                            let imageToUpload = media.mediaImageView.image
-                            FirestoreHandler.shared.uploadImageToFirebase(parentFolder: "jobs", containerId: taskUID, image: imageToUpload!)
-                            
-                            // Append media view to media in DataManager.
-                            let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
-                            mediaArray.append(playableMediaView)
-                        }
-                    }
-                }
+                let mediaArray = self.uploadMedia(taskUID: taskUID, parentFolder: .jobs, mediaData: mediaData)
                 
                 let newTask = CustomFunctions.shared.taskFromData(
                     for: taskUID,
@@ -136,7 +150,52 @@ class FirestoreHandler {
         }
     }
     
-    
+    /// Asynchronously uploads media (images and videos) associated with a task to Firebase Storage.
+    ///
+    /// - Parameters:
+    ///   - taskUID: The unique identifier for the task to which the media belongs.
+    ///   - mediaData: An array of `MediaView` objects containing the media to be uploaded.
+    /// - Returns: An array of `PlayableMediaView` objects containing information about the uploaded media.
+    /// - Throws: An error if any of the media uploads fail.
+    func uploadMedia(taskUID: String, parentFolder: StorageFolder, mediaData: [MediaView]) -> [PlayableMediaView] {
+        var mediaArray: [PlayableMediaView] = []
+        
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+        
+        for media in mediaData {
+            if media != mediaData.first {
+                if let videoURL = media.videoURL {
+                    print("uploading a video!!!!")
+                    let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(
+                        parentFolder: containerId,
+                        containerId: taskUID,
+                        videoURL: videoURL,
+                        thumbnail: media.mediaImageView.image
+                    )
+                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
+                    mediaArray.append(playableMediaView)
+                } else if let imageToUpload = media.mediaImageView.image {
+                    FirestoreHandler.shared.uploadImageToFirebase(
+                        parentFolder: containerId,
+                        containerId: taskUID,
+                        image: imageToUpload
+                    )
+                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
+                    mediaArray.append(playableMediaView)
+                }
+            }
+        }
+        
+        return mediaArray
+    }
     
     /// Fetches a specific `Task` for a user.
     ///

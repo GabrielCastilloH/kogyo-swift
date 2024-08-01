@@ -37,6 +37,16 @@ struct CustomFunctions {
     /// - Returns: A greeting for the given `subject`.
     public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]) -> TaskClass {
         // This task object is completely different from the one on firebase, it has more info.
+        let taskCompletion: CompletionStatus
+        switch data["completion"] as? String {
+        case "notComplete":
+            taskCompletion = .notComplete
+        case "inReview":
+            taskCompletion = .inReview
+        default:
+            taskCompletion = .notComplete
+        }
+        
         let task = TaskClass(
             taskUID: taskUID,
             userUID: DataManager.shared.currentUser!.userUID,
@@ -50,7 +60,7 @@ struct CustomFunctions {
             helperUID: data["helperUID"] as? String,
             media: media,
             equipment: [],
-            completionStatus: data["completion"] as? String ?? "notComplete"
+            completionStatus: taskCompletion
         )
         
         return task

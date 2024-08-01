@@ -11,7 +11,7 @@ import AVKit
 class CompleteTaskController: UIViewController {
 
     // MARK: - Variables
-    let selectedTask: TaskClass
+    var selectedTask: TaskClass
     var idCounter = 0
     // MEDIA:
     var mediaData: [MediaView] = []
@@ -41,16 +41,6 @@ class CompleteTaskController: UIViewController {
     }()
     
     // MEDIA:
-    let mediaTitleView: UITextView = {
-        let textView = UITextView()
-        textView.isUserInteractionEnabled = false
-        textView.text = "Photos & Videos:"
-        textView.textColor = .label
-        textView.textAlignment = .left
-        textView.font = .systemFont(ofSize: 20, weight: .medium)
-        return textView
-    }()
-    
     private let mediaBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants().darkWhiteColor
@@ -85,6 +75,8 @@ class CompleteTaskController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        let mediaTitle = CustomFunctions.shared.createFormLabel(for: "Photos & Videos")
+        
         self.navigationItem.title = "Complete Task"
         
         self.view.addSubview(infoLabel)
@@ -93,8 +85,8 @@ class CompleteTaskController: UIViewController {
         self.view.addSubview(completeButton)
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(mediaTitleView)
-        mediaTitleView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(mediaTitle)
+        mediaTitle.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(mediaBackgroundView)
         mediaBackgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -107,11 +99,12 @@ class CompleteTaskController: UIViewController {
             infoLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 40),
             infoLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -40),
             
-            mediaTitleView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 20),
-            mediaTitleView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
-            mediaTitleView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            mediaTitle.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 20),
+            mediaTitle.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            mediaTitle.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            mediaTitle.heightAnchor.constraint(equalToConstant: 30),
             
-            mediaBackgroundView.topAnchor.constraint(equalTo: mediaTitleView.topAnchor, constant: 35),
+            mediaBackgroundView.topAnchor.constraint(equalTo: mediaTitle.bottomAnchor, constant: 10),
             mediaBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             mediaBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
             mediaBackgroundView.heightAnchor.constraint(equalToConstant: 70),
@@ -129,9 +122,30 @@ class CompleteTaskController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    @objc private func handleComplete() {
+    @objc private func handleComplete() async {
+        print("running handle complete")
+        // Call uploadMedia firestore function. Upload it to: "completion"
+        let mediaArray = FirestoreHandler.shared.uploadMedia(taskUID: selectedTask.taskUID, parentFolder: .completion, mediaData: mediaData)
+        print("supposedly uploaded media.")
         
-        // Call firestore function. 
+        self.selectedTask.completionMedia = mediaArray // Update the completionMedia on the TaskClass object.
+        self.selectedTask.completionStatus = .inReview
+        DataManager.shared.customerMyTasks[selectedTask.taskUID] = self.selectedTask // update DataManager.
+        print("updated datamanager.")
+        
+        
+        // Change status in Firebase to in review.
+        let userUID = selectedTask.userUID
+        let taskUID = selectedTask.taskUID
+        do {
+            try await FirestoreHandler.shared.updateTaskCompletion(userUID: userUID, taskUID: taskUID, completionStatus: .inReview)
+            print("Task completion status updated successfully.")
+        } catch {
+            print("Failed to update task completion status: \(error)")
+        }
+        
+        print("updated task completion")
+
     }
     
     func presentMyTasksController() {
