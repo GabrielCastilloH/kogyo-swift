@@ -63,6 +63,8 @@ class PlayableMediaView: UIView {
             if videoUID != nil {
                 self.videoIcon.isHidden = false
             }
+        } else {
+            mediaImageView.image = UIImage(systemName: "questionmark")
         }
     }
     
@@ -103,6 +105,10 @@ class PlayableMediaView: UIView {
     
     // MARK: - Selectors
     @objc func mediaViewTapped() {
-        self.delegate?.didTapMedia(thumbnail: self.thumbnail, videoUID: self.videoUID)
+        if self.thumbnail != nil {
+            self.delegate?.didTapMedia(thumbnail: self.thumbnail, videoUID: self.videoUID)
+        } else {
+            print("its loading you retard.")
+        }
     }
 }

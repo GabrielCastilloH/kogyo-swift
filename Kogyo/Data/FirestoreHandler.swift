@@ -216,7 +216,7 @@ class FirestoreHandler {
             
             let data = documentSnapshot.data() ?? [:]
             print(data)
-            let mediaData = try await fetchJobMedia(taskId: documentSnapshot.documentID)
+            let mediaData = try await fetchJobMedia(taskId: documentSnapshot.documentID, parentFolder: .jobs)
             
             let task = CustomFunctions.shared.taskFromData(
                 for: documentSnapshot.documentID,
@@ -261,7 +261,7 @@ class FirestoreHandler {
                   
             for document in querySnapshot.documents {
                 let data = document.data() // All data.
-                let mediaData = try await fetchJobMedia(taskId: document.documentID) // Fetch media data
+                let mediaData = try await fetchJobMedia(taskId: document.documentID, parentFolder: .jobs) // Fetch media data
                 
                 let task = CustomFunctions.shared.taskFromData(
                     for: document.documentID,
@@ -480,8 +480,18 @@ class FirestoreHandler {
     ///     - jobId: the unique identifier of the job for which you'd like to fetch the media for.
     ///
     /// - Returns: `[PlayableMediaView]` through a completion handler. Can throw.
-    func fetchJobMedia(taskId: String) async throws -> [PlayableMediaView] {
-        let storageRef = Storage.storage().reference().child("jobs/\(taskId)/")
+    func fetchJobMedia(taskId: String, parentFolder: StorageFolder) async throws -> [PlayableMediaView] {
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+        
+        let storageRef = Storage.storage().reference().child("\(containerId)/\(taskId)/")
         var mediaData: [PlayableMediaView] = []
         
         do {

@@ -7,16 +7,23 @@
 
 import UIKit
 import AVKit
+import FirebaseStorage
 
 class CompleteTaskController: UIViewController {
 
     // MARK: - Variables
+    var taskUID: String
     var selectedTask: TaskClass
     var idCounter = 0
     // MEDIA:
     var mediaData: [MediaView] = []
-    var mediaScrollView: MediaScrollView
+    var mediaPlayableViews: [PlayableMediaView] = []
+    var mediaScrollView: MediaScrollView!
     let imagePickerController = UIImagePickerController()
+    let mediaTitle = CustomFunctions.shared.createFormLabel(for: "Photos & Videos")
+    
+    // REVIEW MEDIA
+    var taskPhotosVideosView = TaskPhotosVideosView()
     
     // MARK: - UI Components
     private let infoLabel: UILabel = {
@@ -40,6 +47,17 @@ class CompleteTaskController: UIViewController {
         return button
     }()
     
+    lazy var cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Cancel Completion", for: .normal)
+        button.backgroundColor = UIColor(red: 0.96, green: 0.27, blue: 0.31, alpha: 1.00)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
+        return button
+    }()
+    
     // MEDIA:
     private let mediaBackgroundView: UIView = {
         let view = UIView()
@@ -48,16 +66,21 @@ class CompleteTaskController: UIViewController {
         return view
     }()
 
-
     // MARK: - Life Cycle
-    init(selectedTask: TaskClass) {
-        self.selectedTask = selectedTask
-        self.mediaScrollView = MediaScrollView(media: self.mediaData)
+    init(selectedTaskUID: String) {
+        self.taskUID = selectedTaskUID
+        self.selectedTask = DataManager.shared.helperMyTasks[self.taskUID]!
+        print(self.selectedTask)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.toggleReviewUI()
     }
 
     override func viewDidLoad() {
@@ -65,17 +88,18 @@ class CompleteTaskController: UIViewController {
         self.view.backgroundColor = .white
         
         // MEDIA:
+        self.mediaScrollView = MediaScrollView(media: self.mediaData)
         self.imagePickerController.delegate = self
         self.imagePickerController.allowsEditing = false
         self.imagePickerController.mediaTypes = ["public.image", "public.movie"]
         self.addMedia(nil)
         
-        setupUI()
+        self.setupUI()
+        self.toggleReviewUI()
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        let mediaTitle = CustomFunctions.shared.createFormLabel(for: "Photos & Videos")
         
         self.navigationItem.title = "Complete Task"
         
@@ -93,6 +117,12 @@ class CompleteTaskController: UIViewController {
         
         self.view.addSubview(mediaScrollView)
         mediaScrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(taskPhotosVideosView)
+        taskPhotosVideosView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(cancelButton)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             infoLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
@@ -117,35 +147,108 @@ class CompleteTaskController: UIViewController {
             completeButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
             completeButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             completeButton.widthAnchor.constraint(equalToConstant: 200),
-            completeButton.heightAnchor.constraint(equalToConstant: 50)
+            completeButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            taskPhotosVideosView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 30),
+            taskPhotosVideosView.heightAnchor.constraint(equalToConstant: 120),
+            taskPhotosVideosView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
+            taskPhotosVideosView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
+            
+            cancelButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
+            cancelButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            cancelButton.widthAnchor.constraint(equalToConstant: 200),
+            cancelButton.heightAnchor.constraint(equalToConstant: 80)
         ])
     }
     
+    private func toggleReviewUI() {
+        if self.selectedTask.completionStatus == .inReview {
+            // If task is inReview: Hide everything
+            self.mediaTitle.isHidden = true
+            self.mediaScrollView.isHidden = true
+            self.mediaBackgroundView.isHidden = true
+            self.completeButton.isHidden = true
+            
+            self.configureMediaViews()
+            self.taskPhotosVideosView.isHidden = false
+            self.cancelButton.isHidden = false
+            
+            
+            
+            Task {
+                do {
+                    self.mediaPlayableViews = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.taskUID, parentFolder: .completion)
+                } catch {
+                    print("Failed...")
+                }
+            }
+            
+        } else {
+            // If task is not inReview show everything.
+            self.mediaTitle.isHidden = false
+            self.mediaScrollView.isHidden = false
+            self.mediaBackgroundView.isHidden = false
+            self.completeButton.isHidden = false
+            
+            self.taskPhotosVideosView.isHidden = true
+            self.cancelButton.isHidden = true
+        }
+    }
+    
     // MARK: - Selectors & Functions
-    @objc private func handleComplete() async {
-        print("running handle complete")
-        // Call uploadMedia firestore function. Upload it to: "completion"
-        let mediaArray = FirestoreHandler.shared.uploadMedia(taskUID: selectedTask.taskUID, parentFolder: .completion, mediaData: mediaData)
-        print("supposedly uploaded media.")
-        
-        self.selectedTask.completionMedia = mediaArray // Update the completionMedia on the TaskClass object.
-        self.selectedTask.completionStatus = .inReview
-        DataManager.shared.customerMyTasks[selectedTask.taskUID] = self.selectedTask // update DataManager.
-        print("updated datamanager.")
-        
-        
-        // Change status in Firebase to in review.
+    @objc private func handleComplete() {
+        if self.mediaData.count <= 2 {
+            AlertManager.showBasicAlert(on: self, title: "Media Required", message: "You must upload at least 2 photos or videos as proof of task completion.")
+        } else {
+            
+            // Call uploadMedia firestore function. Upload it to: "completion"
+            let mediaArray = FirestoreHandler.shared.uploadMedia(taskUID: selectedTask.taskUID, parentFolder: .completion, mediaData: mediaData)
+            
+            self.selectedTask.completionMedia = mediaArray // Update the completionMedia on the TaskClass object.
+            self.selectedTask.completionStatus = .inReview
+            self.mediaPlayableViews = mediaArray
+            DataManager.shared.customerMyTasks[selectedTask.taskUID] = self.selectedTask // update DataManager.
+            
+            // Change status in Firebase to in review.
+            let userUID = selectedTask.userUID
+            let taskUID = selectedTask.taskUID
+            
+            Task {
+                do {
+                    try await FirestoreHandler.shared.updateTaskCompletion(userUID: userUID, taskUID: taskUID, completionStatus: .inReview)
+                    AlertManager.showBasicAlert(on: self, title: "Task Marked as Complete", message: "The task was successfully marked as complete.")
+                    self.toggleReviewUI()
+                } catch {
+                    AlertManager.showBasicAlert(on: self, title: "Failed", message: "The task could not be marked as complete. Please check your internet and try again.")
+                }
+            }
+        }
+    }
+    
+    @objc private func handleCancel() {
         let userUID = selectedTask.userUID
         let taskUID = selectedTask.taskUID
-        do {
-            try await FirestoreHandler.shared.updateTaskCompletion(userUID: userUID, taskUID: taskUID, completionStatus: .inReview)
-            print("Task completion status updated successfully.")
-        } catch {
-            print("Failed to update task completion status: \(error)")
-        }
         
-        print("updated task completion")
-
+        Task {
+            do {
+                try await FirestoreHandler.shared.updateTaskCompletion(userUID: userUID, taskUID: taskUID, completionStatus: .notComplete)
+                AlertManager.showBasicAlert(on: self, title: "Task Marked as Not Complete", message: "The task was successfully marked as not complete.")
+                self.toggleReviewUI()
+            } catch {
+                AlertManager.showBasicAlert(on: self, title: "Failed", message: "The task could not be marked as not complete. Please check your internet and try again.")
+            }
+        }
+    }
+    
+    func configureMediaViews() {
+        for media in self.mediaPlayableViews {
+            media.delegate = self
+            self.taskPhotosVideosView.stackView.addArrangedSubview(media)
+            
+            NSLayoutConstraint.activate([
+                media.widthAnchor.constraint(equalToConstant: 100),
+            ])
+        }
     }
     
     func presentMyTasksController() {
@@ -180,7 +283,7 @@ extension CompleteTaskController: MediaViewDelegate {
     }
     
     func didTapAddImage() {
-        DispatchQueue.main.async { [ weak self ] in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.present(self.imagePickerController, animated: true, completion: nil)
         }
@@ -203,26 +306,67 @@ extension CompleteTaskController: UIImagePickerControllerDelegate & UINavigation
             if let image = info[.originalImage] as? UIImage {
                 self.addMedia(image)
             }
-            
         } else if mediaType == "public.movie" {
             self.handleVideos(info)
         } else {
             print("DEBUG PRINT:", "Image was neither photos or videos.")
         }
         
-        DispatchQueue.main.async { [ weak self ] in
+        DispatchQueue.main.async { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
     }
     
     // Handle Videos
     private func handleVideos(_ info: [UIImagePickerController.InfoKey : Any]) {
-        
         guard let videoURL = info[.mediaURL] as? URL else { return }
         
         AVAsset(url: videoURL).generateThumbnail { thumbnail in
             DispatchQueue.main.async {
                 self.addMedia(thumbnail, videoURL: videoURL)
+            }
+        }
+    }
+}
+
+extension CompleteTaskController: PlayableMediaViewDelegate {
+    func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
+        // Play video or zoom in on photo if it is tapped by the user.
+        if videoUID == nil {
+            let viewController = PhotoViewController(thumbnail: thumbnail)
+            viewController.modalPresentationStyle = .fullScreen
+            self.navigationController?.pushViewController(viewController, animated: true)
+        } else {
+            // Fetch video from Firestore and present AV controller.
+            let videoFileName = "\(videoUID!).mov"
+            let videoRef = Storage.storage().reference().child("jobs/\(self.selectedTask.taskUID)/\(videoFileName)")
+            
+            // Fetch the download URL
+            videoRef.downloadURL { url, error in
+                if let error = error {
+                    print("Error fetching video URL: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let url = url else {
+                    print("Error: Video URL is nil")
+                    return
+                }
+                
+                // Present the video using AVPlayerViewController
+                let player = AVPlayer(url: url)
+                let playerViewController = AVPlayerViewController()
+                playerViewController.player = player
+                
+                // Ensure the player starts playing when the view appears
+                playerViewController.player?.play()
+                
+                // Present the AVPlayerViewController
+                DispatchQueue.main.async {
+                    self.present(playerViewController, animated: true) {
+                        playerViewController.player?.play()
+                    }
+                }
             }
         }
     }

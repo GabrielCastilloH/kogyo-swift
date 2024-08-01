@@ -38,7 +38,7 @@ struct CustomFunctions {
     public func taskFromData(for taskUID: String, data: [String : Any], media: [PlayableMediaView]) -> TaskClass {
         // This task object is completely different from the one on firebase, it has more info.
         let taskCompletion: CompletionStatus
-        switch data["completion"] as? String {
+        switch data["completionStatus"] as? String {
         case "notComplete":
             taskCompletion = .notComplete
         case "inReview":
@@ -46,7 +46,7 @@ struct CustomFunctions {
         default:
             taskCompletion = .notComplete
         }
-        
+
         let task = TaskClass(
             taskUID: taskUID,
             userUID: DataManager.shared.currentUser!.userUID,
