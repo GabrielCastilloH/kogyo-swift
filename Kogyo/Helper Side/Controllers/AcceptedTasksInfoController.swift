@@ -186,6 +186,7 @@ class AcceptedTasksInfoController: UIViewController {
                 media.widthAnchor.constraint(equalToConstant: 100),
             ])
         }
+        self.jobPhotosVideosView.setLoading(false) // finish loading
     }
 }
 

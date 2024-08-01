@@ -171,13 +171,9 @@ class CompleteTaskController: UIViewController {
             self.taskPhotosVideosView.isHidden = false
             self.cancelButton.isHidden = false
             
-            
-            self.taskPhotosVideosView.isLoading(true)
-            
             Task {
                 do {
                     self.mediaPlayableViews = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.taskUID, parentFolder: .completion)
-                    self.taskPhotosVideosView.isLoading(false)
                     self.configureMediaViews() // Configure taskphotoviedoesviews
                 } catch {
                     print("Failed...")
@@ -241,6 +237,7 @@ class CompleteTaskController: UIViewController {
         }
     }
     
+    // TODO: Figure out how to only code this once.
     func configureMediaViews() {
         for media in self.mediaPlayableViews {
             media.delegate = self
@@ -250,6 +247,7 @@ class CompleteTaskController: UIViewController {
                 media.widthAnchor.constraint(equalToConstant: 100),
             ])
         }
+        taskPhotosVideosView.setLoading(false)
     }
     
     func presentMyTasksController() {

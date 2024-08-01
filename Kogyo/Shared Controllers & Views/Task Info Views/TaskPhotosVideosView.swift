@@ -54,6 +54,7 @@ class TaskPhotosVideosView: UIView {
     init() {
         super.init(frame: .zero)
         self.setupUI()
+        self.setLoading(true) // Set loading from the start.
     }
     
     required init?(coder: NSCoder) {
@@ -61,11 +62,12 @@ class TaskPhotosVideosView: UIView {
     }
     
     // MARK: - UI Setup
-    public func isLoading(_ isLoading: Bool) {
+    public func setLoading(_ isLoading: Bool) {
+        self.bringSubviewToFront(loadingView)
         if isLoading {
-            self.loadingView.isHidden = true
-        } else {
             self.loadingView.isHidden = false
+        } else {
+            self.loadingView.isHidden = true
         }
     }
     
@@ -111,7 +113,5 @@ class TaskPhotosVideosView: UIView {
             loadingView.leadingAnchor.constraint(equalTo: mediaBackgroundView.leadingAnchor, constant: 0),
             loadingView.trailingAnchor.constraint(equalTo: mediaBackgroundView.trailingAnchor, constant: 0),
         ])
-        
-        loadingView.isHidden = true
     }
 }
