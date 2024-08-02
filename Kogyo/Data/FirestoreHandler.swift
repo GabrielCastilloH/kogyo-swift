@@ -10,53 +10,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
-
-// TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
-// FOR USERS: a listener must be added to when a task is marked as complete. alerts presented as if it was deleted.
-// Then: they should have the ability to review the completion and then accept it.
-
-
-// TODO: 3. Add ability to see task history, completed tasks, for the user.
-// TODO: 4. fix bug with fetching (or uploading videos), where the app thinks its an image. 
-// TODO: 5. Make it so not all the data is loaded when the app is started, only essential data. And all media is loaded once the specific view is loaded. And once its loaded its stored, that way it doesn't have to load again!
-
-
-// TODO: 4. Add chat feature between customer and helper.
-// TODO: 5. Add payment feature between customer & helper (set it up with 10% comission fee later).
-// TODO: 6. Setup equipment button.
-// TODO: 7. Find a way to store location in firestore and calculate km away in HelperDashboard.
-// TODO: 8. Setup login as helper or customer
-// TODO: 9. Setup sign up as a helper (you must submit data and be approved by me), also set your work area.
-// TODO: 10. Add daily, weekly and monthly earning data for helpers.
-// TODO: 11. (HARD) Setup a schedule for helpers according to all the tasks they have accepted.
-// TODO: 12. Setup notifications whenever a new task is posted or a task is cancelled.
-// TODO: 13. Ensure anything uploaded doesn't exceed 50mb and there is a max number of images and videos. 
-// TODO: 69420. Add "Hire" feature.
-
-enum UserKind {
-    case user
-    case helper
-    case other
-}
-
-enum DataCollection {
-    case helpers
-    case users
-    case tasks
-}
-
-enum CompletionStatus {
-    case complete
-    case notComplete
-    case inReview
-}
-
-enum StorageFolder {
-    case completion
-    case jobs
-    case profile
-}
-
 class FirestoreHandler {
     // Handles everything to do with Firebase.
     
@@ -65,16 +18,16 @@ class FirestoreHandler {
     private let db = Firestore.firestore()
     
     private init() {}
-     
-    // MARK: - General Functions
+    
+    // MARK: - USER: Fetch
     public func fetchUser() async throws -> User {
         guard let userUID = Auth.auth().currentUser?.uid else {
             throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "No current user"])
         }
-
+        
         let db = Firestore.firestore()
         let document = db.collection("users").document(userUID)
-
+        
         do {
             let snapshot = try await document.getDocument()
             
@@ -84,7 +37,7 @@ class FirestoreHandler {
                   let email = snapshotData["email"] as? String else {
                 throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid data in snapshot"])
             }
-
+            
             let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email)
             return user
         } catch {
@@ -92,246 +45,37 @@ class FirestoreHandler {
         }
     }
     
-    /// Updates the completion status of a task in Firestore.
-    ///
-    /// - Parameters:
-    ///   - userUID: The unique identifier of the user.
-    ///   - taskUID: The unique identifier of the task.
-    ///   - completionStatus: The new completion status to be set.
-    /// - Throws: An error if the Firestore update fails.
-    func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) async throws {
-        let dataRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
-        
-        let status: String
-        switch completionStatus {
-        case .complete:
-            status = "complete"
-        case .notComplete:
-            status = "notComplete"
-        case .inReview:
-            status = "inReview"
-        }
-        
-        try await dataRef.updateData(["completionStatus": status])
-    }
-    
-    // MARK: - User Functions
-    
-    /// Uploads a task to Firebase.
-    ///
-    /// ```
-    /// // Data must be structured as in the function `taskFromData` #ihateduplicatedcode
-    /// ```
-    ///
-    /// - Parameters:
-    ///     - taskData: all the data for the task.
-    ///
-    /// - Returns: A greeting for the given `subject`.
-    public func uploadTask(taskData: [String : Any], mediaData: [MediaView], completion: @escaping (Result<String, Error>) -> Void) {
-        
-        let dbRef = db.collection("tasks")
-        var ref: DocumentReference? = nil
-        
-        ref = dbRef.addDocument(data: taskData) { error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let taskUID = ref?.documentID { // Once task data has been uploaded, upload all task media.
-                
-                let mediaArray = self.uploadMedia(taskUID: taskUID, parentFolder: .jobs, mediaData: mediaData)
-                
-                let newTask = CustomFunctions.shared.taskFromData(
-                    for: taskUID,
-                    data: taskData,
-                    media: mediaArray
-                )
-                DataManager.shared.customerMyTasks[taskUID] = newTask
-                completion(.success(taskUID))
-            }
-        }
-    }
-    
-    /// Asynchronously uploads media (images and videos) associated with a task to Firebase Storage.
-    ///
-    /// - Parameters:
-    ///   - taskUID: The unique identifier for the task to which the media belongs.
-    ///   - mediaData: An array of `MediaView` objects containing the media to be uploaded.
-    /// - Returns: An array of `PlayableMediaView` objects containing information about the uploaded media.
-    /// - Throws: An error if any of the media uploads fail.
-    func uploadMedia(taskUID: String, parentFolder: StorageFolder, mediaData: [MediaView]) -> [PlayableMediaView] {
-        var mediaArray: [PlayableMediaView] = []
-        
-        let containerId: String
-        switch parentFolder {
-        case .completion:
-            containerId = "completion"
-        case .jobs:
-            containerId = "jobs"
-        case .profile:
-            containerId = "profile"
-        }
-        
-        for media in mediaData {
-            if media != mediaData.first {
-                if let videoURL = media.videoURL {
-                    print("uploading a video!!!!")
-                    let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(
-                        parentFolder: containerId,
-                        containerId: taskUID,
-                        videoURL: videoURL,
-                        thumbnail: media.mediaImageView.image
-                    )
-                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
-                    mediaArray.append(playableMediaView)
-                } else if let imageToUpload = media.mediaImageView.image {
-                    FirestoreHandler.shared.uploadImageToFirebase(
-                        parentFolder: containerId,
-                        containerId: taskUID,
-                        image: imageToUpload
-                    )
-                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
-                    mediaArray.append(playableMediaView)
-                }
-            }
-        }
-        
-        return mediaArray
-    }
-    
-    /// Fetches a specific `Task` for a user.
-    ///
-    /// - Parameters:
-    ///     - taskUID: The UID of the task to fetch.
-    /// - Returns: A `TaskClass` object representing the task.
-    /// - Throws: An error if the task is not found or if there are issues during the fetching process.
-    func fetchCustomerTask(taskUID: String) async throws -> TaskClass {
-        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
-        let taskRef = db.collection("users").document(currentUserUID).collection("jobs").document(taskUID)
-        
-        do {
-            let documentSnapshot = try await taskRef.getDocument()
-            
-            guard documentSnapshot.exists else {
-                throw NSError(domain: "Task not found", code: 404, userInfo: nil)
-            }
-            
-            let data = documentSnapshot.data() ?? [:]
-            print(data)
-            let mediaData = try await fetchJobMedia(taskId: documentSnapshot.documentID, parentFolder: .jobs)
-            
-            let task = CustomFunctions.shared.taskFromData(
-                for: documentSnapshot.documentID,
-                data: data,
-                media: mediaData
-            )
-            
-            return task
-        } catch {
-            throw error
-        }
-    }
-
-    
-    /// Fetches `[Task]` for either:  a user `userId`, a helper `helperId`, or all available tasks (both are nil).
-    ///
-    /// Only to be called in DataManager to set its data when the app is created.
-    ///
-    /// - Parameters:
-    ///     - kind: An enum that is either a `user`, `helper`, or `other` (for all tasks)
-    ///     - helperId?: The UID of the helper you want to fetch jobs for.
-    ///     - completion: A completion handler that will return `([Task], Error)` when done.
-    ///
-    func fetchTasks(_ kind: UserKind) async throws -> [TaskClass] {
-        
-        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
-        
-        // Cases depending on what tasks you want to fetch.
-        var dataRef = db.collection("tasks")
-        var query: Query? // Query for data ref.
-        
-        if kind == .user {
-            dataRef = db.collection("users").document(currentUserUID).collection("jobs")
-        } else if kind == .helper {
-            query = db.collectionGroup("jobs").whereField("helperUID", isEqualTo: currentUserUID)
-        }
-        
-        do {
-            let querySnapshot = try await (query != nil ? query!.getDocuments() : dataRef.getDocuments())
-            
-            var tasks: [TaskClass] = [] // Returns array of tasks.
-                  
-            for document in querySnapshot.documents {
-                let data = document.data() // All data.
-                
-                // NO LONGER FETCHING MEDIA
-                
-                let task = CustomFunctions.shared.taskFromData(
-                    for: document.documentID,
-                    data: data,
-                    media: nil
-                )
-                tasks.append(task)
-            }
-            
-            return tasks
-        } catch {
-            throw error
-        }
-    }
-    
-    // MARK: - Helper Functions
-    public func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) {
-        let db = Firestore.firestore()
-        let dataRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
-        
-        let statusString: String
-        switch completionStatus {
-        case .complete:
-            statusString = "complete"
-        case .notComplete:
-            statusString = "notComplete"
-        case .inReview:
-            statusString = "inReview"
-        }
-        
-        dataRef.updateData(["completionStatus": statusString]) { error in
-            if let error = error {
-                print("Error updating task completion status: \(error.localizedDescription)")
-            } else {
-                print("Task completion status successfully updated to \(statusString)")
-            }
-        }
-    }
-    
+    // MARK: - HELPER: Assign
     public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping (Error?) -> Void) {
         let taskRef = db.collection("tasks").document(jobId)
         let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
         var task = DataManager.shared.helperAvailableTasks[jobId]!
         task.helperUID = helperUID
-
+        
         taskRef.getDocument { (document, error) in
             guard let document = document, document.exists, let taskData = document.data() else {
                 completion(error)
                 return
             }
-
+            
             jobRef.setData(taskData) { error in
                 guard error == nil else {
                     completion(error)
                     return
                 }
-
+                
                 taskRef.delete { error in
                     guard error == nil else {
                         completion(error)
                         return
                     }
-
+                    
                     jobRef.updateData(["helperUID": helperUID]) { error in
                         if let error = error {
                             completion(error)
                             return
                         }
-
+                        
                         DataManager.shared.helperMyTasks[jobId] = task
                         DataManager.shared.helperAvailableTasks[jobId] = nil
                         completion(nil)
@@ -340,8 +84,8 @@ class FirestoreHandler {
             }
         }
     }
-
     
+    // MARK: - HELPER: Fetch
     /// Fetches a `Helper`object for a given `helperUID`.
     ///
     /// It is called in FetchJobs.
@@ -380,28 +124,9 @@ class FirestoreHandler {
             throw error
         }
     }
-
-    func deleteTask(taskUID: String, userUID: String, collection: DataCollection) async throws {
-        let taskRef: DocumentReference
-        switch collection {
-        case .helpers:
-            throw "No tasks under the collection: 'helpers'."
-        case .users:
-            taskRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
-        case .tasks:
-            taskRef = db.collection("tasks").document(taskUID)
-        }
-        
-        do {
-            try await taskRef.delete()
-        } catch {
-            print("Error deleting task: \(error)")
-            throw error
-        }
-    }
-
     
-    // MARK: - Images & Videos
+    
+    // MARK: - MEDIA: Upload
     /// Uploads image to Firebase.
     ///
     /// > Warning: the ``imageUID`` is used separately for uploading video thumbnails, do not add a value here!
@@ -453,28 +178,54 @@ class FirestoreHandler {
         return uniqueUID
     }
     
-    /// Fetches an image from Firebase storage given a `StorageReference`
+    /// Asynchronously uploads media (images and videos) associated with a task to Firebase Storage.
     ///
     /// - Parameters:
-    ///     - from: `StorageReference` where image is held.
-    ///
-    /// - Returns: A greeting for the given `subject`.
-    func fetchFirebaseImage(from item: StorageReference) async throws -> UIImage {
-        return try await withCheckedThrowingContinuation { continuation in
-            item.getData(maxSize: 10 * 1024 * 1024) { data, error in
-                if let error = error {
-                    print("Error downloading image data: \(error.localizedDescription)")
-                    continuation.resume(throwing: error)
-                } else if let data = data, let image = UIImage(data: data) {
-                    continuation.resume(returning: image)
-                } else {
-                    continuation.resume(throwing: NSError(domain: "Image data error", code: 0, userInfo: nil))
+    ///   - taskUID: The unique identifier for the task to which the media belongs.
+    ///   - mediaData: An array of `MediaView` objects containing the media to be uploaded.
+    /// - Returns: An array of `PlayableMediaView` objects containing information about the uploaded media.
+    /// - Throws: An error if any of the media uploads fail.
+    func uploadMedia(taskUID: String, parentFolder: StorageFolder, mediaData: [MediaView]) -> [PlayableMediaView] {
+        var mediaArray: [PlayableMediaView] = []
+        
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+        
+        for media in mediaData {
+            if media != mediaData.first {
+                if let videoURL = media.videoURL {
+                    print("uploading a video!!!!")
+                    let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(
+                        parentFolder: containerId,
+                        containerId: taskUID,
+                        videoURL: videoURL,
+                        thumbnail: media.mediaImageView.image
+                    )
+                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
+                    mediaArray.append(playableMediaView)
+                } else if let imageToUpload = media.mediaImageView.image {
+                    FirestoreHandler.shared.uploadImageToFirebase(
+                        parentFolder: containerId,
+                        containerId: taskUID,
+                        image: imageToUpload
+                    )
+                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
+                    mediaArray.append(playableMediaView)
                 }
             }
         }
+        
+        return mediaArray
     }
     
-    // MARK: - Fetch Media Function
+    // MARK: - MEDIA: Fetch
     /// Fetches all the media for a particular job, given a taskUID.
     ///
     /// - Parameters:
@@ -534,7 +285,194 @@ class FirestoreHandler {
             throw error
         }
     }
-
+    
+    /// Fetches an image from Firebase storage given a `StorageReference`
+    ///
+    /// - Parameters:
+    ///     - from: `StorageReference` where image is held.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    func fetchFirebaseImage(from item: StorageReference) async throws -> UIImage {
+        return try await withCheckedThrowingContinuation { continuation in
+            item.getData(maxSize: 10 * 1024 * 1024) { data, error in
+                if let error = error {
+                    print("Error downloading image data: \(error.localizedDescription)")
+                    continuation.resume(throwing: error)
+                } else if let data = data, let image = UIImage(data: data) {
+                    continuation.resume(returning: image)
+                } else {
+                    continuation.resume(throwing: NSError(domain: "Image data error", code: 0, userInfo: nil))
+                }
+            }
+        }
+    }
+    
+    // MARK: - TASK: Create
+    /// Uploads a task to Firebase.
+    ///
+    /// ```
+    /// // Data must be structured as in the function `taskFromData` #ihateduplicatedcode
+    /// ```
+    ///
+    /// - Parameters:
+    ///     - taskData: all the data for the task.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    public func uploadTask(taskData: [String : Any], mediaData: [MediaView], completion: @escaping (Result<String, Error>) -> Void) {
+        
+        let dbRef = db.collection("tasks")
+        var ref: DocumentReference? = nil
+        
+        ref = dbRef.addDocument(data: taskData) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else if let taskUID = ref?.documentID { // Once task data has been uploaded, upload all task media.
+                
+                let mediaArray = self.uploadMedia(taskUID: taskUID, parentFolder: .jobs, mediaData: mediaData)
+                
+                let newTask = CustomFunctions.shared.taskFromData(
+                    for: taskUID,
+                    data: taskData,
+                    media: mediaArray
+                )
+                DataManager.shared.customerMyTasks[taskUID] = newTask
+                completion(.success(taskUID))
+            }
+        }
+    }
+    
+    // MARK: - TASK: Fetch
+    /// Fetches `[Task]` for either:  a user `userId`, a helper `helperId`, or all available tasks (both are nil).
+    ///
+    /// Only to be called in DataManager to set its data when the app is created.
+    ///
+    /// - Parameters:
+    ///     - kind: An enum that is either a `user`, `helper`, or `other` (for all tasks)
+    ///     - helperId?: The UID of the helper you want to fetch jobs for.
+    ///     - completion: A completion handler that will return `([Task], Error)` when done.
+    ///
+    func fetchTasks(_ kind: UserKind) async throws -> [TaskClass] {
+        
+        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
+        
+        // Cases depending on what tasks you want to fetch.
+        var dataRef = db.collection("tasks")
+        var query: Query? // Query for data ref.
+        
+        if kind == .user {
+            dataRef = db.collection("users").document(currentUserUID).collection("jobs")
+        } else if kind == .helper {
+            query = db.collectionGroup("jobs").whereField("helperUID", isEqualTo: currentUserUID)
+        }
+        
+        do {
+            let querySnapshot = try await (query != nil ? query!.getDocuments() : dataRef.getDocuments())
+            
+            var tasks: [TaskClass] = [] // Returns array of tasks.
+            
+            for document in querySnapshot.documents {
+                let data = document.data() // All data.
+                
+                // NO LONGER FETCHING MEDIA
+                
+                let task = CustomFunctions.shared.taskFromData(
+                    for: document.documentID,
+                    data: data,
+                    media: nil
+                )
+                tasks.append(task)
+            }
+            
+            return tasks
+        } catch {
+            throw error
+        }
+    }
+    
+    /// Fetches a specific `Task` for a user.
+    ///
+    /// - Parameters:
+    ///     - taskUID: The UID of the task to fetch.
+    /// - Returns: A `TaskClass` object representing the task.
+    /// - Throws: An error if the task is not found or if there are issues during the fetching process.
+    func fetchCustomerTask(taskUID: String) async throws -> TaskClass {
+        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
+        let taskRef = db.collection("users").document(currentUserUID).collection("jobs").document(taskUID)
+        
+        do {
+            let documentSnapshot = try await taskRef.getDocument()
+            
+            guard documentSnapshot.exists else {
+                throw NSError(domain: "Task not found", code: 404, userInfo: nil)
+            }
+            
+            let data = documentSnapshot.data() ?? [:]
+            print(data)
+            let mediaData = try await fetchJobMedia(taskId: documentSnapshot.documentID, parentFolder: .jobs)
+            
+            let task = CustomFunctions.shared.taskFromData(
+                for: documentSnapshot.documentID,
+                data: data,
+                media: mediaData
+            )
+            
+            return task
+        } catch {
+            throw error
+        }
+    }
+    
+    // MARK: - TASK: Update
+    /// Updates the completion status of a task in Firestore.
+    ///
+    /// - Parameters:
+    ///   - userUID: The unique identifier of the user.
+    ///   - taskUID: The unique identifier of the task.
+    ///   - completionStatus: The new completion status to be set.
+    /// - Throws: An error if the Firestore update fails.
+    public func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) {
+        let db = Firestore.firestore()
+        let dataRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
+        
+        let statusString: String
+        switch completionStatus {
+        case .complete:
+            statusString = "complete"
+        case .notComplete:
+            statusString = "notComplete"
+        case .inReview:
+            statusString = "inReview"
+        }
+        
+        dataRef.updateData(["completionStatus": statusString]) { error in
+            if let error = error {
+                print("Error updating task completion status: \(error.localizedDescription)")
+            } else {
+                print("Task completion status successfully updated to \(statusString)")
+            }
+        }
+    }
+    
+    // MARK: - TASK: Delete
+    func deleteTask(taskUID: String, userUID: String, collection: DataCollection) async throws {
+        let taskRef: DocumentReference
+        switch collection {
+        case .helpers:
+            throw "No tasks under the collection: 'helpers'."
+        case .users:
+            taskRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
+        case .tasks:
+            taskRef = db.collection("tasks").document(taskUID)
+        }
+        
+        do {
+            try await taskRef.delete()
+        } catch {
+            print("Error deleting task: \(error)")
+            throw error
+        }
+    }
+    
     // MARK: - Other Functions
     public func editNames(userUID: String, firstName: String, lastName: String) {
         

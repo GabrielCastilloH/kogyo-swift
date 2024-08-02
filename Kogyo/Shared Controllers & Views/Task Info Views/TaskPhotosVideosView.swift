@@ -6,15 +6,20 @@
 //
 
 import UIKit
+import WebKit
 
 class TaskPhotosVideosView: UIView {
     // UIView responsible for presenting task media.
-    
     
     // MARK: - Variables
     let cf = CustomFunctions()
     
     // MARK: - UI Components
+    let webView: WKWebView = {
+        let wV = WKWebView()
+        return wV
+    }()
+    
     private let mediaBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants().darkWhiteColor
@@ -42,11 +47,20 @@ class TaskPhotosVideosView: UIView {
         return stackView
     }()
     
-    private let loadingView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .red
-        view.layer.cornerRadius = 10
-        return view
+//    private let webView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .red
+//        view.layer.cornerRadius = 10
+//        return view
+//    }()
+    
+    private let noMediaLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.text = "No Photos or Videos Uploaded"
+        return label
     }()
     
     
@@ -63,17 +77,21 @@ class TaskPhotosVideosView: UIView {
     
     // MARK: - UI Setup
     public func setLoading(_ isLoading: Bool) {
-        self.bringSubviewToFront(loadingView)
+        self.bringSubviewToFront(webView)
         if isLoading {
-            self.loadingView.isHidden = false
+            self.webView.isHidden = false
         } else {
-            self.loadingView.isHidden = true
+            self.webView.isHidden = true
         }
     }
     
     private func setupUI() {
-        self.addSubview(loadingView)
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        guard let loadingAnimationUrl = URL(string: "https://gabrielcastilloh.github.io/codepen_animation/redirecting_loader.html")
+        else { return }
+        webView.load(URLRequest(url: loadingAnimationUrl))
+        
+        self.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
         
         let photoVideoTitle = cf.createFormLabel(for: "Photos & Videos")
         
@@ -88,6 +106,9 @@ class TaskPhotosVideosView: UIView {
         
         scrollView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(noMediaLabel)
+        noMediaLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             photoVideoTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
@@ -108,22 +129,31 @@ class TaskPhotosVideosView: UIView {
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
             
-            loadingView.topAnchor.constraint(equalTo: mediaBackgroundView.topAnchor),
-            loadingView.bottomAnchor.constraint(equalTo: mediaBackgroundView.bottomAnchor),
-            loadingView.leadingAnchor.constraint(equalTo: mediaBackgroundView.leadingAnchor, constant: 0),
-            loadingView.trailingAnchor.constraint(equalTo: mediaBackgroundView.trailingAnchor, constant: 0),
+            webView.topAnchor.constraint(equalTo: mediaBackgroundView.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: mediaBackgroundView.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: mediaBackgroundView.leadingAnchor, constant: 0),
+            webView.trailingAnchor.constraint(equalTo: mediaBackgroundView.trailingAnchor, constant: 0),
+            
+            noMediaLabel.centerYAnchor.constraint(equalTo: mediaBackgroundView.centerYAnchor),
+            noMediaLabel.centerXAnchor.constraint(equalTo: mediaBackgroundView.centerXAnchor),
         ])
+        self.noMediaLabel.isHidden = true
     }
     
     // MARK: - Selectors & Functions
     func configureMediaViews(mediaData: [PlayableMediaView], delegate: PlayableMediaViewDelegate) {
-        for media in mediaData {
-            media.delegate = delegate
-            self.stackView.addArrangedSubview(media)
-            
-            NSLayoutConstraint.activate([
-                media.widthAnchor.constraint(equalToConstant: 100),
-            ])
+        if mediaData == [] {
+            self.bringSubviewToFront(noMediaLabel)
+            self.noMediaLabel.isHidden = false
+        } else {
+            for media in mediaData {
+                media.delegate = delegate
+                self.stackView.addArrangedSubview(media)
+                
+                NSLayoutConstraint.activate([
+                    media.widthAnchor.constraint(equalToConstant: 100),
+                ])
+            }
         }
         self.setLoading(false) // finish loading
     }

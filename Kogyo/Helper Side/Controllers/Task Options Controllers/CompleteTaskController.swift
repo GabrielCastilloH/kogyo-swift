@@ -171,17 +171,25 @@ class CompleteTaskController: UIViewController {
             self.taskPhotosVideosView.isHidden = false
             self.cancelButton.isHidden = false
             
-            Task {
-                do {
-                    self.mediaPlayableViews = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.taskUID, parentFolder: .completion)
-                    self.configureMediaViews() // Configure taskphotoviedoesviews
-                } catch {
-                    print("Failed to fetch media for the current task.")
+            // Configure media once the view loads.
+            if let media = selectedTask.completionMedia {
+                self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+            } else {
+                Task {
+                    do {
+                        let media = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.selectedTask.taskUID, parentFolder: .jobs)
+                        self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+                        
+                        // Update DataManager
+                        DataManager.shared.helperMyTasks[self.selectedTask.taskUID]?.completionMedia = media
+                        
+                    } catch {
+                        print("Failed to fetch media for the current task.")
+                    }
                 }
             }
-            
         } else {
-            // If task is not inReview show everything.
+            // If task is not inReview show everything, delete review media.
             self.mediaTitle.isHidden = false
             self.mediaScrollView.isHidden = false
             self.mediaBackgroundView.isHidden = false
@@ -189,6 +197,8 @@ class CompleteTaskController: UIViewController {
             
             self.taskPhotosVideosView.isHidden = true
             self.cancelButton.isHidden = true
+            
+            
         }
     }
     
@@ -235,19 +245,6 @@ class CompleteTaskController: UIViewController {
                 AlertManager.showBasicAlert(on: self, title: "Failed", message: "The task could not be marked as not complete. Please check your internet and try again.")
             }
         }
-    }
-    
-    // TODO: Figure out how to only code this once.
-    func configureMediaViews() {
-        for media in self.mediaPlayableViews {
-            media.delegate = self
-            self.taskPhotosVideosView.stackView.addArrangedSubview(media)
-            
-            NSLayoutConstraint.activate([
-                media.widthAnchor.constraint(equalToConstant: 100),
-            ])
-        }
-        taskPhotosVideosView.setLoading(false)
     }
     
     func presentMyTasksController() {
