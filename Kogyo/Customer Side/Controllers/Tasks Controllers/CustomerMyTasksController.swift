@@ -92,6 +92,14 @@ class CustomerMyTasksController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.navigationItem.title = "Current Jobs"
+        
+        let historyButton = UIBarButtonItem(image: UIImage(systemName: "clock"), style: .plain, target: self, action: #selector(showHistory))
+        self.navigationItem.rightBarButtonItem = historyButton
+    }
+
+    @objc private func showHistory() {
+        let oldTasksController = CustomerOldTasksController()
+        self.navigationController?.pushViewController(oldTasksController, animated: true)
     }
     
     
