@@ -17,6 +17,7 @@ class CustomerTaskInfoController: UIViewController {
     
     
     // MARK: - UI Components
+    var jobHelperInfoView: JobHelperInfoView
     var taskPhotosVideosView = TaskPhotosVideosView()
     
     private let dateAddedLabel: UILabel = {
@@ -30,10 +31,22 @@ class CustomerTaskInfoController: UIViewController {
         return label
     }()
     
+    lazy var reviewCompletionBtn: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Review Completion", for: .normal)
+        button.backgroundColor = UIColor(red: 0.10, green: 0.50, blue: 0.35, alpha: 1.00)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(didTapReviewCompletionBtn), for: .touchUpInside)
+        return button
+    }()
+    
     
     // MARK: - Life Cycle
     init(for job: TaskClass, jobUID: String) {
         self.selectedTask = job
+        self.jobHelperInfoView = JobHelperInfoView(for: job)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -76,6 +89,7 @@ class CustomerTaskInfoController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
+        self.toggleCompletionView()
     }
     
     // MARK: - UI Setup
@@ -85,14 +99,23 @@ class CustomerTaskInfoController: UIViewController {
         self.navigationItem.title = self.selectedTask.kind
     }
     
+    private func toggleCompletionView() {
+        if self.selectedTask.completionStatus == .inReview {
+            self.jobHelperInfoView.isHidden = true // This is called after setup ui.
+            self.reviewCompletionBtn.isHidden = false
+        } else {
+            self.jobHelperInfoView.isHidden = false
+            self.reviewCompletionBtn.isHidden = true
+        }
+    }
+    
     private func setupUI() {
         self.view.addSubview(dateAddedLabel)
         dateAddedLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let jobQuickInfoView = JobQuickInfoView(for: self.selectedTask)
         let jobDescriptionView = JobDescriptionView(for: self.selectedTask)
-        
-        let jobHelperInfoView = JobHelperInfoView(for: self.selectedTask)
+        jobHelperInfoView = JobHelperInfoView(for: self.selectedTask)
         
         self.view.addSubview(jobQuickInfoView)
         jobQuickInfoView.translatesAutoresizingMaskIntoConstraints = false
@@ -111,6 +134,9 @@ class CustomerTaskInfoController: UIViewController {
         
         self.view.addSubview(jobHelperInfoView)
         jobHelperInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(reviewCompletionBtn)
+        reviewCompletionBtn.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             dateAddedLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
@@ -137,7 +163,19 @@ class CustomerTaskInfoController: UIViewController {
             jobHelperInfoView.heightAnchor.constraint(equalToConstant: 250),
             jobHelperInfoView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobHelperInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            
+            reviewCompletionBtn.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
+            reviewCompletionBtn.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            reviewCompletionBtn.widthAnchor.constraint(equalToConstant: 200),
+            reviewCompletionBtn.heightAnchor.constraint(equalToConstant: 50),
         ])
+    }
+    
+    // MARK: - Selectors & Functions
+    @objc func didTapReviewCompletionBtn() {
+        let completeController = CustomerCompleteTaskController(selectedTaskUID: self.selectedTask.taskUID)
+        completeController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(completeController, animated: true)
     }
 }
 

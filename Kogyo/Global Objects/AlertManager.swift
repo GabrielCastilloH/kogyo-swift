@@ -116,7 +116,7 @@ extension AlertManager {
     
     public static func showCancelAlertCustomer(on vc: CustomerMyTasksController, helper: Helper, task: TaskClass, completion: @escaping () -> Void) {
         let title = "Task Canceled"
-        let message = "\(helper.firstName) \(helper.lastName) has canceled your \(task.kind) task: \(task.description.prefix(40))... If you'd like to find another helper click \"Find Helper\" below or go to your task history."
+        let message = "\(helper.firstName) \(helper.lastName) has canceled your \(task.kind) task: \(task.description.prefix(60))... If you'd like to find another helper click \"Find Helper\" below or go to your task history."
         
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -149,6 +149,26 @@ extension AlertManager {
     public static func showNameChangedAlert(on vc: UIViewController) {
         showBasicAlert(on: vc, title: "Name Changed", message: "Your name was successfully changed!")
     }
+    
+    public static func showMarkedCompleteAlert(on vc: CustomerMyTasksController, task: TaskClass, completion: @escaping () -> Void) {
+        let title = "Task Marked as Complete"
+        let message = "The \(task.kind) task: \(task.description.prefix(60))... was marked as complete."
+        
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let findHelperAction = UIAlertAction(title: "Review Task", style: .default) { _ in
+                vc.reviewTask(task: task)
+                completion()
+            }
+            alertController.addAction(findHelperAction)
+            let cancelAction = UIAlertAction(title: "Dismiss", style: .cancel) { _ in
+                completion()
+            }
+            alertController.addAction(cancelAction)
+            vc.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 

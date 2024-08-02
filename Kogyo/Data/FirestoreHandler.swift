@@ -392,13 +392,11 @@ class FirestoreHandler {
     ///     - helperId?: The UID of the helper you want to fetch jobs for.
     ///     - completion: A completion handler that will return `([Task], Error)` when done.
     ///
-    func fetchTasks(_ kind: UserKind) async throws -> [TaskClass] {
+    func fetchTasks(_ kind: UserKind) async throws -> ([TaskClass], [TaskClass]) {
+        let currentUserUID = DataManager.shared.currentUser!.userUID
         
-        let currentUserUID = DataManager.shared.currentUser!.userUID // Runs after data is loaded.
-        
-        // Cases depending on what tasks you want to fetch.
         var dataRef = db.collection("tasks")
-        var query: Query? // Query for data ref.
+        var query: Query?
         
         if kind == .user {
             dataRef = db.collection("users").document(currentUserUID).collection("jobs")
@@ -409,26 +407,33 @@ class FirestoreHandler {
         do {
             let querySnapshot = try await (query != nil ? query!.getDocuments() : dataRef.getDocuments())
             
-            var tasks: [TaskClass] = [] // Returns array of tasks.
+            var notCompleteTasks: [TaskClass] = []
+            var completeTasks: [TaskClass] = []
             
             for document in querySnapshot.documents {
-                let data = document.data() // All data.
-                
-                // NO LONGER FETCHING MEDIA
+                let data = document.data()
                 
                 let task = CustomFunctions.shared.taskFromData(
                     for: document.documentID,
                     data: data,
                     media: nil
                 )
-                tasks.append(task)
+                
+                if let completionStatus = data["completionStatus"] as? String {
+                    if completionStatus == "complete" {
+                        completeTasks.append(task)
+                    } else {
+                        notCompleteTasks.append(task)
+                    }
+                }
             }
             
-            return tasks
+            return (notCompleteTasks, completeTasks)
         } catch {
             throw error
         }
     }
+
     
     /// Fetches a specific `Task` for a user.
     ///
@@ -485,6 +490,8 @@ class FirestoreHandler {
         }
         
         try await dataRef.updateData(["completionStatus": status])
+        
+        // Update DataManager.
     }
     
     // MARK: - TASK: Delete

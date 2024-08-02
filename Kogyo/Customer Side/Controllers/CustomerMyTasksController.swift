@@ -136,11 +136,31 @@ class CustomerMyTasksController: UIViewController {
             }
             
             for documentChange in querySnapshot.documentChanges {
+                let document = documentChange.document
+                let taskUID = document.documentID
+                
                 if documentChange.type == .removed {
-                    let taskUID = documentChange.document.documentID
                     if let deletedTask = DataManager.shared.customerMyTasks[taskUID] {
                         DataManager.shared.customerMyTasks[taskUID] = nil
                         DataManager.shared.deletedJobs.append(deletedTask)
+                    }
+                } else if documentChange.type == .modified {
+                    if let completionStatus = document.get("completionStatus") as? String {
+                        if completionStatus == "inReview" {
+                            // Update DataManager.
+                            var updatedTask = DataManager.shared.customerMyTasks[taskUID]!
+                            updatedTask.completionStatus = .inReview
+                            DataManager.shared.customerMyTasks[taskUID] = updatedTask
+                            // Show alert
+                            AlertManager.showMarkedCompleteAlert(on: self, task: updatedTask) { }
+                        } else if completionStatus == "notComplete" {
+                            // Update DataManager.
+                            var updatedTask = DataManager.shared.customerMyTasks[taskUID]!
+                            updatedTask.completionStatus = .notComplete
+                            DataManager.shared.customerMyTasks[taskUID] = updatedTask
+                        }
+                        // Reload data.
+                        self.reloadTaskData()
                     }
                 }
             }
@@ -162,6 +182,20 @@ class CustomerMyTasksController: UIViewController {
                 self.presentNextAlert()
             }
         }
+    }
+    
+    public func reviewTask(task: TaskClass) {
+        let job = DataManager.shared.customerMyTasks[task.taskUID]!
+        let jobId = job.taskUID
+        
+        let jobInfoController = CustomerTaskInfoController(for: job, jobUID: jobId)
+        
+        if let tasksController = self.navigationController?.viewControllers.first(where: { $0 is CustomerMyTasksController }) {
+            self.navigationController?.popToViewController(tasksController, animated: true)
+        }
+        
+        jobInfoController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(jobInfoController, animated: true)
     }
     
     

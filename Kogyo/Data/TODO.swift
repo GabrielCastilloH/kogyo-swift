@@ -2,9 +2,7 @@
 
 
 
-// TODO: 2. Add ability to complete tasks (need to submit photo proof, must be accepted by BOTH parties).
-// FOR USERS: a listener must be added to when a task is marked as complete. alerts presented as if it was deleted.
-// Then: they should have the ability to review the completion and then accept it.
+
 
 
 // TODO: 4. Add ability to see task history, completed tasks, for the user.
