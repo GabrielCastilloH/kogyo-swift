@@ -307,6 +307,47 @@ class FirestoreHandler {
         }
     }
     
+    // MARK: - MEDIA: Delete
+    /// Deletes all media files associated with a specific task from Firebase storage.
+    ///
+    /// This function deletes all media files (such as images and videos) stored under a specified
+    /// task ID and parent folder in Firebase storage.
+    ///
+    /// - Parameters:
+    ///   - taskId: A unique identifier for the task whose media files are to be deleted.
+    ///   - parentFolder: The parent folder under which the media files are stored. This can be
+    ///     one of `.completion`, `.jobs`, or `.profile`.
+    ///
+    /// - Throws: An error if there is an issue listing or deleting the files in Firebase storage.
+    ///
+    func deleteMedia(taskId: String, parentFolder: StorageFolder) async throws {
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+        
+        let storageRef = Storage.storage().reference().child("\(containerId)/\(taskId)/")
+        
+        do {
+            let result = try await storageRef.listAll()
+            
+            for item in result.items {
+                try await item.delete()
+            }
+            
+            print("All media files for task \(taskId) in \(containerId) have been deleted.")
+        } catch {
+            print("Error deleting files: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
+    
     // MARK: - TASK: Create
     /// Uploads a task to Firebase.
     ///
@@ -430,27 +471,20 @@ class FirestoreHandler {
     ///   - taskUID: The unique identifier of the task.
     ///   - completionStatus: The new completion status to be set.
     /// - Throws: An error if the Firestore update fails.
-    public func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) {
-        let db = Firestore.firestore()
+    func updateTaskCompletion(userUID: String, taskUID: String, completionStatus: CompletionStatus) async throws {
         let dataRef = db.collection("users").document(userUID).collection("jobs").document(taskUID)
         
-        let statusString: String
+        let status: String
         switch completionStatus {
         case .complete:
-            statusString = "complete"
+            status = "complete"
         case .notComplete:
-            statusString = "notComplete"
+            status = "notComplete"
         case .inReview:
-            statusString = "inReview"
+            status = "inReview"
         }
         
-        dataRef.updateData(["completionStatus": statusString]) { error in
-            if let error = error {
-                print("Error updating task completion status: \(error.localizedDescription)")
-            } else {
-                print("Task completion status successfully updated to \(statusString)")
-            }
-        }
+        try await dataRef.updateData(["completionStatus": status])
     }
     
     // MARK: - TASK: Delete

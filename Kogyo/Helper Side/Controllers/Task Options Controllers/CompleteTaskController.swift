@@ -70,7 +70,6 @@ class CompleteTaskController: UIViewController {
     init(selectedTaskUID: String) {
         self.taskUID = selectedTaskUID
         self.selectedTask = DataManager.shared.helperMyTasks[self.taskUID]!
-        print(self.selectedTask)
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -80,7 +79,23 @@ class CompleteTaskController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.toggleReviewUI()
+        // Configure media once the view loads.
+        if let media = selectedTask.completionMedia {
+            self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+        } else {
+            Task {
+                do {
+                    let media = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.selectedTask.taskUID, parentFolder: .completion)
+                    self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
+                    
+                    // Update DataManager
+                    DataManager.shared.helperMyTasks[self.selectedTask.taskUID]?.completionMedia = media
+                    
+                } catch {
+                    print("Failed to fetch media for the current task.")
+                }
+            }
+        }
     }
 
     override func viewDidLoad() {
@@ -170,24 +185,6 @@ class CompleteTaskController: UIViewController {
             self.completeButton.isHidden = true
             self.taskPhotosVideosView.isHidden = false
             self.cancelButton.isHidden = false
-            
-            // Configure media once the view loads.
-            if let media = selectedTask.completionMedia {
-                self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
-            } else {
-                Task {
-                    do {
-                        let media = try await FirestoreHandler.shared.fetchJobMedia(taskId: self.selectedTask.taskUID, parentFolder: .jobs)
-                        self.taskPhotosVideosView.configureMediaViews(mediaData: media, delegate: self)
-                        
-                        // Update DataManager
-                        DataManager.shared.helperMyTasks[self.selectedTask.taskUID]?.completionMedia = media
-                        
-                    } catch {
-                        print("Failed to fetch media for the current task.")
-                    }
-                }
-            }
         } else {
             // If task is not inReview show everything, delete review media.
             self.mediaTitle.isHidden = false
@@ -197,8 +194,6 @@ class CompleteTaskController: UIViewController {
             
             self.taskPhotosVideosView.isHidden = true
             self.cancelButton.isHidden = true
-            
-            
         }
     }
     
@@ -240,6 +235,15 @@ class CompleteTaskController: UIViewController {
             do {
                 try await FirestoreHandler.shared.updateTaskCompletion(userUID: userUID, taskUID: taskUID, completionStatus: .notComplete)
                 AlertManager.showBasicAlert(on: self, title: "Task Marked as Not Complete", message: "The task was successfully marked as not complete.")
+                
+                // Delete data & update UI
+                try await FirestoreHandler.shared.deleteMedia(taskId: self.selectedTask.taskUID, parentFolder: .completion)
+                
+                // update DataManager.
+                self.selectedTask.completionStatus = .notComplete
+                self.selectedTask.completionMedia = nil
+                DataManager.shared.helperMyTasks[selectedTask.taskUID] = self.selectedTask
+                
                 self.toggleReviewUI()
             } catch {
                 AlertManager.showBasicAlert(on: self, title: "Failed", message: "The task could not be marked as not complete. Please check your internet and try again.")
