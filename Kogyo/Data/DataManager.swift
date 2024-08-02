@@ -67,6 +67,7 @@ class DataManager {
                     self.helperOldTasks[task.taskUID] = task
                 }
             } else {
+                // Fetch tasks for the user, both not completed and completed
                 let userTasks = try await FirestoreHandler.shared.fetchTasks(.user)
                 let (notCompleteUserTasks, completeUserTasks) = userTasks
                 
@@ -85,12 +86,23 @@ class DataManager {
                 
                 for job in completeUserTasks.sorted(by: { $0.dateAdded > $1.dateAdded }) {
                     self.customerOldTasks[job.taskUID] = job
+                    
+                    // Ensure helpers are fetched for completed tasks as well
+                    if let helperUID = job.helperUID {
+                        do {
+                            let helper = try await FirestoreHandler.shared.fetchHelper(for: helperUID)
+                            self.helpers[helper.helperUID] = helper
+                        } catch {
+                            print("Error fetching helper: \(error.localizedDescription)")
+                        }
+                    }
                 }
             }
         } catch {
             print("Error fetching data: \(error.localizedDescription)")
         }
     }
+
     
     func printValues() {
         print("Current Jobs: \(self.customerMyTasks)")

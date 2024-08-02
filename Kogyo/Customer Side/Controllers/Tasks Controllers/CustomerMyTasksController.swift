@@ -1,6 +1,6 @@
 //
-//  CurrentTasksController.swift
-//  App1
+//  CustomerMyTasksController.swift
+//  Kogyo
 //
 //  Created by Gabriel Castillo on 6/4/24.
 //
@@ -89,13 +89,25 @@ class CustomerMyTasksController: UIViewController {
     }
     
     private func setupNavBar() {
-        self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = "Current Jobs"
+        // Set title attributes for the navigation bar
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)
+        ]
+        self.navigationItem.title = "Current Tasks"
         
-        let historyButton = UIBarButtonItem(image: UIImage(systemName: "clock"), style: .plain, target: self, action: #selector(showHistory))
+        // Create and customize the history button
+        let historyImage = UIImage(systemName: "clock.arrow.2.circlepath")?
+            .withRenderingMode(.alwaysTemplate) // Use template mode for tinting
+        let historyButton = UIBarButtonItem(image: historyImage, style: .plain, target: self, action: #selector(showHistory))
+        
+        // Customize the appearance of the button
+        historyButton.tintColor = .black // Set the icon color to black
         self.navigationItem.rightBarButtonItem = historyButton
+        
+        // Center-align the title and the button
+        self.navigationController?.navigationBar.topItem?.titleView?.tintColor = .black
     }
+
 
     @objc private func showHistory() {
         let oldTasksController = CustomerOldTasksController()

@@ -63,6 +63,8 @@
 		FFD8A9A52C15B9EB009F5C8C /* JobQuickInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A42C15B9EB009F5C8C /* JobQuickInfoView.swift */; };
 		FFD9EFBE2C4F156F0054DCD6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */; };
 		FFF177462C5D6E3E006DC19E /* CustomerCompleteTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF177452C5D6E3E006DC19E /* CustomerCompleteTaskController.swift */; };
+		FFF177492C5D7DD9006DC19E /* CustomerOldTasksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF177482C5D7DD9006DC19E /* CustomerOldTasksController.swift */; };
+		FFF1774B2C5D8741006DC19E /* HelperOldTasksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF1774A2C5D8741006DC19E /* HelperOldTasksController.swift */; };
 		FFF372CF2C16C45A00F8D362 /* TaskClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372CE2C16C45A00F8D362 /* TaskClass.swift */; };
 		FFF372D12C16C59B00F8D362 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D02C16C59B00F8D362 /* LoginController.swift */; };
 		FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF372D22C16C5CE00F8D362 /* AuthHeaderView.swift */; };
@@ -146,6 +148,8 @@
 		FFD8A9A42C15B9EB009F5C8C /* JobQuickInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobQuickInfoView.swift; sourceTree = "<group>"; };
 		FFD9EFBD2C4F156F0054DCD6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FFF177452C5D6E3E006DC19E /* CustomerCompleteTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerCompleteTaskController.swift; sourceTree = "<group>"; };
+		FFF177482C5D7DD9006DC19E /* CustomerOldTasksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerOldTasksController.swift; sourceTree = "<group>"; };
+		FFF1774A2C5D8741006DC19E /* HelperOldTasksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperOldTasksController.swift; sourceTree = "<group>"; };
 		FFF372CE2C16C45A00F8D362 /* TaskClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskClass.swift; sourceTree = "<group>"; };
 		FFF372D02C16C59B00F8D362 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		FFF372D22C16C5CE00F8D362 /* AuthHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHeaderView.swift; sourceTree = "<group>"; };
@@ -209,16 +213,15 @@
 		D0D3A99B2C11B91B000DFFB8 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				FFF177472C5D7DA7006DC19E /* Tasks Controllers */,
 				D0E923DD2C0E8D250070977A /* CustomerHomeController.swift */,
 				D0D3A99E2C11B975000DFFB8 /* CustomerCreateTaskController.swift */,
 				FF86A0142C1E52BE00E5F675 /* MapController.swift */,
-				D0E923EE2C0E98420070977A /* CustomerMyTasksController.swift */,
 				FFD8A9982C15588D009F5C8C /* CustomerLoadingScreenController.swift */,
 				FFD8A9A12C15B99F009F5C8C /* CustomerTaskInfoController.swift */,
 				D0E923F02C0E98670070977A /* CustomerSettingsController.swift */,
 				FF919BCA2C274E0F00A1FE27 /* PhotoViewController.swift */,
 				FF879A4A2C1B2F3D00922513 /* Settings View Controllers */,
-				FFF177452C5D6E3E006DC19E /* CustomerCompleteTaskController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -359,6 +362,16 @@
 			path = "Task Info Views";
 			sourceTree = "<group>";
 		};
+		FFF177472C5D7DA7006DC19E /* Tasks Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FFF177452C5D6E3E006DC19E /* CustomerCompleteTaskController.swift */,
+				D0E923EE2C0E98420070977A /* CustomerMyTasksController.swift */,
+				FFF177482C5D7DD9006DC19E /* CustomerOldTasksController.swift */,
+			);
+			path = "Tasks Controllers";
+			sourceTree = "<group>";
+		};
 		FFF372C92C16C3D000F8D362 /* Authentication Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -459,6 +472,7 @@
 				FF6045762C4184F20063176A /* AcceptedTasksInfoController.swift */,
 				FF1D4CFB2C55D4580034C830 /* HelperTaskOptionsController.swift */,
 				FF1D4CFD2C55DF6B0034C830 /* Task Options Controllers */,
+				FFF1774A2C5D8741006DC19E /* HelperOldTasksController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -581,6 +595,7 @@
 				FF28AF5D2C212BBC00F58D0F /* MediaView.swift in Sources */,
 				D0E923F32C0E98C90070977A /* TabController.swift in Sources */,
 				FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */,
+				FFF1774B2C5D8741006DC19E /* HelperOldTasksController.swift in Sources */,
 				D0E923DE2C0E8D250070977A /* CustomerHomeController.swift in Sources */,
 				FF6045752C417F060063176A /* TaskRequiredEquipmentView.swift in Sources */,
 				FF86A0152C1E52BE00E5F675 /* MapController.swift in Sources */,
@@ -619,6 +634,7 @@
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
 				FF0B76EC2C29CEE70019FD8B /* LogoLoadingController.swift in Sources */,
 				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
+				FFF177492C5D7DD9006DC19E /* CustomerOldTasksController.swift in Sources */,
 				FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */,
 				FF28AF5B2C2129DB00F58D0F /* MediaScrollView.swift in Sources */,
 				FF05FD602C1444E30083B839 /* JobPaymentView.swift in Sources */,
