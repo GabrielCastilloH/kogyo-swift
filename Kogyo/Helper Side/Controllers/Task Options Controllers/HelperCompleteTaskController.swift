@@ -1,5 +1,5 @@
 //
-//  CompleteTaskController.swift
+//  HelperCompleteTaskController.swift
 //  Kogyo
 //
 //  Created by Gabriel Castillo on 7/29/24.
@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 import FirebaseStorage
 
-class CompleteTaskController: UIViewController {
+class HelperCompleteTaskController: UIViewController {
 
     // MARK: - Variables
     var taskUID: String
@@ -260,7 +260,7 @@ class CompleteTaskController: UIViewController {
 }
 
 // MARK: - Media View Functions and Delegate
-extension CompleteTaskController: MediaViewDelegate {
+extension HelperCompleteTaskController: MediaViewDelegate {
     
     public func addMedia(_ image: UIImage?, videoURL: URL? = nil) {
         var newMediaView = MediaView(with: image, and: self.idCounter)
@@ -298,7 +298,7 @@ extension CompleteTaskController: MediaViewDelegate {
     }
 }
 
-extension CompleteTaskController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+extension HelperCompleteTaskController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         let mediaType = info[.mediaType] as? String
@@ -329,7 +329,7 @@ extension CompleteTaskController: UIImagePickerControllerDelegate & UINavigation
     }
 }
 
-extension CompleteTaskController: PlayableMediaViewDelegate {
+extension HelperCompleteTaskController: PlayableMediaViewDelegate {
     func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
         // Play video or zoom in on photo if it is tapped by the user.
         if videoUID == nil {
