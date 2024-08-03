@@ -175,6 +175,7 @@ class CustomerMyTasksController: UIViewController {
                             AlertManager.showMarkedCompleteAlert(on: self, task: updatedTask) { }
                         } else if completionStatus == "notComplete" {
                             // Update DataManager.
+                            print("fetching task!")
                             var updatedTask = DataManager.shared.customerMyTasks[taskUID]!
                             updatedTask.completionStatus = .notComplete
                             DataManager.shared.customerMyTasks[taskUID] = updatedTask

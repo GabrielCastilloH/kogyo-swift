@@ -19,335 +19,6 @@ class FirestoreHandler {
     
     private init() {}
     
-    // MARK: - USER: Fetch
-    public func fetchUser() async throws -> User {
-        guard let userUID = Auth.auth().currentUser?.uid else {
-            throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "No current user"])
-        }
-        
-        let db = Firestore.firestore()
-        let document = db.collection("users").document(userUID)
-        
-        do {
-            let snapshot = try await document.getDocument()
-            
-            guard let snapshotData = snapshot.data(),
-                  let firstName = snapshotData["firstName"] as? String,
-                  let lastName = snapshotData["lastName"] as? String,
-                  let email = snapshotData["email"] as? String else {
-                throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid data in snapshot"])
-            }
-            
-            let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email)
-            return user
-        } catch {
-            throw error
-        }
-    }
-    
-    // MARK: - HELPER: Assign
-    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping (Error?) -> Void) {
-        let taskRef = db.collection("tasks").document(jobId)
-        let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
-        var task = DataManager.shared.helperAvailableTasks[jobId]!
-        task.helperUID = helperUID
-        
-        taskRef.getDocument { (document, error) in
-            guard let document = document, document.exists, let taskData = document.data() else {
-                completion(error)
-                return
-            }
-            
-            jobRef.setData(taskData) { error in
-                guard error == nil else {
-                    completion(error)
-                    return
-                }
-                
-                taskRef.delete { error in
-                    guard error == nil else {
-                        completion(error)
-                        return
-                    }
-                    
-                    jobRef.updateData(["helperUID": helperUID]) { error in
-                        if let error = error {
-                            completion(error)
-                            return
-                        }
-                        
-                        DataManager.shared.helperMyTasks[jobId] = task
-                        DataManager.shared.helperAvailableTasks[jobId] = nil
-                        completion(nil)
-                    }
-                }
-            }
-        }
-    }
-    
-    // MARK: - HELPER: Fetch
-    /// Fetches a `Helper`object for a given `helperUID`.
-    ///
-    /// It is called in FetchJobs.
-    ///
-    ///
-    /// - Parameters:
-    ///     - for: The UID of the helper you want to fetch.
-    ///     - completion: A completion handler that will return `(Helper, Error)` when done.
-    ///
-    func fetchHelper(for helperUID: String) async throws -> Helper {
-        let storageRef = Storage.storage().reference()
-        
-        do {
-            // Fetch helper information from Firestore
-            let helperRef = db.collection("helpers").document(helperUID)
-            let document = try await helperRef.getDocument()
-            
-            guard let data = document.data() else {
-                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Helper not found"])
-            }
-            
-            // Fetch profile image from Firebase Storage
-            let profileRef = storageRef.child("profile/\(helperUID).jpeg")
-            let profileImage = try await self.fetchFirebaseImage(from: profileRef)
-            
-            let helper = Helper(
-                helperUID: helperUID,
-                firstName: data["firstName"] as? String ?? "",
-                lastName: data["lastName"] as? String ?? "",
-                description: data["helperDescription"] as? String ?? "",
-                profileImage: profileImage
-            )
-            
-            return helper
-        } catch {
-            throw error
-        }
-    }
-    
-    
-    // MARK: - MEDIA: Upload
-    /// Uploads image to Firebase.
-    ///
-    /// > Warning: the ``imageUID`` is used separately for uploading video thumbnails, do not add a value here!
-    ///
-    /// - Parameters:
-    ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
-    ///     - containerId: the ID of the specific parent folder. Use `taskUID` when storing job data.
-    ///     - image: the image you want to upload as a `UIImage`
-    ///     - imageUID: do not add value. Look at warning!
-    ///
-    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage, imageUID: String?=nil) {
-        guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
-        
-        storageRef.putData(imageData, metadata: nil) { (metadata, error) in
-            if let error = error {
-                print("Error uploading image: \(error.localizedDescription)")
-                return
-            }
-        }
-    }
-    
-    /// Uploads video to Firebase.
-    ///
-    /// - Parameters:
-    ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
-    ///     - containerId: the ID of the specific parent folder. Use `taskUID` when storing job data.
-    ///     - videoURL: the url of the location of the video (in the users device) that you want to upload.
-    ///     - thumbnail: a `UIImage` for the thumbnail of the video.
-    ///
-    /// - Returns: the uniqueUID of the video and the image. They are each .mov and .jpeg respectively to differentiate
-    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL, thumbnail: UIImage?) -> String? {
-        let uniqueUID = UUID().uuidString
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(uniqueUID).mov")
-        
-        self.uploadImageToFirebase(parentFolder: "jobs", containerId: "\(containerId)", image: thumbnail ?? UIImage(named: "Cleaning")!, imageUID: uniqueUID)
-        
-        guard let videoData = try? Data(contentsOf: videoURL) else {
-            print("Error fetching data from video URL.")
-            return nil
-        }
-        
-        storageRef.putData(videoData) { metadata, error in
-            guard let _ = metadata, error == nil else { // metadata here if you would like to see it.
-                print("Error uploading data to firebase storage.")
-                return
-            }
-        }
-        return uniqueUID
-    }
-    
-    /// Asynchronously uploads media (images and videos) associated with a task to Firebase Storage.
-    ///
-    /// - Parameters:
-    ///   - taskUID: The unique identifier for the task to which the media belongs.
-    ///   - mediaData: An array of `MediaView` objects containing the media to be uploaded.
-    /// - Returns: An array of `PlayableMediaView` objects containing information about the uploaded media.
-    /// - Throws: An error if any of the media uploads fail.
-    func uploadMedia(taskUID: String, parentFolder: StorageFolder, mediaData: [MediaView]) -> [PlayableMediaView] {
-        var mediaArray: [PlayableMediaView] = []
-        
-        let containerId: String
-        switch parentFolder {
-        case .completion:
-            containerId = "completion"
-        case .jobs:
-            containerId = "jobs"
-        case .profile:
-            containerId = "profile"
-        }
-        
-        for media in mediaData {
-            if media != mediaData.first {
-                if let videoURL = media.videoURL {
-                    print("uploading a video!!!!")
-                    let videoUID = FirestoreHandler.shared.uploadVideoToFirebase(
-                        parentFolder: containerId,
-                        containerId: taskUID,
-                        videoURL: videoURL,
-                        thumbnail: media.mediaImageView.image
-                    )
-                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: videoUID)
-                    mediaArray.append(playableMediaView)
-                } else if let imageToUpload = media.mediaImageView.image {
-                    FirestoreHandler.shared.uploadImageToFirebase(
-                        parentFolder: containerId,
-                        containerId: taskUID,
-                        image: imageToUpload
-                    )
-                    let playableMediaView = PlayableMediaView(with: media.media, videoUID: nil)
-                    mediaArray.append(playableMediaView)
-                }
-            }
-        }
-        
-        return mediaArray
-    }
-    
-    // MARK: - MEDIA: Fetch
-    /// Fetches all the media for a particular job, given a taskUID.
-    ///
-    /// - Parameters:
-    ///     - jobId: the unique identifier of the job for which you'd like to fetch the media for.
-    ///
-    /// - Returns: `[PlayableMediaView]` through a completion handler. Can throw.
-    func fetchJobMedia(taskId: String, parentFolder: StorageFolder) async throws -> [PlayableMediaView] {
-        let containerId: String
-        switch parentFolder {
-        case .completion:
-            containerId = "completion"
-        case .jobs:
-            containerId = "jobs"
-        case .profile:
-            containerId = "profile"
-        }
-        
-        let storageRef = Storage.storage().reference().child("\(containerId)/\(taskId)/")
-        var mediaData: [PlayableMediaView] = []
-        
-        do {
-            let result = try await storageRef.listAll()
-            
-            var fileNames: [String] = []
-            var videoNames: [String] = []
-            
-            for item in result.items {
-                let name = item.name
-                let fileName = (name as NSString).deletingPathExtension
-                
-                if fileNames.contains(fileName) {
-                    videoNames.append(fileName)
-                } else {
-                    fileNames.append(fileName)
-                }
-            }
-            
-            for item in result.items {
-                let fileName = item.name
-                let baseName = (fileName as NSString).deletingPathExtension
-                let fileExtension = (fileName as NSString).pathExtension
-                
-                if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
-                    let image = try await fetchFirebaseImage(from: item)
-                    var mediaView = await PlayableMediaView(with: image, videoUID: nil)
-                    
-                    if videoNames.contains(baseName) {
-                        mediaView = await PlayableMediaView(with: image, videoUID: baseName)
-                    }
-                    mediaData.append(mediaView)
-                }
-            }
-            
-            return mediaData
-        } catch {
-            print("Error listing files: \(error.localizedDescription)")
-            throw error
-        }
-    }
-    
-    /// Fetches an image from Firebase storage given a `StorageReference`
-    ///
-    /// - Parameters:
-    ///     - from: `StorageReference` where image is held.
-    ///
-    /// - Returns: A greeting for the given `subject`.
-    func fetchFirebaseImage(from item: StorageReference) async throws -> UIImage {
-        return try await withCheckedThrowingContinuation { continuation in
-            item.getData(maxSize: 10 * 1024 * 1024) { data, error in
-                if let error = error {
-                    print("Error downloading image data: \(error.localizedDescription)")
-                    continuation.resume(throwing: error)
-                } else if let data = data, let image = UIImage(data: data) {
-                    continuation.resume(returning: image)
-                } else {
-                    continuation.resume(throwing: NSError(domain: "Image data error", code: 0, userInfo: nil))
-                }
-            }
-        }
-    }
-    
-    // MARK: - MEDIA: Delete
-    /// Deletes all media files associated with a specific task from Firebase storage.
-    ///
-    /// This function deletes all media files (such as images and videos) stored under a specified
-    /// task ID and parent folder in Firebase storage.
-    ///
-    /// - Parameters:
-    ///   - taskId: A unique identifier for the task whose media files are to be deleted.
-    ///   - parentFolder: The parent folder under which the media files are stored. This can be
-    ///     one of `.completion`, `.jobs`, or `.profile`.
-    ///
-    /// - Throws: An error if there is an issue listing or deleting the files in Firebase storage.
-    ///
-    func deleteMedia(taskId: String, parentFolder: StorageFolder) async throws {
-        let containerId: String
-        switch parentFolder {
-        case .completion:
-            containerId = "completion"
-        case .jobs:
-            containerId = "jobs"
-        case .profile:
-            containerId = "profile"
-        }
-        
-        let storageRef = Storage.storage().reference().child("\(containerId)/\(taskId)/")
-        
-        do {
-            let result = try await storageRef.listAll()
-            
-            for item in result.items {
-                try await item.delete()
-            }
-            
-            print("All media files for task \(taskId) in \(containerId) have been deleted.")
-        } catch {
-            print("Error deleting files: \(error.localizedDescription)")
-            throw error
-        }
-    }
-
-    
     // MARK: - TASK: Create
     /// Uploads a task to Firebase.
     ///
@@ -359,27 +30,38 @@ class FirestoreHandler {
     ///     - taskData: all the data for the task.
     ///
     /// - Returns: A greeting for the given `subject`.
-    public func uploadTask(taskData: [String : Any], mediaData: [MediaView], completion: @escaping (Result<String, Error>) -> Void) {
-        
+    func uploadTask(taskData: [String : Any], mediaData: [MediaView]) async throws -> String {
         let dbRef = db.collection("tasks")
-        var ref: DocumentReference? = nil
-        
-        ref = dbRef.addDocument(data: taskData) { error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let taskUID = ref?.documentID { // Once task data has been uploaded, upload all task media.
-                
-                let mediaArray = self.uploadMedia(taskUID: taskUID, parentFolder: .jobs, mediaData: mediaData)
-                
-                let newTask = CustomFunctions.shared.taskFromData(
-                    for: taskUID,
-                    data: taskData,
-                    media: mediaArray
-                )
-                DataManager.shared.customerMyTasks[taskUID] = newTask
-                completion(.success(taskUID))
+        var modifiedTaskData = taskData
+        modifiedTaskData["mediaUploadComplete"] = false
+
+        let ref: DocumentReference = try await withCheckedThrowingContinuation { continuation in
+            var ref: DocumentReference? = nil
+            ref = dbRef.addDocument(data: modifiedTaskData) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else if let ref = ref {
+                    continuation.resume(returning: ref)
+                } else {
+                    continuation.resume(throwing: NSError(domain: "Unknown error", code: -1, userInfo: nil))
+                }
             }
         }
+
+        let taskUID = ref.documentID
+        let mediaArray = await uploadMedia(taskUID: taskUID, parentFolder: .jobs, mediaData: mediaData)
+
+        let newTask = CustomFunctions.shared.taskFromData(
+            for: taskUID,
+            data: taskData,
+            media: mediaArray
+        )
+        DataManager.shared.customerMyTasks[taskUID] = newTask
+
+        // Update the task document to set mediaUploadComplete to true
+        try await dbRef.document(taskUID).updateData(["mediaUploadComplete": true])
+
+        return taskUID
     }
     
     // MARK: - TASK: Fetch
@@ -510,6 +192,334 @@ class FirestoreHandler {
             try await taskRef.delete()
         } catch {
             print("Error deleting task: \(error)")
+            throw error
+        }
+    }
+    
+    
+    // MARK: - USER: Fetch
+    public func fetchUser() async throws -> User {
+        guard let userUID = Auth.auth().currentUser?.uid else {
+            throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "No current user"])
+        }
+        
+        let db = Firestore.firestore()
+        let document = db.collection("users").document(userUID)
+        
+        do {
+            let snapshot = try await document.getDocument()
+            
+            guard let snapshotData = snapshot.data(),
+                  let firstName = snapshotData["firstName"] as? String,
+                  let lastName = snapshotData["lastName"] as? String,
+                  let email = snapshotData["email"] as? String else {
+                throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid data in snapshot"])
+            }
+            
+            let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email)
+            return user
+        } catch {
+            throw error
+        }
+    }
+    
+    // MARK: - HELPER: Assign
+    public func assignHelper(_ helperUID: String, toJob jobId: String, forUser userId: String, completion: @escaping (Error?) -> Void) {
+        let taskRef = db.collection("tasks").document(jobId)
+        let jobRef = db.collection("users").document(userId).collection("jobs").document(jobId)
+        var task = DataManager.shared.helperAvailableTasks[jobId]!
+        task.helperUID = helperUID
+        
+        taskRef.getDocument { (document, error) in
+            guard let document = document, document.exists, let taskData = document.data() else {
+                completion(error)
+                return
+            }
+            
+            jobRef.setData(taskData) { error in
+                guard error == nil else {
+                    completion(error)
+                    return
+                }
+                
+                taskRef.delete { error in
+                    guard error == nil else {
+                        completion(error)
+                        return
+                    }
+                    
+                    jobRef.updateData(["helperUID": helperUID]) { error in
+                        if let error = error {
+                            completion(error)
+                            return
+                        }
+                        
+                        DataManager.shared.helperMyTasks[jobId] = task
+                        DataManager.shared.helperAvailableTasks[jobId] = nil
+                        completion(nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - HELPER: Fetch
+    /// Fetches a `Helper`object for a given `helperUID`.
+    ///
+    /// It is called in FetchJobs.
+    ///
+    ///
+    /// - Parameters:
+    ///     - for: The UID of the helper you want to fetch.
+    ///     - completion: A completion handler that will return `(Helper, Error)` when done.
+    ///
+    func fetchHelper(for helperUID: String) async throws -> Helper {
+        let storageRef = Storage.storage().reference()
+        
+        do {
+            // Fetch helper information from Firestore
+            let helperRef = db.collection("helpers").document(helperUID)
+            let document = try await helperRef.getDocument()
+            
+            guard let data = document.data() else {
+                throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Helper not found"])
+            }
+            
+            // Fetch profile image from Firebase Storage
+            let profileRef = storageRef.child("profile/\(helperUID).jpeg")
+            let profileImage = try await self.fetchFirebaseImage(from: profileRef)
+            
+            let helper = Helper(
+                helperUID: helperUID,
+                firstName: data["firstName"] as? String ?? "",
+                lastName: data["lastName"] as? String ?? "",
+                description: data["helperDescription"] as? String ?? "",
+                profileImage: profileImage
+            )
+            
+            return helper
+        } catch {
+            throw error
+        }
+    }
+    
+    
+    // MARK: - MEDIA: Upload
+    /// Uploads image to Firebase.
+    ///
+    /// > Warning: the ``imageUID`` is used separately for uploading video thumbnails, do not add a value here!
+    ///
+    /// - Parameters:
+    ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
+    ///     - containerId: the ID of the specific parent folder. Use `taskUID` when storing job data.
+    ///     - image: the image you want to upload as a `UIImage`
+    ///     - imageUID: do not add value. Look at warning!
+    ///
+    func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage, imageUID: String? = nil) async {
+        guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
+        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
+        
+        do {
+            _ = try await storageRef.putDataAsync(imageData)
+        } catch {
+            print("Error uploading image: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Uploads video to Firebase.
+    ///
+    /// - Parameters:
+    ///     - parentFolder: the overarching parent folder for example: `"jobs"` or `"helpers"`
+    ///     - containerId: the ID of the specific parent folder. Use `taskUID` when storing job data.
+    ///     - videoURL: the url of the location of the video (in the users device) that you want to upload.
+    ///     - thumbnail: a `UIImage` for the thumbnail of the video.
+    ///
+    /// - Returns: the uniqueUID of the video and the image. They are each .mov and .jpeg respectively to differentiate
+    func uploadVideoToFirebase(parentFolder: String, containerId: String, videoURL: URL, thumbnail: UIImage?) async -> String? {
+         let uniqueUID = UUID().uuidString
+         let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(uniqueUID).mov")
+         
+         await uploadImageToFirebase(parentFolder: "jobs", containerId: "\(containerId)", image: thumbnail ?? UIImage(named: "Cleaning")!, imageUID: uniqueUID)
+         
+         guard let videoData = try? Data(contentsOf: videoURL) else {
+             print("Error fetching data from video URL.")
+             return nil
+         }
+         
+         do {
+             _ = try await storageRef.putDataAsync(videoData)
+         } catch {
+             print("Error uploading data to firebase storage.")
+             return nil
+         }
+         
+         return uniqueUID
+     }
+    
+    /// Asynchronously uploads media (images and videos) associated with a task to Firebase Storage.
+    ///
+    /// - Parameters:
+    ///   - taskUID: The unique identifier for the task to which the media belongs.
+    ///   - mediaData: An array of `MediaView` objects containing the media to be uploaded.
+    /// - Returns: An array of `PlayableMediaView` objects containing information about the uploaded media.
+    /// - Throws: An error if any of the media uploads fail.
+    func uploadMedia(taskUID: String, parentFolder: StorageFolder, mediaData: [MediaView]) async -> [PlayableMediaView] {
+        var mediaArray: [PlayableMediaView] = []
+
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+
+        for media in mediaData {
+            if media != mediaData.first {
+                if let videoURL = await media.videoURL {
+                    print("uploading a video!!!!")
+                    let videoUID = await FirestoreHandler.shared.uploadVideoToFirebase(
+                        parentFolder: containerId,
+                        containerId: taskUID,
+                        videoURL: videoURL,
+                        thumbnail: media.mediaImageView.image
+                    )
+                    let playableMediaView = await PlayableMediaView(with: media.media, videoUID: videoUID)
+                    mediaArray.append(playableMediaView)
+                } else if let imageToUpload = await media.mediaImageView.image {
+                    await FirestoreHandler.shared.uploadImageToFirebase(
+                        parentFolder: containerId,
+                        containerId: taskUID,
+                        image: imageToUpload
+                    )
+                    let playableMediaView = await PlayableMediaView(with: media.media, videoUID: nil)
+                    mediaArray.append(playableMediaView)
+                }
+            }
+        }
+        return mediaArray
+    }
+    
+    // MARK: - MEDIA: Fetch
+    /// Fetches all the media for a particular job, given a taskUID.
+    ///
+    /// - Parameters:
+    ///     - jobId: the unique identifier of the job for which you'd like to fetch the media for.
+    ///
+    /// - Returns: `[PlayableMediaView]` through a completion handler. Can throw.
+    func fetchJobMedia(taskId: String, parentFolder: StorageFolder) async throws -> [PlayableMediaView] {
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+        
+        let storageRef = Storage.storage().reference().child("\(containerId)/\(taskId)/")
+        var mediaData: [PlayableMediaView] = []
+        
+        do {
+            let result = try await storageRef.listAll()
+            
+            var fileNames: [String] = []
+            var videoNames: [String] = []
+            
+            for item in result.items {
+                let name = item.name
+                let fileName = (name as NSString).deletingPathExtension
+                
+                if fileNames.contains(fileName) {
+                    videoNames.append(fileName)
+                } else {
+                    fileNames.append(fileName)
+                }
+            }
+            
+            for item in result.items {
+                let fileName = item.name
+                let baseName = (fileName as NSString).deletingPathExtension
+                let fileExtension = (fileName as NSString).pathExtension
+                
+                if fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" {
+                    let image = try await fetchFirebaseImage(from: item)
+                    var mediaView = await PlayableMediaView(with: image, videoUID: nil)
+                    
+                    if videoNames.contains(baseName) {
+                        mediaView = await PlayableMediaView(with: image, videoUID: baseName)
+                    }
+                    mediaData.append(mediaView)
+                }
+            }
+            
+            return mediaData
+        } catch {
+            print("Error listing files: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
+    /// Fetches an image from Firebase storage given a `StorageReference`
+    ///
+    /// - Parameters:
+    ///     - from: `StorageReference` where image is held.
+    ///
+    /// - Returns: A greeting for the given `subject`.
+    func fetchFirebaseImage(from item: StorageReference) async throws -> UIImage {
+        return try await withCheckedThrowingContinuation { continuation in
+            item.getData(maxSize: 10 * 1024 * 1024) { data, error in
+                if let error = error {
+                    print("Error downloading image data: \(error.localizedDescription)")
+                    continuation.resume(throwing: error)
+                } else if let data = data, let image = UIImage(data: data) {
+                    continuation.resume(returning: image)
+                } else {
+                    continuation.resume(throwing: NSError(domain: "Image data error", code: 0, userInfo: nil))
+                }
+            }
+        }
+    }
+    
+    // MARK: - MEDIA: Delete
+    /// Deletes all media files associated with a specific task from Firebase storage.
+    ///
+    /// This function deletes all media files (such as images and videos) stored under a specified
+    /// task ID and parent folder in Firebase storage.
+    ///
+    /// - Parameters:
+    ///   - taskId: A unique identifier for the task whose media files are to be deleted.
+    ///   - parentFolder: The parent folder under which the media files are stored. This can be
+    ///     one of `.completion`, `.jobs`, or `.profile`.
+    ///
+    /// - Throws: An error if there is an issue listing or deleting the files in Firebase storage.
+    ///
+    func deleteMedia(taskId: String, parentFolder: StorageFolder) async throws {
+        let containerId: String
+        switch parentFolder {
+        case .completion:
+            containerId = "completion"
+        case .jobs:
+            containerId = "jobs"
+        case .profile:
+            containerId = "profile"
+        }
+        
+        let storageRef = Storage.storage().reference().child("\(containerId)/\(taskId)/")
+        
+        do {
+            let result = try await storageRef.listAll()
+            
+            for item in result.items {
+                try await item.delete()
+            }
+            
+            print("All media files for task \(taskId) in \(containerId) have been deleted.")
+        } catch {
+            print("Error deleting files: \(error.localizedDescription)")
             throw error
         }
     }

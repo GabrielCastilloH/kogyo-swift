@@ -198,13 +198,13 @@ class HelperCompleteTaskController: UIViewController {
     }
     
     // MARK: - Selectors & Functions
-    @objc private func handleComplete() {
+    @objc private func handleComplete() async {
         if self.mediaData.count <= 2 {
             AlertManager.showBasicAlert(on: self, title: "Media Required", message: "You must upload at least 2 photos or videos as proof of task completion.")
         } else {
             
             // Call uploadMedia firestore function. Upload it to: "completion"
-            let mediaArray = FirestoreHandler.shared.uploadMedia(taskUID: selectedTask.taskUID, parentFolder: .completion, mediaData: mediaData)
+            let mediaArray = await FirestoreHandler.shared.uploadMedia(taskUID: selectedTask.taskUID, parentFolder: .completion, mediaData: mediaData)
             
             self.selectedTask.completionMedia = mediaArray // Update the completionMedia on the TaskClass object.
             self.selectedTask.completionStatus = .inReview

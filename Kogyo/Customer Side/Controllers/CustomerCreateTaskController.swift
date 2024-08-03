@@ -251,16 +251,27 @@ class CustomerCreateTaskController: UIViewController {
                 "completionStatus": "notComplete",
             ]
             
-            // Upload task to database.
-            FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData) { result in
-                switch result {
-                case .success(let taskUID):
+            Task {
+                do {
+                    // Upload task to database.
+                    let taskUID = try await FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData)
                     let userUID = DataManager.shared.currentUser!.userUID
                     self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
-                case .failure(let error):
+                } catch {
                     print("Error adding job: \(error.localizedDescription)")
                 }
             }
+//
+//            // Upload task to database.
+//            FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData) { result in
+//                switch result {
+//                case .success(let taskUID):
+//                    let userUID = DataManager.shared.currentUser!.userUID
+//                    self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
+//                case .failure(let error):
+//                    print("Error adding job: \(error.localizedDescription)")
+//                }
+//            }
             
             self.submitJobBtn.isUserInteractionEnabled = false
             self.submitJobBtn.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)

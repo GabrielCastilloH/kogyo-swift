@@ -196,44 +196,39 @@ class HelperDashboardController: UIViewController {
     private func listenForAvailableTasks() {
         let db = Firestore.firestore()
         let taskRef = db.collection("tasks")
-        
+
         taskListener = taskRef.addSnapshotListener { [weak self] querySnapshot, error in
             guard let self = self else { return }
             if let error = error {
                 print("Error listening for task updates: \(error.localizedDescription)")
                 return
             }
-            
+
             guard let querySnapshot = querySnapshot else {
                 print("No snapshot data available")
                 return
             }
-            
+
             for documentChange in querySnapshot.documentChanges {
                 if documentChange.type == .added {
                     let document = documentChange.document
                     let data = document.data()
                     
-                    // Fetch media data asynchronously
-                    Task {
-                        // NOTE: CHANGED THIS TO JOBS! AS PARENT FOLDER
-                        let mediaData = try? await FirestoreHandler.shared.fetchJobMedia(taskId: document.documentID, parentFolder: .jobs) // Fetch media data
-                        
+                    // Only process tasks where mediaUploadComplete is true
+                    if let mediaUploadComplete = data["mediaUploadComplete"] as? Bool, mediaUploadComplete {
                         let newTask = CustomFunctions.shared.taskFromData(
-                            for: document.documentID, 
+                            for: document.documentID,
                             data: data,
-                            media: mediaData ?? []
+                            media: nil
                         )
-                        
+
                         // Update DataManager
                         DataManager.shared.helperAvailableTasks[document.documentID] = newTask
-                        
+
                         // Update local availableTasks and reload the table
-                        // TODO: Set the data manager as the data source for table data!
                         self.availableTasks = Array(DataManager.shared.helperAvailableTasks.values)
                             .sorted { $0.dateAdded > $1.dateAdded }
                         self.availableTasksTable.reloadData()
-                        
                     }
                 } else if documentChange.type == .removed {
                     let taskUID = documentChange.document.documentID
@@ -242,7 +237,7 @@ class HelperDashboardController: UIViewController {
                         .sorted { $0.dateAdded > $1.dateAdded }
                     self.availableTasksTable.reloadData()
                 }
-                
+
                 // Update noTasksLabel visibility
                 self.noTasksLabel.isHidden = self.availableTasks.count > 0
             }

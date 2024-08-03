@@ -1,10 +1,10 @@
 // Good luck my soldier!
 
 // TODO: 5. fix bug with fetching (or uploading videos), where the app thinks its an image.
-// TODO: 6. Fix bug where when a task is posted the photos and videos aren't shown.
-
 // TODO: 6. Add chat feature between customer and helper.
+
 // TODO: 7. Add payment feature between customer & helper (set it up with 10% comission fee later).
+
 // TODO: 8. Setup equipment button.
 // TODO: 9. Find a way to store location in firestore and calculate km away in HelperDashboard.
 // TODO: 10. Setup login as helper or customer
