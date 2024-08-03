@@ -94,9 +94,28 @@ class CustomerTaskInfoController: UIViewController {
     
     // MARK: - UI Setup
     private func setupNavBar() {
-        self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        // Set title attributes for the navigation bar
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)
+        ]
         self.navigationItem.title = self.selectedTask.kind
+
+        // Create and customize the chat button
+        let chatImage = UIImage(systemName: "message")?
+            .withRenderingMode(.alwaysTemplate) // Use template mode for tinting
+        let chatButton = UIBarButtonItem(image: chatImage, style: .plain, target: self, action: #selector(showChat))
+        
+        // Customize the appearance of the button
+        chatButton.tintColor = .black // Set the icon color to black
+        self.navigationItem.rightBarButtonItem = chatButton
+
+        // Center-align the title and the button
+        self.navigationController?.navigationBar.topItem?.titleView?.tintColor = .black
+    }
+
+    // Action method for the chat button
+    @objc private func showChat() {
+        // Handle chat button tap
     }
     
     private func toggleCompletionView() {
