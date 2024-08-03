@@ -317,7 +317,9 @@ class FirestoreHandler {
     ///
     func uploadImageToFirebase(parentFolder: String, containerId: String, image: UIImage, imageUID: String? = nil) async {
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
-        let storageRef = Storage.storage().reference().child("\(parentFolder)/\(containerId)/\(UUID().uuidString).jpeg")
+        
+        let storageRef = Storage.storage().reference()
+            .child("\(parentFolder)/\(containerId)/\(imageUID ?? UUID().uuidString).jpeg")
         
         do {
             _ = try await storageRef.putDataAsync(imageData)
@@ -440,6 +442,8 @@ class FirestoreHandler {
                 }
             }
             
+            print("videosnames:", videoNames)
+            
             for item in result.items {
                 let fileName = item.name
                 let baseName = (fileName as NSString).deletingPathExtension
@@ -450,6 +454,7 @@ class FirestoreHandler {
                     var mediaView = await PlayableMediaView(with: image, videoUID: nil)
                     
                     if videoNames.contains(baseName) {
+                        print("getting video")
                         mediaView = await PlayableMediaView(with: image, videoUID: baseName)
                     }
                     mediaData.append(mediaView)

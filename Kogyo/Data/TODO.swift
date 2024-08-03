@@ -1,6 +1,5 @@
 // Good luck my soldier!
 
-// TODO: 5. fix bug with fetching (or uploading videos), where the app thinks its an image.
 // TODO: 6. Add chat feature between customer and helper.
 
 // TODO: 7. Add payment feature between customer & helper (set it up with 10% comission fee later).
