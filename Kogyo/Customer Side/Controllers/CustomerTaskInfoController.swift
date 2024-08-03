@@ -115,7 +115,9 @@ class CustomerTaskInfoController: UIViewController {
 
     // Action method for the chat button
     @objc private func showChat() {
-        // Handle chat button tap
+        let viewController = ChatViewController()
+        viewController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func toggleCompletionView() {
