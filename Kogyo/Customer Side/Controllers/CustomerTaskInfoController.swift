@@ -93,6 +93,13 @@ class CustomerTaskInfoController: UIViewController {
     }
     
     // MARK: - UI Setup
+    @objc private func showChat() {
+        // This should either open existing conversation, or start a new one.
+        let viewController = ChatViewController(selectedTask: self.selectedTask, isHelper: false)
+        viewController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     private func setupNavBar() {
         // Set title attributes for the navigation bar
         self.navigationController?.navigationBar.titleTextAttributes = [
@@ -111,13 +118,6 @@ class CustomerTaskInfoController: UIViewController {
 
         // Center-align the title and the button
         self.navigationController?.navigationBar.topItem?.titleView?.tintColor = .black
-    }
-
-    // Action method for the chat button
-    @objc private func showChat() {
-        let viewController = ChatViewController()
-        viewController.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func toggleCompletionView() {

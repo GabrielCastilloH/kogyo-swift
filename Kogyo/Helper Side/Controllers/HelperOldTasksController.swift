@@ -125,7 +125,7 @@ extension HelperOldTasksController: UITableViewDelegate, UITableViewDataSource {
         let task = self.oldTasks[indexPath.row]
         let taskId = task.taskUID
         
-        let taskInfoController = AcceptedTasksInfoController(for: task, taskUID: taskId)
+        let taskInfoController = HelperTaskInfoController(for: task, taskUID: taskId)
         
         taskInfoController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(taskInfoController, animated: true)

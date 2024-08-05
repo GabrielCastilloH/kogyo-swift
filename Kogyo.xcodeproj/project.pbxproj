@@ -36,7 +36,7 @@
 		FF45E4B72C161674000F1BE7 /* JobHelperInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */; };
 		FF6045722C4178CB0063176A /* HelperMyTasksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045712C4178CB0063176A /* HelperMyTasksController.swift */; };
 		FF6045752C417F060063176A /* TaskRequiredEquipmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045742C417F060063176A /* TaskRequiredEquipmentView.swift */; };
-		FF6045772C4184F20063176A /* AcceptedTasksInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045762C4184F20063176A /* AcceptedTasksInfoController.swift */; };
+		FF6045772C4184F20063176A /* HelperTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045762C4184F20063176A /* HelperTaskInfoController.swift */; };
 		FF6527832C1424460077E630 /* JobHoursView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527822C1424460077E630 /* JobHoursView.swift */; };
 		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
 		FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882062C1C787200288618 /* FirestoreHandler.swift */; };
@@ -92,6 +92,7 @@
 		FFF3F21A2C3F01FD00E20496 /* HelperDashboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF3F2192C3F01FD00E20496 /* HelperDashboardController.swift */; };
 		FFF3F21D2C3F048100E20496 /* PaymentSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF3F21C2C3F048100E20496 /* PaymentSettingsController.swift */; };
 		FFF3F2232C3F086200E20496 /* HelperCurrentTasksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF3F2222C3F086200E20496 /* HelperCurrentTasksCell.swift */; };
+		FFF51C012C6130DB00012F80 /* ChatObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF51C002C6130DB00012F80 /* ChatObjects.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -126,7 +127,7 @@
 		FF45E4B62C161674000F1BE7 /* JobHelperInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHelperInfoView.swift; sourceTree = "<group>"; };
 		FF6045712C4178CB0063176A /* HelperMyTasksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperMyTasksController.swift; sourceTree = "<group>"; };
 		FF6045742C417F060063176A /* TaskRequiredEquipmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRequiredEquipmentView.swift; sourceTree = "<group>"; };
-		FF6045762C4184F20063176A /* AcceptedTasksInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptedTasksInfoController.swift; sourceTree = "<group>"; };
+		FF6045762C4184F20063176A /* HelperTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperTaskInfoController.swift; sourceTree = "<group>"; };
 		FF6527822C1424460077E630 /* JobHoursView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHoursView.swift; sourceTree = "<group>"; };
 		FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEquipmentFormView.swift; sourceTree = "<group>"; };
 		FF6882062C1C787200288618 /* FirestoreHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreHandler.swift; sourceTree = "<group>"; };
@@ -174,6 +175,7 @@
 		FFF3F2192C3F01FD00E20496 /* HelperDashboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperDashboardController.swift; sourceTree = "<group>"; };
 		FFF3F21C2C3F048100E20496 /* PaymentSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSettingsController.swift; sourceTree = "<group>"; };
 		FFF3F2222C3F086200E20496 /* HelperCurrentTasksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperCurrentTasksCell.swift; sourceTree = "<group>"; };
+		FFF51C002C6130DB00012F80 /* ChatObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatObjects.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +282,7 @@
 		D0E923D82C0E8D250070977A /* Kogyo */ = {
 			isa = PBXGroup;
 			children = (
+				FFCC86AB2C5ECC58002232F9 /* Chat */,
 				FFF372CC2C16C43300F8D362 /* Global Objects */,
 				FFF3F21B2C3F036000E20496 /* Authentication */,
 				FFF3F2172C3F01B300E20496 /* Customer Side */,
@@ -355,8 +358,10 @@
 			isa = PBXGroup;
 			children = (
 				FFCC86AC2C5ECC7C002232F9 /* ChatViewController.swift */,
+				FFF51C002C6130DB00012F80 /* ChatObjects.swift */,
 			);
-			path = Chat;
+			name = Chat;
+			path = "Global Objects/Chat";
 			sourceTree = "<group>";
 		};
 		FFD8A99E2C157A4B009F5C8C /* Current Task Views */ = {
@@ -414,7 +419,6 @@
 		FFF372CC2C16C43300F8D362 /* Global Objects */ = {
 			isa = PBXGroup;
 			children = (
-				FFCC86AB2C5ECC58002232F9 /* Chat */,
 				FFF372E42C16C84800F8D362 /* AlertManager.swift */,
 				D09C5ED12C0F3F8E002C6F89 /* Constants.swift */,
 				D0D3A9992C11A868000DFFB8 /* Extensions.swift */,
@@ -488,7 +492,7 @@
 				FF6045712C4178CB0063176A /* HelperMyTasksController.swift */,
 				FFF3F2192C3F01FD00E20496 /* HelperDashboardController.swift */,
 				FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */,
-				FF6045762C4184F20063176A /* AcceptedTasksInfoController.swift */,
+				FF6045762C4184F20063176A /* HelperTaskInfoController.swift */,
 				FF1D4CFB2C55D4580034C830 /* HelperTaskOptionsController.swift */,
 				FF1D4CFD2C55DF6B0034C830 /* Task Options Controllers */,
 				FFF1774A2C5D8741006DC19E /* HelperOldTasksController.swift */,
@@ -592,6 +596,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF51C012C6130DB00012F80 /* ChatObjects.swift in Sources */,
 				FFF372D12C16C59B00F8D362 /* LoginController.swift in Sources */,
 				FF6527832C1424460077E630 /* JobHoursView.swift in Sources */,
 				D0C5CED42C12EEBA002582D4 /* JobKindFormView.swift in Sources */,
@@ -632,7 +637,7 @@
 				FFD8A9992C15588D009F5C8C /* CustomerLoadingScreenController.swift in Sources */,
 				FFF372D72C16C64200F8D362 /* CustomAuthButton.swift in Sources */,
 				D09C5ED22C0F3F8E002C6F89 /* Constants.swift in Sources */,
-				FF6045772C4184F20063176A /* AcceptedTasksInfoController.swift in Sources */,
+				FF6045772C4184F20063176A /* HelperTaskInfoController.swift in Sources */,
 				D0D3A99A2C11A868000DFFB8 /* Extensions.swift in Sources */,
 				FFD8A9A22C15B99F009F5C8C /* CustomerTaskInfoController.swift in Sources */,
 				D09C5ED52C0F49F0002C6F89 /* JobCategoryView.swift in Sources */,

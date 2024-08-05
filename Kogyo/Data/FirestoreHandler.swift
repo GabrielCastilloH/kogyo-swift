@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
+import MessageKit
 
 class FirestoreHandler {
     // Handles everything to do with Firebase.
@@ -546,6 +547,73 @@ class FirestoreHandler {
                 DataManager.shared.currentUser?.lastName = lastName
                 
                 return
+            }
+        }
+    }
+}
+
+// MARK: - MESSAGES
+extension FirestoreHandler {
+    // 1. Return all messages for a given conversation
+    // 2. Send a message.
+    
+    public static let dateFormatter: DateFormatter = {
+        let formattre = DateFormatter()
+        formattre.dateStyle = .medium
+        formattre.timeStyle = .long
+        formattre.locale = .current
+        return formattre
+    }()
+    
+    /// Returns all messages for a conversation given a taskUID (which is the convo UID).
+    public func returnAllMessages(for selectedTask: TaskClass, completion: @escaping (Result<[Message], Error>) -> Void) {
+        let storageRef = db
+            .collection("users")
+            .document(selectedTask.userUID)
+            .collection("jobs")
+            .document(selectedTask.taskUID)
+            .collection("messages")
+        
+        storageRef.getDocuments { (querySnapshot, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            let messages = querySnapshot?.documents.compactMap { document in
+                CustomFunctions.shared.createMessage(from: document)
+            } ?? []
+            
+            completion(.success(messages))
+        }
+    }
+
+    
+    /// Sends a message with target conversation (taskUID), with message (Message).
+    public func sendMessage(for selectedTask: TaskClass, with message: Message, completion: @escaping (Bool) -> Void) {
+        let messageData: [String: Any] = [
+            "name": message.sender.displayName,
+            "is_read": false,
+            "id": message.messageId,
+            "content": message.content,
+            "senderUID": message.sender.senderId,
+            "type": "text", // Update if more types exist
+            "dateTime": Timestamp(date: message.sentDate)
+        ]
+        
+        let storageRef = db
+            .collection("users")
+            .document(selectedTask.userUID)
+            .collection("jobs")
+            .document(selectedTask.taskUID)
+            .collection("messages")
+        
+        storageRef.addDocument(data: messageData) { error in
+            if let error = error {
+                print("Error sending message: \(error)")
+                completion(false)
+            } else {
+                completion(true)
             }
         }
     }

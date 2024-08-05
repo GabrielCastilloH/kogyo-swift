@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import MessageKit
 
 struct CustomFunctions {
     
@@ -64,6 +65,33 @@ struct CustomFunctions {
         )
         
         return task
+    }
+    
+    public func createMessage(from document: QueryDocumentSnapshot) -> Message? {
+        let data = document.data()
+        
+        guard let messageID = data["id"] as? String,
+              let type = data["type"] as? String,
+              let content = data["content"] as? String,
+              let name = data["name"] as? String,
+              let isRead = data["is_read"] as? Bool,
+              let senderUID = data["senderUID"] as? String,
+              let date = (data["dateTime"] as? Timestamp)?.dateValue() else {
+            // Handle missing or invalid data
+            return nil
+        }
+        
+        let finalKind: MessageKind = .text(content)
+        
+        let sender = Sender(photoURL: "",
+                            senderId: senderUID,
+                            displayName: name)
+        
+        return Message(sender: sender,
+                       messageId: messageID,
+                       sentDate: date,
+                       content: content,
+                       kind: finalKind)
     }
     
     func createPlaceholder(for text: String) -> NSAttributedString {

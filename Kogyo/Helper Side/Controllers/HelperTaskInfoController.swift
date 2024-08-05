@@ -105,7 +105,26 @@ class HelperTaskInfoController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.navigationItem.title = self.selectedTask.kind
+        
+        // Create and customize the chat button
+        let chatImage = UIImage(systemName: "message")?
+            .withRenderingMode(.alwaysTemplate) // Use template mode for tinting
+        let chatButton = UIBarButtonItem(image: chatImage, style: .plain, target: self, action: #selector(showChat))
+        
+        // Customize the appearance of the button
+        chatButton.tintColor = .black // Set the icon color to black
+        self.navigationItem.rightBarButtonItem = chatButton
+
+        // Center-align the title and the button
+        self.navigationController?.navigationBar.topItem?.titleView?.tintColor = .black
     }
+    
+    @objc private func showChat() {
+            // This should either open existing conversation, or start a new one.
+            let viewController = ChatViewController(selectedTask: self.selectedTask, isHelper: true)
+            viewController.modalPresentationStyle = .fullScreen
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
     
     private func setupUI() {
         self.view.addSubview(postedOnLabel)
