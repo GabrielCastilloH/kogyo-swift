@@ -27,6 +27,7 @@ class DataManager {
     var helperAvailableTasks:[String: TaskClass] = [:]
     var helperMyTasks: [String: TaskClass] = [:]
     var helperOldTasks: [String: TaskClass] = [:]
+//    var customers: [String: User] = [:]
     
     
     // MARK: - Functions
@@ -49,7 +50,7 @@ class DataManager {
                 
                 // Get data for available tasks.
                 let availableTasks = try await FirestoreHandler.shared.fetchTasks(.other)
-                let (notCompleteTasks, completeTasks) = availableTasks
+                let (notCompleteTasks, _) = availableTasks
                 
                 for task in notCompleteTasks.sorted(by: { $0.dateAdded > $1.dateAdded }) {
                     self.helperAvailableTasks[task.taskUID] = task

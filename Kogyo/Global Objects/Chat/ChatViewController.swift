@@ -167,4 +167,40 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         return messages[indexPath.section]
     }
+    
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        // Check if the message sender is the current user
+        if message.sender.senderId == self.selfSender.senderId {
+            // Return blue color for the current user's messages
+            return Constants().lightBlueColor
+        } else {
+            // Return grey color for other users' messages
+            return UIColor(red: 0.89, green: 0.90, blue: 0.93, alpha: 1.00)
+        }
+    }
+
+    
+    
+    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let message = message as! Message
+        let name = message.sender.displayName
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 12, weight: .bold),
+            .foregroundColor: UIColor.darkGray
+        ]
+        return NSAttributedString(string: name, attributes: attributes)
+    }
+    
+    func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let message = message as! Message
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a" // Customize the date format as needed
+        let dateString = dateFormatter.string(from: message.sentDate)
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 10),
+            .foregroundColor: UIColor.lightGray
+        ]
+        return NSAttributedString(string: dateString, attributes: attributes)
+    }
 }

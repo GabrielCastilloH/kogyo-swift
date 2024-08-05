@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import UIKit
 
 struct User {
     let userUID: String
     var firstName: String
     var lastName: String
     let email: String
+//    let profileImage: UIImage
 }
