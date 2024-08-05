@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 import FirebaseStorage
 
-class AcceptedTasksInfoController: UIViewController {
+class HelperTaskInfoController: UIViewController {
     // Info about tasks already accepted by the helper. Access messaging feature here. 
     
     // MARK: - Variables
@@ -190,7 +190,7 @@ class AcceptedTasksInfoController: UIViewController {
     }
 }
 
-extension AcceptedTasksInfoController: PlayableMediaViewDelegate {
+extension HelperTaskInfoController: PlayableMediaViewDelegate {
     // TODO: Move this to custom functions.
     func didTapMedia(thumbnail: UIImage?, videoUID: String?) {
         // Play video or zoom in on photo if it is tapped by the user.
