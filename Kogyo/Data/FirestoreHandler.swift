@@ -199,7 +199,7 @@ class FirestoreHandler {
     
     
     // MARK: - USER: Fetch
-    public func fetchUser() async throws -> User {
+    public func fetchCurrentUser(isHelper: Bool) async throws -> User {
         guard let userUID = Auth.auth().currentUser?.uid else {
             throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "No current user"])
         }
@@ -217,7 +217,38 @@ class FirestoreHandler {
                 throw NSError(domain: "fetchUser", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid data in snapshot"])
             }
             
-            let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email)
+            let imageRef = "profile/\(userUID)\(isHelper ? "" : "_user").jpeg"
+            
+            let profileRef = Storage.storage().reference().child(imageRef)
+            let profileImage = try await self.fetchFirebaseImage(from: profileRef)
+            
+            
+            let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email, profileImage: profileImage)
+            return user
+        } catch {
+            throw error
+        }
+    }
+    
+    public func fetchCustomer(userUID: String) async throws -> User {
+        let db = Firestore.firestore()
+        let document = db.collection("users").document(userUID)
+        
+        do {
+            let snapshot = try await document.getDocument()
+            
+            guard let snapshotData = snapshot.data(),
+                  let firstName = snapshotData["firstName"] as? String,
+                  let lastName = snapshotData["lastName"] as? String,
+                  let email = snapshotData["email"] as? String else {
+                throw NSError(domain: "fetchCustomer", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid data in snapshot"])
+            }
+            
+            let imageRef = "profile/\(userUID)_user.jpeg" // Assuming customers don't have suffix
+            let profileRef = Storage.storage().reference().child(imageRef)
+            let profileImage = try await fetchFirebaseImage(from: profileRef)
+            
+            let user = User(userUID: userUID, firstName: firstName, lastName: lastName, email: email, profileImage: profileImage)
             return user
         } catch {
             throw error

@@ -13,5 +13,5 @@ struct User {
     var firstName: String
     var lastName: String
     let email: String
-//    let profileImage: UIImage
+    let profileImage: UIImage
 }

@@ -22,7 +22,7 @@ class ChatViewController: MessagesViewController {
     init(selectedTask: TaskClass, isHelper: Bool) {
         self.selectedTask = selectedTask
         
-        let currentUserName = "\(DataManager.shared.currentUser!.firstName) \(DataManager.shared.currentUser!.lastName)"
+        let currentUserName = "\(DataManager.shared.currentUser!.firstName) \(DataManager.shared.currentUser!.lastName.prefix(1).capitalized)."
         if isHelper {
             self.currentUserConvoUID = "\(self.selectedTask.helperUID!)_helper"
             self.selfSender = Sender(photoURL: "", senderId: currentUserConvoUID, displayName: currentUserName)
@@ -32,6 +32,7 @@ class ChatViewController: MessagesViewController {
         }
         
         super.init(nibName: nil, bundle: nil)
+        print("disp:",self.selfSender.displayName)
     }
     
     required init?(coder: NSCoder) {
@@ -179,28 +180,64 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             return UIColor(red: 0.89, green: 0.90, blue: 0.93, alpha: 1.00)
         }
     }
-
     
-    
-    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let message = message as! Message
-        let name = message.sender.displayName
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 12, weight: .bold),
-            .foregroundColor: UIColor.darkGray
-        ]
-        return NSAttributedString(string: name, attributes: attributes)
+    func configureAvatarView(_ avatarView: AvatarView, for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        // Cast the message to your custom Message type
+        guard let message = message as? Message else {
+            avatarView.image = UIImage() // Fallback image if casting fails
+            return
+        }
+        
+        // Determine if the message sender is the current user
+        let isCurrentUser = message.sender.senderId == self.selfSender.senderId
+        
+        // Set the profile image based on whether the message is from the current user or another user
+        if isCurrentUser {
+            // Set the current user's profile image
+            avatarView.image = DataManager.shared.currentUser!.profileImage
+        } else {
+            // Determine if the current user is a helper or a customer
+            let isHelper = self.currentUserConvoUID.contains("_helper")
+            
+            if isHelper {
+                // Set the profile image for the customer
+                avatarView.image = DataManager.shared.customers[self.selectedTask.taskUID]!.profileImage
+            } else {
+                // Set the profile image for the helper
+                print("selected task:", self.selectedTask)
+                avatarView.image = DataManager.shared.helpers[self.selectedTask.helperUID!]!.profileImage
+            }
+        }
     }
     
-    func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+    func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return 20
+    }
+    
+    func cellBottomLabelHeight(for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return 20
+    }
+    
+    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         let message = message as! Message
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a" // Customize the date format as needed
         let dateString = dateFormatter.string(from: message.sentDate)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 10),
-            .foregroundColor: UIColor.lightGray
+            .foregroundColor: UIColor.gray
         ]
         return NSAttributedString(string: dateString, attributes: attributes)
+      }
+
+    func cellBottomLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let name = message.sender.displayName
+        return NSAttributedString(
+          string: name,
+          attributes: [
+            .font: UIFont.preferredFont(forTextStyle: .caption1),
+            .foregroundColor: UIColor(white: 0.3, alpha: 1)
+          ]
+        )
     }
 }

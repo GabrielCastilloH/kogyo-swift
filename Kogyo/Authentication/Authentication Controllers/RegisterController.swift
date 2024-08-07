@@ -111,7 +111,9 @@ class RegisterController: UIViewController {
 
             if wasRegistered {
                 if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                    sceneDelegate.checkAuthentication()
+                    Task {
+                       await sceneDelegate.checkAuthentication()
+                    }
                 }
             }
         }

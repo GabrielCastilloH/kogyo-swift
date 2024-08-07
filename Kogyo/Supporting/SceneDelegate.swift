@@ -18,7 +18,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Setup window, clear DataManager, check authentication.
         self.setupWindow(with: scene)
         DataManager.shared.customerMyTasks = [:]
-        self.checkAuthentication()
+        
+        Task {
+            await self.checkAuthentication()
+        }
     }
     
     private func setupWindow(with scene: UIScene) {
@@ -31,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     // MARK: - Auth & Animation Functions
-    public func checkAuthentication() {
+    public func checkAuthentication() async {
         // Check if the user is logged in, removes all views from hierarchy.
         self.window?.rootViewController = nil
         self.window?.subviews.forEach { $0.removeFromSuperview() }
@@ -40,17 +43,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if Auth.auth().currentUser == nil {
             self.animateTransition(to: LoginController(), isWorker: self.isWorker)
         } else {
-            self.presentHomeController()
+            await self.presentHomeController()
         }
     }
     
-    private func presentHomeController() {
+    private func presentHomeController() async {
         // Presents a loading screen until all data is downloaded.
         let loadingViewController = LogoLoadingController()
         self.window?.rootViewController = loadingViewController
         self.window?.makeKeyAndVisible()
         
-        Task {
+        do {
             await DataManager.shared.fetchDatabaseData(asWorker: self.isWorker)
             self.animateTransition(to: nil, isWorker: self.isWorker)
         }
