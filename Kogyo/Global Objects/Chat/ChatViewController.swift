@@ -170,14 +170,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        // Check if the message sender is the current user
-        if message.sender.senderId == self.selfSender.senderId {
-            // Return blue color for the current user's messages
-            return Constants().lightBlueColor
-        } else {
-            // Return grey color for other users' messages
-            return UIColor(red: 0.89, green: 0.90, blue: 0.93, alpha: 1.00)
-        }
+        return message.sender.senderId == self.selfSender.senderId ? Constants().lightBlueColor : UIColor(red: 0.89, green: 0.90, blue: 0.93, alpha: 1.00)
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -200,44 +193,53 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        // Return height based on whether the label should be displayed or not
-        return cellTopLabelAttributedText(for: message, at: indexPath) != nil ? 20 : 0
+        guard let currentMessage = message as? Message else { return 0 }
+        
+        if indexPath.section == 0 {
+            return 20
+        }
+        
+        if indexPath.section > 0, let previousMessage = messages[indexPath.section - 1] as? Message {
+            let calendar = Calendar.current
+            let difference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: currentMessage.sentDate).minute ?? 0
+            let minutesPastLastHour = calendar.component(.minute, from: currentMessage.sentDate)
+            let isHalfHourCrossed = (minutesPastLastHour % 30 == 0) && (minutesPastLastHour > 10)
+            
+            let shouldShowTimestamp = difference >= 10 || isHalfHourCrossed
+            return shouldShowTimestamp ? 20 : 0
+        }
+        
+        return 0
     }
     
     func cellBottomLabelHeight(for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 20
+        let currentMessage = messages[indexPath.section]
+        let isLastMessageFromSender = indexPath.section == messages.count - 1 || (indexPath.section < messages.count - 1 && currentMessage.sender.senderId != messages[indexPath.section + 1].sender.senderId)
+        
+        return isLastMessageFromSender ? 20 : 0
     }
     
-    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+    func cellTopLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         guard let message = message as? Message else { return nil }
         
-        // Check if it's the first message or if the timestamp needs to be shown
         if indexPath.section == 0 {
-            // Always show timestamp for the first message
             return createTimestampAttributedString(from: message.sentDate)
-        } else {
-            let previousMessage = messages[indexPath.section - 1]
-            let shouldShowTimestamp = shouldShowTimestamp(currentMessage: message, previousMessage: previousMessage)
+        } else if indexPath.section > 0, let previousMessage = messages[indexPath.section - 1] as? Message {
+            let calendar = Calendar.current
+            let difference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: message.sentDate).minute ?? 0
+            let minutesPastLastHour = calendar.component(.minute, from: message.sentDate)
+            let isHalfHourCrossed = (minutesPastLastHour % 30 == 0) && (minutesPastLastHour > 10)
+            
+            let shouldShowTimestamp = difference >= 10 || isHalfHourCrossed
             return shouldShowTimestamp ? createTimestampAttributedString(from: message.sentDate) : nil
         }
-    }
-    
-    private func shouldShowTimestamp(currentMessage: Message, previousMessage: Message) -> Bool {
-        let calendar = Calendar.current
         
-        // Calculate the difference in minutes
-        let difference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: currentMessage.sentDate).minute ?? 0
-        
-        // Check if the difference is more than 10 minutes or if the time crosses a perfect half hour
-        let minutesPastLastHour = calendar.component(.minute, from: currentMessage.sentDate)
-        let isHalfHourCrossed = (minutesPastLastHour % 30 == 0) && (minutesPastLastHour > 10)
-        
-        return difference >= 10 || isHalfHourCrossed
+        return nil
     }
     
     private func createTimestampAttributedString(from date: Date) -> NSAttributedString {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a" // Customize the date format as needed
+        dateFormatter.dateFormat = "h:mm a"
         let dateString = dateFormatter.string(from: date)
         return NSAttributedString(
             string: dateString,
@@ -249,13 +251,15 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func cellBottomLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let name = message.sender.displayName
-        return NSAttributedString(
-          string: name,
-          attributes: [
-            .font: UIFont.preferredFont(forTextStyle: .caption1),
-            .foregroundColor: UIColor(white: 0.3, alpha: 1)
-          ]
-        )
+        let currentMessage = messages[indexPath.section]
+        let isLastMessageFromSender = indexPath.section == messages.count - 1 || (indexPath.section < messages.count - 1 && currentMessage.sender.senderId != messages[indexPath.section + 1].sender.senderId)
+        
+        return isLastMessageFromSender ? NSAttributedString(
+            string: currentMessage.sender.displayName,
+            attributes: [
+                .font: UIFont.preferredFont(forTextStyle: .caption1),
+                .foregroundColor: UIColor(white: 0.3, alpha: 1)
+            ]
+        ) : nil
     }
 }
