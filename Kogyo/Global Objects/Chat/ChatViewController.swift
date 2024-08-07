@@ -169,7 +169,6 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         return messages[indexPath.section]
     }
     
-    
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         // Check if the message sender is the current user
         if message.sender.senderId == self.selfSender.senderId {
@@ -182,36 +181,27 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        // Cast the message to your custom Message type
         guard let message = message as? Message else {
             avatarView.image = UIImage() // Fallback image if casting fails
             return
         }
         
-        // Determine if the message sender is the current user
         let isCurrentUser = message.sender.senderId == self.selfSender.senderId
-        
-        // Set the profile image based on whether the message is from the current user or another user
         if isCurrentUser {
-            // Set the current user's profile image
             avatarView.image = DataManager.shared.currentUser!.profileImage
         } else {
-            // Determine if the current user is a helper or a customer
             let isHelper = self.currentUserConvoUID.contains("_helper")
-            
             if isHelper {
-                // Set the profile image for the customer
                 avatarView.image = DataManager.shared.customers[self.selectedTask.taskUID]!.profileImage
             } else {
-                // Set the profile image for the helper
-                print("selected task:", self.selectedTask)
                 avatarView.image = DataManager.shared.helpers[self.selectedTask.helperUID!]!.profileImage
             }
         }
     }
     
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 20
+        // Return height based on whether the label should be displayed or not
+        return cellTopLabelAttributedText(for: message, at: indexPath) != nil ? 20 : 0
     }
     
     func cellBottomLabelHeight(for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
@@ -219,17 +209,45 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let message = message as! Message
+        guard let message = message as? Message else { return nil }
+        
+        // Check if it's the first message or if the timestamp needs to be shown
+        if indexPath.section == 0 {
+            // Always show timestamp for the first message
+            return createTimestampAttributedString(from: message.sentDate)
+        } else {
+            let previousMessage = messages[indexPath.section - 1]
+            let shouldShowTimestamp = shouldShowTimestamp(currentMessage: message, previousMessage: previousMessage)
+            return shouldShowTimestamp ? createTimestampAttributedString(from: message.sentDate) : nil
+        }
+    }
+    
+    private func shouldShowTimestamp(currentMessage: Message, previousMessage: Message) -> Bool {
+        let calendar = Calendar.current
+        
+        // Calculate the difference in minutes
+        let difference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: currentMessage.sentDate).minute ?? 0
+        
+        // Check if the difference is more than 10 minutes or if the time crosses a perfect half hour
+        let minutesPastLastHour = calendar.component(.minute, from: currentMessage.sentDate)
+        let isHalfHourCrossed = (minutesPastLastHour % 30 == 0) && (minutesPastLastHour > 10)
+        
+        return difference >= 10 || isHalfHourCrossed
+    }
+    
+    private func createTimestampAttributedString(from date: Date) -> NSAttributedString {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a" // Customize the date format as needed
-        let dateString = dateFormatter.string(from: message.sentDate)
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 10),
-            .foregroundColor: UIColor.gray
-        ]
-        return NSAttributedString(string: dateString, attributes: attributes)
-      }
-
+        let dateString = dateFormatter.string(from: date)
+        return NSAttributedString(
+            string: dateString,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 10),
+                .foregroundColor: UIColor.gray
+            ]
+        )
+    }
+    
     func cellBottomLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         let name = message.sender.displayName
         return NSAttributedString(
