@@ -199,7 +199,8 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             return 20
         }
         
-        if indexPath.section > 0, let previousMessage = messages[indexPath.section - 1] as? Message {
+        if indexPath.section > 0 {
+            let previousMessage = messages[indexPath.section - 1]
             let calendar = Calendar.current
             let difference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: currentMessage.sentDate).minute ?? 0
             let minutesPastLastHour = calendar.component(.minute, from: currentMessage.sentDate)
@@ -224,7 +225,8 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         
         if indexPath.section == 0 {
             return createTimestampAttributedString(from: message.sentDate)
-        } else if indexPath.section > 0, let previousMessage = messages[indexPath.section - 1] as? Message {
+        } else if indexPath.section > 0 {
+            let previousMessage = messages[indexPath.section - 1]
             let calendar = Calendar.current
             let difference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: message.sentDate).minute ?? 0
             let minutesPastLastHour = calendar.component(.minute, from: message.sentDate)

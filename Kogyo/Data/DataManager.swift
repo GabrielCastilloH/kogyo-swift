@@ -10,6 +10,8 @@ import FirebaseAuth
 class DataManager {
     // Stores all data to prevent having to reload everything.
     
+    public var isHelper = false
+    
     static let shared = DataManager()
     var deletedJobs: [TaskClass] = []
     
@@ -38,7 +40,7 @@ class DataManager {
         // Fetches all the data when loading Kogyo.
         print("started")
         do {
-            let user = try await FirestoreHandler.shared.fetchCurrentUser(isHelper: false)
+            let user = try await FirestoreHandler.shared.fetchCurrentUser(isHelper: self.isHelper)
             print("done fetching user")
             self.currentUser = user
             let currUID = user.userUID
