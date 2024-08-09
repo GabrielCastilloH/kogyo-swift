@@ -9,6 +9,8 @@ import UIKit
 import FirebaseAuth
 import Photos
 import FirebaseStorage
+import StripePaymentSheet
+
 
 class CustomerCreateTaskController: UIViewController {
     // Responsible for creating a new job.
@@ -19,6 +21,9 @@ class CustomerCreateTaskController: UIViewController {
     var keyboardHeight: CGFloat = 300
     var cf = CustomFunctions()
     var idCounter = 0
+    
+    var paymentSheet: PaymentSheet?
+    let backendCheckoutUrl = URL(string: "http://127.0.0.1:4242/payment-sheet")! // Your backend endpoint
     
     // Media Scroll View:
     var mediaData: [MediaView] = []
@@ -61,8 +66,9 @@ class CustomerCreateTaskController: UIViewController {
         button.setTitle("Other Payment Methods", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
-        button.backgroundColor = UIColor(red: 0.93, green: 0.93, blue: 0.94, alpha: 1.00)
+        button.backgroundColor = .systemBlue
         button.addTarget(self, action: #selector(otherPaymentMethods), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
     
@@ -114,6 +120,35 @@ class CustomerCreateTaskController: UIViewController {
         )
         
         self.addMedia(nil)
+        
+        // MARK: Fetch the PaymentIntent client secret, Ephemeral Key secret, Customer ID, and publishable key
+        var request = URLRequest(url: backendCheckoutUrl)
+        request.httpMethod = "POST"
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                  let customerId = json["customer"] as? String,
+                  let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
+                  let paymentIntentClientSecret = json["paymentIntent"] as? String,
+                  let publishableKey = json["publishableKey"] as? String,
+                  let self = self else {
+                // Handle error
+                return
+            }
+            
+            STPAPIClient.shared.publishableKey = publishableKey
+            // MARK: Create a PaymentSheet instance
+            var configuration = PaymentSheet.Configuration()
+            configuration.merchantDisplayName = "Example, Inc."
+            configuration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            // Set `allowsDelayedPaymentMethods` to true if your business handles
+            // delayed notification payment methods like US bank accounts.
+            configuration.allowsDelayedPaymentMethods = true
+            self.paymentSheet = PaymentSheet(paymentIntentClientSecret: paymentIntentClientSecret, configuration: configuration)
+        })
+        task.resume()
+        
+        self.otherPaymentMethodsBtn.isEnabled = true
     }
     
     // MARK: - UI Setup
@@ -247,55 +282,25 @@ class CustomerCreateTaskController: UIViewController {
     }
     
     @objc func otherPaymentMethods() {
-        createCheckoutSession { sessionId, url in
-            self.presentStripeCheckout(url: url)
+        print("button has been clicked, repeat")
+        print("PRESENTING!!!")
+        self.paymentSheet?.present(from: self) { paymentResult in
+            print("should have presented")
+            // MARK: Handle the payment result
+            switch paymentResult {
+            case .completed:
+                print("Your order is confirmed")
+            case .canceled:
+                print("Canceled!")
+            case .failed(let error):
+                print("Payment failed: \(error)")
+            }
         }
     }
     
     @objc func payWithCash() {
         // Handle cash payment logic here
         // e.g., save the task as "Cash" and continue
-    }
-    
-    func createCheckoutSession(completion: @escaping (String, String) -> Void) {
-        let url = URL(string: "http://localhost:4242/create-checkout-session")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        let body = ["amount": 300]  // Adjust amount as needed
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print("Error: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data, options: [])
-                if let jsonDict = json as? [String: Any],
-                   let sessionId = jsonDict["id"] as? String,
-                   let url = jsonDict["url"] as? String {
-                    DispatchQueue.main.async {
-                        completion(sessionId, url)
-                    }
-                }
-            } catch {
-                print("Error: \(error.localizedDescription)")
-            }
-        }
-        
-        task.resume()
-    }
-    
-    func presentStripeCheckout(url: String) {
-        //        guard let checkoutURL = URL(string: url) else {
-        //            print("Invalid URL")
-        //            return
-        //        }
-        let vc = WebViewerController(with: url)
-        let nav = UINavigationController(rootViewController: vc)
-        self.present(nav, animated: true, completion: nil)
     }
     
     @objc func didTapPayCash() { // Submits the task

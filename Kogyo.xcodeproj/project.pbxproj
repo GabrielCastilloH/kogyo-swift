@@ -39,6 +39,10 @@
 		FF6045772C4184F20063176A /* HelperTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045762C4184F20063176A /* HelperTaskInfoController.swift */; };
 		FF6527832C1424460077E630 /* JobHoursView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527822C1424460077E630 /* JobHoursView.swift */; };
 		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
+		FF68638F2C65E8D000289F5F /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = FF68638E2C65E8D000289F5F /* Stripe */; };
+		FF6863912C65E8D000289F5F /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = FF6863902C65E8D000289F5F /* StripePaymentSheet */; };
+		FF6863932C65E8D000289F5F /* StripePayments in Frameworks */ = {isa = PBXBuildFile; productRef = FF6863922C65E8D000289F5F /* StripePayments */; };
+		FF6863952C65E8D000289F5F /* StripePaymentsUI in Frameworks */ = {isa = PBXBuildFile; productRef = FF6863942C65E8D000289F5F /* StripePaymentsUI */; };
 		FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882062C1C787200288618 /* FirestoreHandler.swift */; };
 		FF6882092C1C790700288618 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6882082C1C790600288618 /* Helper.swift */; };
 		FF76C2AD2C5C974300F35DD1 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF76C2AC2C5C974300F35DD1 /* Enums.swift */; };
@@ -184,13 +188,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				FFCC86B02C5ED72A002232F9 /* RealmSwift in Frameworks */,
+				FF6863932C65E8D000289F5F /* StripePayments in Frameworks */,
 				FFF372F02C16CB9800F8D362 /* FirebaseAnalytics in Frameworks */,
 				FFF372F62C16CB9800F8D362 /* FirebaseStorage in Frameworks */,
 				FFCC86A72C5ECB9C002232F9 /* JGProgressHUD in Frameworks */,
+				FF6863912C65E8D000289F5F /* StripePaymentSheet in Frameworks */,
+				FF6863952C65E8D000289F5F /* StripePaymentsUI in Frameworks */,
 				FFF372F22C16CB9800F8D362 /* FirebaseAuth in Frameworks */,
 				FFCC86AA2C5ECBB7002232F9 /* SDWebImage in Frameworks */,
 				FFF372F42C16CB9800F8D362 /* FirebaseFirestore in Frameworks */,
 				FFCC869F2C5ECB1A002232F9 /* MessageKit in Frameworks */,
+				FF68638F2C65E8D000289F5F /* Stripe in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,6 +541,10 @@
 				FFCC86A62C5ECB9C002232F9 /* JGProgressHUD */,
 				FFCC86A92C5ECBB7002232F9 /* SDWebImage */,
 				FFCC86AF2C5ED72A002232F9 /* RealmSwift */,
+				FF68638E2C65E8D000289F5F /* Stripe */,
+				FF6863902C65E8D000289F5F /* StripePaymentSheet */,
+				FF6863922C65E8D000289F5F /* StripePayments */,
+				FF6863942C65E8D000289F5F /* StripePaymentsUI */,
 			);
 			productName = App1;
 			productReference = D0E923D62C0E8D250070977A /* Kogyo.app */;
@@ -568,6 +580,7 @@
 				FFCC86A52C5ECB9C002232F9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				FFCC86A82C5ECBB7002232F9 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				FFCC86AE2C5ED72A002232F9 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				FF68638D2C65E8D000289F5F /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
 			);
 			productRefGroup = D0E923D72C0E8D250070977A /* Products */;
 			projectDirPath = "";
@@ -897,6 +910,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		FF68638D2C65E8D000289F5F /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 23.29.0;
+			};
+		};
 		FFCC869D2C5ECB1A002232F9 /* XCRemoteSwiftPackageReference "MessageKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MessageKit/MessageKit";
@@ -940,6 +961,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FF68638E2C65E8D000289F5F /* Stripe */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF68638D2C65E8D000289F5F /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = Stripe;
+		};
+		FF6863902C65E8D000289F5F /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF68638D2C65E8D000289F5F /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentSheet;
+		};
+		FF6863922C65E8D000289F5F /* StripePayments */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF68638D2C65E8D000289F5F /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePayments;
+		};
+		FF6863942C65E8D000289F5F /* StripePaymentsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF68638D2C65E8D000289F5F /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentsUI;
+		};
 		FFCC869E2C5ECB1A002232F9 /* MessageKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FFCC869D2C5ECB1A002232F9 /* XCRemoteSwiftPackageReference "MessageKit" */;
