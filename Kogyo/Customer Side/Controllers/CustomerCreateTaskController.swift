@@ -44,14 +44,25 @@ class CustomerCreateTaskController: UIViewController {
     let addEquipmentFormView = AddEquipmentFormView()
     let jobPaymentView = JobPaymentView()
     
-    private lazy var submitJobBtn: UIButton = {
+    private lazy var payCashButton: UIButton = {
         let button = UIButton()
         button.tintColor = .white
-        button.setTitle("Submit Task", for: .normal)
+        button.setTitle("Pay Cash", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
         button.layer.cornerRadius = 15
         button.backgroundColor = Constants().lightBlueColor
-        button.addTarget(self, action: #selector(didTapSubmitTask), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapPayCash), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var otherPaymentMethodsBtn: UIButton = {
+        let button = UIButton()
+        button.tintColor = .white
+        button.setTitle("Other Payment Methods", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
+        button.layer.cornerRadius = 15
+        button.backgroundColor = UIColor(red: 0.93, green: 0.93, blue: 0.94, alpha: 1.00)
+        button.addTarget(self, action: #selector(otherPaymentMethods), for: .touchUpInside)
         return button
     }()
     
@@ -65,8 +76,8 @@ class CustomerCreateTaskController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
-        self.submitJobBtn.isUserInteractionEnabled = true
-        self.submitJobBtn.backgroundColor = Constants().lightBlueColor
+        self.payCashButton.isUserInteractionEnabled = true
+        self.payCashButton.backgroundColor = Constants().lightBlueColor
         self.setupNavbar()
     }
     
@@ -157,8 +168,11 @@ class CustomerCreateTaskController: UIViewController {
         let separator5 = UIView()
         cf.createSeparatorView(for: self, with: separator5, under: jobPaymentView)
         
-        self.view.addSubview(submitJobBtn)
-        submitJobBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(payCashButton)
+        payCashButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(otherPaymentMethodsBtn)
+        otherPaymentMethodsBtn.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
@@ -207,10 +221,15 @@ class CustomerCreateTaskController: UIViewController {
             jobPaymentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             jobPaymentView.heightAnchor.constraint(equalToConstant: 75),
             
-            submitJobBtn.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
-            submitJobBtn.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            submitJobBtn.heightAnchor.constraint(equalToConstant: 50),
-            submitJobBtn.widthAnchor.constraint(equalToConstant: 180),
+            payCashButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
+            payCashButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -100),
+            payCashButton.heightAnchor.constraint(equalToConstant: 50),
+            payCashButton.widthAnchor.constraint(equalToConstant: 180),
+            
+            otherPaymentMethodsBtn.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
+            otherPaymentMethodsBtn.leadingAnchor.constraint(equalTo: payCashButton.trailingAnchor, constant: 20),
+            otherPaymentMethodsBtn.heightAnchor.constraint(equalToConstant: 50),
+            otherPaymentMethodsBtn.widthAnchor.constraint(equalToConstant: 180),
         ])
     }
     
@@ -227,7 +246,59 @@ class CustomerCreateTaskController: UIViewController {
         }
     }
     
-    @objc func didTapSubmitTask() { // Submits the task
+    @objc func otherPaymentMethods() {
+        createCheckoutSession { sessionId, url in
+            self.presentStripeCheckout(url: url)
+        }
+    }
+    
+    @objc func payWithCash() {
+        // Handle cash payment logic here
+        // e.g., save the task as "Cash" and continue
+    }
+    
+    func createCheckoutSession(completion: @escaping (String, String) -> Void) {
+        let url = URL(string: "http://localhost:4242/create-checkout-session")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        let body = ["amount": 300]  // Adjust amount as needed
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            do {
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+                if let jsonDict = json as? [String: Any],
+                   let sessionId = jsonDict["id"] as? String,
+                   let url = jsonDict["url"] as? String {
+                    DispatchQueue.main.async {
+                        completion(sessionId, url)
+                    }
+                }
+            } catch {
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func presentStripeCheckout(url: String) {
+        //        guard let checkoutURL = URL(string: url) else {
+        //            print("Invalid URL")
+        //            return
+        //        }
+        let vc = WebViewerController(with: url)
+        let nav = UINavigationController(rootViewController: vc)
+        self.present(nav, animated: true, completion: nil)
+    }
+    
+    @objc func didTapPayCash() { // Submits the task
         let dateAdded = Date()
         let kind = self.jobKindView.pickerTextField.text ?? ""
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
@@ -261,20 +332,9 @@ class CustomerCreateTaskController: UIViewController {
                     print("Error adding job: \(error.localizedDescription)")
                 }
             }
-//
-//            // Upload task to database.
-//            FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData) { result in
-//                switch result {
-//                case .success(let taskUID):
-//                    let userUID = DataManager.shared.currentUser!.userUID
-//                    self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
-//                case .failure(let error):
-//                    print("Error adding job: \(error.localizedDescription)")
-//                }
-//            }
             
-            self.submitJobBtn.isUserInteractionEnabled = false
-            self.submitJobBtn.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
+            self.payCashButton.isUserInteractionEnabled = false
+            self.payCashButton.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
         }
     }
 }
