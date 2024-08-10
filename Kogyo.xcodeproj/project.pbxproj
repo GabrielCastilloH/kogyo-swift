@@ -67,7 +67,7 @@
 		FFCC86AD2C5ECC7C002232F9 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFCC86AC2C5ECC7C002232F9 /* ChatViewController.swift */; };
 		FFCC86B02C5ED72A002232F9 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FFCC86AF2C5ED72A002232F9 /* RealmSwift */; };
 		FFD8A9992C15588D009F5C8C /* CustomerLoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9982C15588D009F5C8C /* CustomerLoadingScreenController.swift */; };
-		FFD8A99B2C157908009F5C8C /* TaskListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* TaskListing.swift */; };
+		FFD8A99B2C157908009F5C8C /* AppBasicData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99A2C157908009F5C8C /* AppBasicData.swift */; };
 		FFD8A99D2C157924009F5C8C /* CustomFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */; };
 		FFD8A9A02C157A6E009F5C8C /* CurrentTasksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A99F2C157A6E009F5C8C /* CurrentTasksCell.swift */; };
 		FFD8A9A22C15B99F009F5C8C /* CustomerTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD8A9A12C15B99F009F5C8C /* CustomerTaskInfoController.swift */; };
@@ -156,7 +156,7 @@
 		FFC08B1B2C57FFE900B4B1E2 /* HelperCompleteTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperCompleteTaskController.swift; sourceTree = "<group>"; };
 		FFCC86AC2C5ECC7C002232F9 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		FFD8A9982C15588D009F5C8C /* CustomerLoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerLoadingScreenController.swift; sourceTree = "<group>"; };
-		FFD8A99A2C157908009F5C8C /* TaskListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListing.swift; sourceTree = "<group>"; };
+		FFD8A99A2C157908009F5C8C /* AppBasicData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBasicData.swift; sourceTree = "<group>"; };
 		FFD8A99C2C157924009F5C8C /* CustomFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFunctions.swift; sourceTree = "<group>"; };
 		FFD8A99F2C157A6E009F5C8C /* CurrentTasksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTasksCell.swift; sourceTree = "<group>"; };
 		FFD8A9A12C15B99F009F5C8C /* CustomerTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerTaskInfoController.swift; sourceTree = "<group>"; };
@@ -215,7 +215,7 @@
 				FFF372CE2C16C45A00F8D362 /* TaskClass.swift */,
 				FF6882062C1C787200288618 /* FirestoreHandler.swift */,
 				FF919BCC2C275E2700A1FE27 /* DataManager.swift */,
-				FFD8A99A2C157908009F5C8C /* TaskListing.swift */,
+				FFD8A99A2C157908009F5C8C /* AppBasicData.swift */,
 				FF76C2AC2C5C974300F35DD1 /* Enums.swift */,
 				FF76C2AE2C5C975400F35DD1 /* TODO.swift */,
 			);
@@ -624,7 +624,7 @@
 				FFF372E22C16C80500F8D362 /* Validator.swift in Sources */,
 				FF6882072C1C787200288618 /* FirestoreHandler.swift in Sources */,
 				FF6045722C4178CB0063176A /* HelperMyTasksController.swift in Sources */,
-				FFD8A99B2C157908009F5C8C /* TaskListing.swift in Sources */,
+				FFD8A99B2C157908009F5C8C /* AppBasicData.swift in Sources */,
 				FF3E57BD2C2294EE0040F617 /* PlayableMediaView.swift in Sources */,
 				FFF372D32C16C5CE00F8D362 /* AuthHeaderView.swift in Sources */,
 				D0D3A9962C11537C000DFFB8 /* SearchBarView.swift in Sources */,

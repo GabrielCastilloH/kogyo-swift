@@ -38,7 +38,6 @@ class MaterialsCell: UITableViewCell {
     }
     
     func configure(with material: Material) {
-        print("configuring!")
         nameLabel.text = material.name
         priceLabel.text = String(format: "$%.2f", material.price)
     }

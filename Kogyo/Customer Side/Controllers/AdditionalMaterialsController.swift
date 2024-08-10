@@ -7,34 +7,36 @@
 
 import UIKit
 
-// Model to represent Material
-struct Material {
-    let name: String
-    let price: Float
-    let category: String
-}
-
 class AdditionalMaterialsController: UIViewController {
     
-    private let materials: [Material] = [
-        Material(name: "Paint", price: 25.0, category: "Construction"),
-        Material(name: "Nails", price: 10.0, category: "Construction"),
-        Material(name: "Soil", price: 15.0, category: "Care"),
-        Material(name: "Fertilizer", price: 30.0, category: "Care")
-    ]
-    
+    private let materials = AppBasicData.shared.materials
     private let tableView = UITableView()
-    private let searchController = UISearchController(searchResultsController: nil)
+    private let searchBar = UISearchBar()
     private var filteredMaterials: [Material] = []
     private var selectedMaterial: Material?
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         self.filteredMaterials = self.materials
         
-        super.viewDidLoad()
-        print("this view did load.")
-        self.setupTableView()
-//        self.setupSearchController()
+        setupSearchBar()
+        setupTableView()
+    }
+    
+    private func setupSearchBar() {
+        searchBar.delegate = self
+        searchBar.placeholder = "Search Materials"
+        searchBar.sizeToFit()
+        searchBar.backgroundColor = .white
+        
+        view.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
     }
     
     private func setupTableView() {
@@ -45,19 +47,11 @@ class AdditionalMaterialsController: UIViewController {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-    }
-    
-    private func setupSearchController() {
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Materials"
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
     }
     
     private func filterMaterials(for searchText: String) {
@@ -103,8 +97,8 @@ extension AdditionalMaterialsController: UITableViewDelegate, UITableViewDataSou
     }
     
     private func getCategory(for section: Int) -> String {
-        let categories = Set(filteredMaterials.map { $0.category })
-        return Array(categories)[section]
+        let categories = Array(Set(filteredMaterials.map { $0.category })).sorted()
+        return categories[section]
     }
     
     private func promptForQuantity() {
@@ -128,9 +122,8 @@ extension AdditionalMaterialsController: UITableViewDelegate, UITableViewDataSou
     }
 }
 
-extension AdditionalMaterialsController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        let searchText = searchController.searchBar.text ?? ""
+extension AdditionalMaterialsController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterMaterials(for: searchText)
     }
 }

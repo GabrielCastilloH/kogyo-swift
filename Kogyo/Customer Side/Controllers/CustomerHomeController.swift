@@ -10,7 +10,7 @@ import UIKit
 class CustomerHomeController: UIViewController {
     
     // MARK: - Variables
-    var taskListing = TaskListing()
+    var taskListing = AppBasicData()
     var taskSearch: [TaskCategoryBtnView] = []
     
     // MARK: - UI Components

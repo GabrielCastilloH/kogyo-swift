@@ -64,7 +64,7 @@ class JobKindFormView: UIView {
     
     // MARK: - Life Cycle
     init(kind: String) {
-        self.allJobs = TaskListing().allJobs
+        self.allJobs = AppBasicData().allJobs
         self.jobKind = kind
         self.pickerTextField.text = jobKind
         super.init(frame: .zero)
