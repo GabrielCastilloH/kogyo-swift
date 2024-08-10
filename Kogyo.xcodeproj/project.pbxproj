@@ -54,6 +54,8 @@
 		FF879A4F2C1BA62700922513 /* FirstLastNameForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A4E2C1BA62700922513 /* FirstLastNameForm.swift */; };
 		FF879A512C1BB50500922513 /* NotificationSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A502C1BB50500922513 /* NotificationSettingsController.swift */; };
 		FF879A552C1BB5E900922513 /* SupportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF879A542C1BB5E900922513 /* SupportController.swift */; };
+		FF89D9A92C680E8F00FBD1C6 /* AdditionalMaterialsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF89D9A82C680E8F00FBD1C6 /* AdditionalMaterialsController.swift */; };
+		FF89D9AB2C68121500FBD1C6 /* MaterialsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF89D9AA2C68121500FBD1C6 /* MaterialsCell.swift */; };
 		FF919BCB2C274E0F00A1FE27 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF919BCA2C274E0F00A1FE27 /* PhotoViewController.swift */; };
 		FF919BCD2C275E2700A1FE27 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF919BCC2C275E2700A1FE27 /* DataManager.swift */; };
 		FF929AA02C40CB37007B0307 /* AvailableTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */; };
@@ -145,6 +147,8 @@
 		FF879A4E2C1BA62700922513 /* FirstLastNameForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLastNameForm.swift; sourceTree = "<group>"; };
 		FF879A502C1BB50500922513 /* NotificationSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsController.swift; sourceTree = "<group>"; };
 		FF879A542C1BB5E900922513 /* SupportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportController.swift; sourceTree = "<group>"; };
+		FF89D9A82C680E8F00FBD1C6 /* AdditionalMaterialsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalMaterialsController.swift; sourceTree = "<group>"; };
+		FF89D9AA2C68121500FBD1C6 /* MaterialsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialsCell.swift; sourceTree = "<group>"; };
 		FF919BCA2C274E0F00A1FE27 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		FF919BCC2C275E2700A1FE27 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		FF929A9F2C40CB37007B0307 /* AvailableTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableTaskInfoController.swift; sourceTree = "<group>"; };
@@ -242,6 +246,7 @@
 				D0E923F02C0E98670070977A /* CustomerSettingsController.swift */,
 				FF919BCA2C274E0F00A1FE27 /* PhotoViewController.swift */,
 				FF879A4A2C1B2F3D00922513 /* Settings View Controllers */,
+				FF89D9A82C680E8F00FBD1C6 /* AdditionalMaterialsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 				FF6527822C1424460077E630 /* JobHoursView.swift */,
 				FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */,
 				FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */,
+				FF89D9AA2C68121500FBD1C6 /* MaterialsCell.swift */,
 			);
 			path = "Add Job Views";
 			sourceTree = "<group>";
@@ -634,6 +640,7 @@
 				D09C5ED72C0F564D002C6F89 /* TaskCategoryBtnView.swift in Sources */,
 				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
 				D0E923F12C0E98670070977A /* CustomerSettingsController.swift in Sources */,
+				FF89D9A92C680E8F00FBD1C6 /* AdditionalMaterialsController.swift in Sources */,
 				FFF3F21D2C3F048100E20496 /* PaymentSettingsController.swift in Sources */,
 				FF1D4CFF2C55DF890034C830 /* CancelTaskController.swift in Sources */,
 				FFD8A9A02C157A6E009F5C8C /* CurrentTasksCell.swift in Sources */,
@@ -679,6 +686,7 @@
 				D0E923DC2C0E8D250070977A /* SceneDelegate.swift in Sources */,
 				FF0B76EC2C29CEE70019FD8B /* LogoLoadingController.swift in Sources */,
 				FF879A492C1B2CBF00922513 /* SettingsOption.swift in Sources */,
+				FF89D9AB2C68121500FBD1C6 /* MaterialsCell.swift in Sources */,
 				FFF177492C5D7DD9006DC19E /* CustomerOldTasksController.swift in Sources */,
 				FFCC86AD2C5ECC7C002232F9 /* ChatViewController.swift in Sources */,
 				FF879A4C2C1BA2EE00922513 /* PersonalInfoController.swift in Sources */,

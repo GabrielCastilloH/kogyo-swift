@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol EquipmentViewDelegate {
+    func didTapAdditionalMaterialsBtn()
+}
+
 class AddEquipmentFormView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
+    var delegate: EquipmentViewDelegate?
     
     // MARK: - UI Components
     private lazy var addEquipmentBtn: UIButton = {
@@ -17,7 +22,7 @@ class AddEquipmentFormView: UIView {
         button.imageView?.contentMode = .scaleAspectFit
         button.tintColor = Constants().darkGrayColor
         button.backgroundColor = UIColor(white: 1, alpha: 0)
-        button.addTarget(self, action: #selector(didTapMediaButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addEquipmentBtnTapped), for: .touchUpInside)
         return button
     }()
     
@@ -70,10 +75,10 @@ class AddEquipmentFormView: UIView {
             
         ])
     }
-
-    // MARK: - Selectors
-    @objc func didTapMediaButton() {
-        print("good luck setting up the add equipment func.")
+    
+    // MARK: - Selecters
+    @objc private func addEquipmentBtnTapped() {
+        print("Good luck setting up the add media func.")
+        delegate?.didTapAdditionalMaterialsBtn()
     }
-
 }

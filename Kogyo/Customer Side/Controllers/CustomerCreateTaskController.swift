@@ -109,6 +109,7 @@ class CustomerCreateTaskController: UIViewController {
         imagePickerController.mediaTypes = ["public.image", "public.movie"]
         
         self.jobDateTimeView.delegate = self
+        self.addEquipmentFormView.delegate = self
         
         self.setupUI()
         
@@ -284,17 +285,22 @@ class CustomerCreateTaskController: UIViewController {
     @objc func otherPaymentMethods() {
         print("button has been clicked, repeat")
         print("PRESENTING!!!")
-        self.paymentSheet?.present(from: self) { paymentResult in
-            print("should have presented")
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                print("Your order is confirmed")
-            case .canceled:
-                print("Canceled!")
-            case .failed(let error):
-                print("Payment failed: \(error)")
+        
+        if let safePaymentSheet = paymentSheet {
+            safePaymentSheet.present(from: self) { paymentResult in
+                print("should have presented")
+                // MARK: Handle the payment result
+                switch paymentResult {
+                case .completed:
+                    print("Your order is confirmed")
+                case .canceled:
+                    print("Canceled!")
+                case .failed(let error):
+                    print("Payment failed: \(error)")
+                }
             }
+        } else {
+            print("The surver isn't running you dummy! I need it to be able to create payment request.")
         }
     }
     
@@ -370,6 +376,14 @@ extension CustomerCreateTaskController: JobPaymentViewDelegate {
                     self.view.frame.origin.y = 0
                 })
         }
+    }
+}
+
+extension CustomerCreateTaskController: EquipmentViewDelegate {
+    func didTapAdditionalMaterialsBtn() {
+        let viewController = AdditionalMaterialsController()
+//        viewController.modalPresentationStyle = .pageSheet
+        self.present(viewController, animated: true, completion: nil)
     }
 }
 
