@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TaskListing {
+struct AppBasicData {
     
     let allCategories = [
         JobCategoryView(title: "Home", jobButtons: [
