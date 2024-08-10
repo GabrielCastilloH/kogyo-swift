@@ -1,11 +1,10 @@
 // Good luck my soldier!
 
-// TODO: 7. Add payment feature between customer & helper (set it up with 10% comission fee later).
-// TODO: 8. Setup equipment button.
-
 // TODO: 9. Find a way to store location in firestore and calculate km away in HelperDashboard.
 // TODO: 10. Make the "my tasks" screen include Posted Task (Waiting for Helper) and Active Tasks
 // You will not be able to pay with cash only card. Find out how to refund amounts paid when a customer cancels their posting.
+
+// TODO: 11. Add equipment to the database. 
 
 // TODO: 11. Setup login as helper or customer
 // TODO: 12. Setup sign up as a helper (you must submit data and be approved by me), also set your work area.

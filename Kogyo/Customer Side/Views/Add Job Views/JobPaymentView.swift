@@ -96,16 +96,12 @@ class JobPaymentView: UIView {
     private func setupUI() {
         let paymentTitle = cf.createFormLabel(for: "Payment:")
         let recPaymentTitle = cf.createFormLabel(for: "Recommended Payment:")
-        let paymentMethodTitle = cf.createFormLabel(for: "Payment Method:")
 
         self.addSubview(paymentTitle)
         paymentTitle.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(recPaymentTitle)
         recPaymentTitle.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(paymentMethodTitle)
-        paymentMethodTitle.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(paymentTextField)
         paymentTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -144,9 +140,6 @@ class JobPaymentView: UIView {
             
             recPaymentLabel.topAnchor.constraint(equalTo: recPaymentTitle.topAnchor),
             recPaymentLabel.leadingAnchor.constraint(equalTo: recPaymentTitle.trailingAnchor, constant: 10),
-            
-            paymentMethodTitle.topAnchor.constraint(equalTo: recPaymentLabel.bottomAnchor, constant: 5),
-            paymentMethodTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
         ])
     }
 

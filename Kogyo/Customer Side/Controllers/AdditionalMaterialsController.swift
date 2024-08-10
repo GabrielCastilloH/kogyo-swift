@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol AdditionalMaterialsDelegate {
+    func didEnterMaterial(_ data: (String, Int, Float))
+}
+
 class AdditionalMaterialsController: UIViewController {
     
     private let materials = AppBasicData.shared.materials
@@ -14,6 +18,9 @@ class AdditionalMaterialsController: UIViewController {
     private let searchBar = UISearchBar()
     private var filteredMaterials: [Material] = []
     private var selectedMaterial: Material?
+    
+    var delegate: AdditionalMaterialsDelegate?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,7 +125,7 @@ extension AdditionalMaterialsController: UITableViewDelegate, UITableViewDataSou
     }
     
     private func materialSelected(name: String, quantity: Int, price: Float) {
-        print("Material Selected: \(name), Quantity: \(quantity), Price: \(price)")
+        self.delegate?.didEnterMaterial((name, quantity, price))
     }
 }
 

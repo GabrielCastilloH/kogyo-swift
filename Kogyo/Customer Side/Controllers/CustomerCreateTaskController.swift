@@ -30,9 +30,26 @@ class CustomerCreateTaskController: UIViewController {
     var mediaScrollView: MediaScrollView
     let imagePickerController = UIImagePickerController()
     
+    // Materials
+    var materials = [(String, Int, Float)]()
+    let materialsTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = Constants().darkWhiteColor
+        tableView.layer.cornerRadius = 10
+        tableView.layer.borderWidth = 3
+        tableView.layer.borderColor = Constants().darkWhiteColor.cgColor
+        return tableView
+    }()
+    
     // MARK: - UI Components
     let jobKindView: JobKindFormView
     let descriptionFormView = DescriptionFormView()
+    lazy var payButton : UIBarButtonItem = {
+        let barBtn = UIBarButtonItem(title: "Pay", style: .plain, target: self, action: #selector(didTapPay))
+        barBtn.tintColor = .gray
+        barBtn.isEnabled = false
+        return barBtn
+    }()
     
     let mediaTitleView: UITextView = {
         let textView = UITextView()
@@ -49,29 +66,6 @@ class CustomerCreateTaskController: UIViewController {
     let addEquipmentFormView = AddEquipmentFormView()
     let jobPaymentView = JobPaymentView()
     
-    private lazy var payCashButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .white
-        button.setTitle("Pay Cash", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
-        button.layer.cornerRadius = 15
-        button.backgroundColor = Constants().lightBlueColor
-        button.addTarget(self, action: #selector(didTapPayCash), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var otherPaymentMethodsBtn: UIButton = {
-        let button = UIButton()
-        button.tintColor = .white
-        button.setTitle("Other Payment Methods", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .semibold)
-        button.layer.cornerRadius = 15
-        button.backgroundColor = .systemBlue
-        button.addTarget(self, action: #selector(otherPaymentMethods), for: .touchUpInside)
-        button.isEnabled = false
-        return button
-    }()
-    
     // Media view:
     private let mediaBackgroundView: UIView = {
         let view = UIView()
@@ -82,8 +76,6 @@ class CustomerCreateTaskController: UIViewController {
     
     // MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
-        self.payCashButton.isUserInteractionEnabled = true
-        self.payCashButton.backgroundColor = Constants().lightBlueColor
         self.setupNavbar()
     }
     
@@ -111,6 +103,11 @@ class CustomerCreateTaskController: UIViewController {
         self.jobDateTimeView.delegate = self
         self.addEquipmentFormView.delegate = self
         
+        // Materials
+        self.materialsTableView.delegate = self
+        self.materialsTableView.dataSource = self
+        self.materialsTableView.register(AdditionalMaterialsCell.self, forCellReuseIdentifier: "AdditionalMaterialsCell")
+        
         self.setupUI()
         
         NotificationCenter.default.addObserver(
@@ -122,7 +119,6 @@ class CustomerCreateTaskController: UIViewController {
         
         self.addMedia(nil)
         
-        // MARK: Fetch the PaymentIntent client secret, Ephemeral Key secret, Customer ID, and publishable key
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
@@ -138,32 +134,33 @@ class CustomerCreateTaskController: UIViewController {
             }
             
             STPAPIClient.shared.publishableKey = publishableKey
-            // MARK: Create a PaymentSheet instance
             var configuration = PaymentSheet.Configuration()
-            configuration.merchantDisplayName = "Example, Inc."
+            configuration.merchantDisplayName = "Kogyo"
             configuration.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-            // Set `allowsDelayedPaymentMethods` to true if your business handles
-            // delayed notification payment methods like US bank accounts.
             configuration.allowsDelayedPaymentMethods = true
             self.paymentSheet = PaymentSheet(paymentIntentClientSecret: paymentIntentClientSecret, configuration: configuration)
         })
         task.resume()
         
-        self.otherPaymentMethodsBtn.isEnabled = true
+        self.setPayBtnEnabled(to: true)
     }
     
     // MARK: - UI Setup
     private func setupNavbar() {
+        // Configure the navigation bar
         navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)
+        ]
         self.navigationController?.navigationBar.backgroundColor = .clear
         self.tabBarController?.tabBar.isHidden = false
         self.navigationItem.title = "Create a New Task"
+
+        // Set the "Pay" button to the right of the navigation bar
+        self.navigationItem.rightBarButtonItem = self.payButton
     }
     
     private func setupUI() {
-        
         self.view.addSubview(jobKindView)
         jobKindView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -194,21 +191,15 @@ class CustomerCreateTaskController: UIViewController {
         self.view.addSubview(addEquipmentFormView)
         addEquipmentFormView.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(materialsTableView)
+        materialsTableView.translatesAutoresizingMaskIntoConstraints = false
+        
         let separator4 = UIView()
-        cf.createSeparatorView(for: self, with: separator4, under: addEquipmentFormView)
+        cf.createSeparatorView(for: self, with: separator4, under: materialsTableView)
         
         self.view.addSubview(jobPaymentView)
         jobPaymentView.translatesAutoresizingMaskIntoConstraints = false
         jobPaymentView.delegate = self
-        
-        let separator5 = UIView()
-        cf.createSeparatorView(for: self, with: separator5, under: jobPaymentView)
-        
-        self.view.addSubview(payCashButton)
-        payCashButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(otherPaymentMethodsBtn)
-        otherPaymentMethodsBtn.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             jobKindView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 115),
@@ -250,66 +241,36 @@ class CustomerCreateTaskController: UIViewController {
             addEquipmentFormView.topAnchor.constraint(equalTo: jobHoursView.bottomAnchor, constant: 5),
             addEquipmentFormView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             addEquipmentFormView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            addEquipmentFormView.heightAnchor.constraint(equalToConstant: 15),
+            addEquipmentFormView.heightAnchor.constraint(equalToConstant: 25),
+            
+            materialsTableView.topAnchor.constraint(equalTo: addEquipmentFormView.bottomAnchor, constant: 5),
+            materialsTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            materialsTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+            materialsTableView.heightAnchor.constraint(equalToConstant: 100),
+            
+            // Changing it manually.
+            separator4.topAnchor.constraint(equalTo: materialsTableView.bottomAnchor, constant: 10),
             
             jobPaymentView.topAnchor.constraint(equalTo: separator4.bottomAnchor, constant: 15),
             jobPaymentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             jobPaymentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             jobPaymentView.heightAnchor.constraint(equalToConstant: 75),
-            
-            payCashButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
-            payCashButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -100),
-            payCashButton.heightAnchor.constraint(equalToConstant: 50),
-            payCashButton.widthAnchor.constraint(equalToConstant: 180),
-            
-            otherPaymentMethodsBtn.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -110),
-            otherPaymentMethodsBtn.leadingAnchor.constraint(equalTo: payCashButton.trailingAnchor, constant: 20),
-            otherPaymentMethodsBtn.heightAnchor.constraint(equalToConstant: 50),
-            otherPaymentMethodsBtn.widthAnchor.constraint(equalToConstant: 180),
         ])
     }
     
-    // MARK: - Selectors & Functions
-    private func presentLoadingScreen(jobUID: String, userId: String) {
-        let loadingScreenController = CustomerLoadingScreenController(jobId: jobUID, userId: userId)
-        self.navigationController?.pushViewController(loadingScreenController, animated: true)
-    }
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            self.keyboardHeight = keyboardRectangle.height
-        }
-    }
-    
-    @objc func otherPaymentMethods() {
-        print("button has been clicked, repeat")
-        print("PRESENTING!!!")
-        
-        if let safePaymentSheet = paymentSheet {
-            safePaymentSheet.present(from: self) { paymentResult in
-                print("should have presented")
-                // MARK: Handle the payment result
-                switch paymentResult {
-                case .completed:
-                    print("Your order is confirmed")
-                case .canceled:
-                    print("Canceled!")
-                case .failed(let error):
-                    print("Payment failed: \(error)")
-                }
-            }
+    private func setPayBtnEnabled(to isEnabled: Bool) {
+        if isEnabled {
+            self.payButton.isEnabled = true
+            self.payButton.tintColor = .systemBlue
         } else {
-            print("The surver isn't running you dummy! I need it to be able to create payment request.")
+            self.payButton.isEnabled = false
+            self.payButton.tintColor = .systemGray
         }
     }
     
-    @objc func payWithCash() {
-        // Handle cash payment logic here
-        // e.g., save the task as "Cash" and continue
-    }
-    
-    @objc func didTapPayCash() { // Submits the task
+    // MARK: - Selectors & Functions
+    // Function that gets called when the "Pay" button is tapped
+    @objc private func didTapPay() {
         let dateAdded = Date()
         let kind = self.jobKindView.pickerTextField.text ?? ""
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
@@ -321,6 +282,9 @@ class CustomerCreateTaskController: UIViewController {
         if kind == "" || description == "" || expHours == 0 || location == "" || payment == 0 || location == "Click to set location" {
             AlertManager.showMissingJobInfoAlert(on: self)
         } else {
+            self.setPayBtnEnabled(to: false)
+            
+            print("button has been clicked, repeat")
             let taskData: [String : Any] = [
                 "userUID": DataManager.shared.currentUser!.userUID,
                 "dateAdded": dateAdded,
@@ -333,20 +297,102 @@ class CustomerCreateTaskController: UIViewController {
                 "completionStatus": "notComplete",
             ]
             
-            Task {
-                do {
-                    // Upload task to database.
-                    let taskUID = try await FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData)
-                    let userUID = DataManager.shared.currentUser!.userUID
-                    self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
-                } catch {
-                    print("Error adding job: \(error.localizedDescription)")
+            if let safePaymentSheet = paymentSheet {
+                safePaymentSheet.present(from: self) { paymentResult in // Handle payment result
+                    switch paymentResult {
+                    case .completed:
+                        print("Your order is confirmed")
+                        Task {
+                            do { // Upload task to database.
+                                let taskUID = try await FirestoreHandler.shared.uploadTask(taskData: taskData, mediaData: self.mediaData)
+                                let userUID = DataManager.shared.currentUser!.userUID
+                                self.presentLoadingScreen(jobUID: taskUID, userId: userUID)
+                            } catch {
+                                print("Error adding job: \(error.localizedDescription)")
+                            }
+                        }
+                    case .canceled:
+                        print("Canceled!")
+                        self.setPayBtnEnabled(to: true)
+                        
+                    case .failed(let error):
+                        print("Payment failed: \(error)")
+                        self.setPayBtnEnabled(to: true)
+                    }
                 }
+            } else {
+                print("The surver isn't running you dummy! I need it to be able to create payment request.")
+                self.setPayBtnEnabled(to: true)
             }
-            
-            self.payCashButton.isUserInteractionEnabled = false
-            self.payCashButton.backgroundColor = Constants().lightGrayColor.withAlphaComponent(0.7)
         }
+    }
+    
+    private func presentLoadingScreen(jobUID: String, userId: String) {
+        let loadingScreenController = CustomerLoadingScreenController(jobId: jobUID, userId: userId)
+        self.navigationController?.pushViewController(loadingScreenController, animated: true)
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            self.keyboardHeight = keyboardRectangle.height
+        }
+    }
+}
+
+extension CustomerCreateTaskController: UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: - UITableViewDataSource Methods
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.materials.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AdditionalMaterialsCell", for: indexPath) as! AdditionalMaterialsCell
+        let materialData = materials[indexPath.row]
+        cell.configure(with: materialData)
+        return cell
+    }
+    
+    // MARK: - UITableViewDelegate Methods
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            materials.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+}
+
+extension CustomerCreateTaskController: EquipmentViewDelegate {
+    func didTapAdditionalMaterialsBtn() {
+        let viewController = AdditionalMaterialsController()
+        viewController.delegate = self
+        self.present(viewController, animated: true, completion: nil)
+    }
+}
+
+extension CustomerCreateTaskController: AdditionalMaterialsDelegate {
+    func didEnterMaterial(_ data: (String, Int, Float)) {
+        let (name, quantity, price) = data
+        
+        // Check if the material already exists in the list
+        if let index = materials.firstIndex(where: { $0.0 == name && $0.2 == price }) {
+            // Update the existing material's quantity
+            var existingMaterial = materials[index]
+            existingMaterial.1 += quantity
+            materials[index] = existingMaterial
+        } else {
+            materials.append(data)
+        }
+        
+        self.materialsTableView.reloadData()
+        self.navigationController?.dismiss(animated: true)
     }
 }
 
@@ -379,13 +425,6 @@ extension CustomerCreateTaskController: JobPaymentViewDelegate {
     }
 }
 
-extension CustomerCreateTaskController: EquipmentViewDelegate {
-    func didTapAdditionalMaterialsBtn() {
-        let viewController = AdditionalMaterialsController()
-//        viewController.modalPresentationStyle = .pageSheet
-        self.present(viewController, animated: true, completion: nil)
-    }
-}
 
 extension CustomerCreateTaskController: JobDateTimeViewDelegate {
     func pressedLocationButton() {

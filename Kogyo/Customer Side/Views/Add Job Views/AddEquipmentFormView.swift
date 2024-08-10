@@ -70,7 +70,7 @@ class AddEquipmentFormView: UIView {
             
             addEquipmentBtn.topAnchor.constraint(equalTo: plusImage.topAnchor),
             addEquipmentBtn.bottomAnchor.constraint(equalTo: plusImage.bottomAnchor),
-            addEquipmentBtn.leadingAnchor.constraint(equalTo: plusImage.leadingAnchor),
+            addEquipmentBtn.leadingAnchor.constraint(equalTo: addEquipmentLabel.leadingAnchor),
             addEquipmentBtn.trailingAnchor.constraint(equalTo: plusImage.trailingAnchor),
             
         ])
