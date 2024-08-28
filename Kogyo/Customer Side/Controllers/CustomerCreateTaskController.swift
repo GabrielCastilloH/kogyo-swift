@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
 import Photos
 import FirebaseStorage
 import StripePaymentSheet
@@ -21,6 +22,7 @@ class CustomerCreateTaskController: UIViewController {
     var keyboardHeight: CGFloat = 300
     var cf = CustomFunctions()
     var idCounter = 0
+    var selectedLocation: CLLocation?
     
     var paymentSheet: PaymentSheet?
     let backendCheckoutUrl = URL(string: "http://127.0.0.1:4242/payment-sheet")! // Your backend endpoint
@@ -63,7 +65,7 @@ class CustomerCreateTaskController: UIViewController {
     
     public let jobDateTimeView = JobDateTimeView()
     let jobHoursView = JobHoursView()
-    let addEquipmentFormView = AddEquipmentFormView()
+    let addEquipmentFormView = AddMaterialsFormView()
     let jobPaymentView = JobPaymentView()
     
     // Media view:
@@ -276,10 +278,10 @@ class CustomerCreateTaskController: UIViewController {
         let description = self.descriptionFormView.descriptionTextView.text ?? ""
         let dateTime = self.jobDateTimeView.datePicker.date
         let expHours = Int(self.jobHoursView.pickerTextField.text ?? "") ?? 0
-        let location = self.jobDateTimeView.addressLabel.text ?? "Click to set location"
+        let location = GeoPoint(latitude: self.selectedLocation?.coordinate.latitude ?? 0.0, longitude: self.selectedLocation?.coordinate.longitude ?? 0.0)
         let payment = Int(self.jobPaymentView.paymentTextField.text ?? "") ?? 0
         
-        if kind == "" || description == "" || expHours == 0 || location == "" || payment == 0 || location == "Click to set location" {
+        if kind == "" || description == "" || expHours == 0 || payment == 0 || location == CLLocation(latitude: 0, longitude: 0) {
             AlertManager.showMissingJobInfoAlert(on: self)
         } else {
             self.setPayBtnEnabled(to: false)
@@ -296,6 +298,7 @@ class CustomerCreateTaskController: UIViewController {
                 "payment": payment,
                 "completionStatus": "notComplete",
             ]
+            print(taskData)
             
             if let safePaymentSheet = paymentSheet {
                 safePaymentSheet.present(from: self) { paymentResult in // Handle payment result
@@ -338,6 +341,11 @@ class CustomerCreateTaskController: UIViewController {
             self.keyboardHeight = keyboardRectangle.height
         }
     }
+    
+    public func didSelectLocation(address: String, location: CLLocation) {
+        self.jobDateTimeView.addressLabel.text = address
+        self.selectedLocation = location
+    }
 }
 
 extension CustomerCreateTaskController: UITableViewDataSource, UITableViewDelegate {
@@ -369,7 +377,7 @@ extension CustomerCreateTaskController: UITableViewDataSource, UITableViewDelega
     }
 }
 
-extension CustomerCreateTaskController: EquipmentViewDelegate {
+extension CustomerCreateTaskController: AddMaterialsViewDelegate {
     func didTapAdditionalMaterialsBtn() {
         let viewController = AdditionalMaterialsController()
         viewController.delegate = self

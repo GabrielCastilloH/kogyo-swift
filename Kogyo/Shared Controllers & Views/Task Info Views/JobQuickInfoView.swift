@@ -78,7 +78,7 @@ class JobQuickInfoView: UIView {
         let dateFormatted = formatter.string(from: task.dateTime)
         
         self.dateLabel.text = dateFormatted
-        self.addressLabel.text = task.location
+        self.addressLabel.text = "\(task.location.latitude) + \(task.location.longitude)"
         self.hoursLabel.text = String(task.expectedHours) + " hours"
         self.paymentLabel.text = "$" + String(task.payment)
         

@@ -56,7 +56,7 @@ struct CustomFunctions {
             description: data["description"] as? String ?? "",
             dateTime: (data["dateTime"] as? Timestamp)?.dateValue() ?? Date(),
             expectedHours: data["expectedHours"] as? Int ?? 0,
-            location: data["location"] as? String ?? "",
+            location: data["location"] as? GeoPoint ?? GeoPoint(latitude: 0, longitude: 0),
             payment: data["payment"] as? Int ?? 0,
             helperUID: data["helperUID"] as? String,
             media: media,
@@ -71,10 +71,10 @@ struct CustomFunctions {
         let data = document.data()
         
         guard let messageID = data["id"] as? String,
-              let type = data["type"] as? String,
+//              let type = data["type"] as? String,
               let content = data["content"] as? String,
               let name = data["name"] as? String,
-              let isRead = data["is_read"] as? Bool,
+//              let isRead = data["is_read"] as? Bool,
               let senderUID = data["senderUID"] as? String,
               let date = (data["dateTime"] as? Timestamp)?.dateValue() else {
             // Handle missing or invalid data

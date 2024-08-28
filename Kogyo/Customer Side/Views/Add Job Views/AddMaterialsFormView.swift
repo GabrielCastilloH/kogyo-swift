@@ -1,5 +1,5 @@
 //
-//  AddEquipmentFormView.swift
+//  AddMaterialsFormView.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/8/24.
@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol EquipmentViewDelegate {
+protocol AddMaterialsViewDelegate {
     func didTapAdditionalMaterialsBtn()
 }
 
 class AddMaterialsFormView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
-    var delegate: EquipmentViewDelegate?
+    var delegate: AddMaterialsViewDelegate?
     
     // MARK: - UI Components
     private lazy var addEquipmentBtn: UIButton = {

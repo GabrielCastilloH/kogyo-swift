@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 struct TaskClass {
     let taskUID: String
@@ -15,7 +16,7 @@ struct TaskClass {
     let description: String
     let dateTime: Date
     let expectedHours: Int
-    let location: String // change later
+    let location: GeoPoint // change later
     let payment: Int
     var helperUID: String?
     var media: [PlayableMediaView]? // [(UIImage?, String?)]

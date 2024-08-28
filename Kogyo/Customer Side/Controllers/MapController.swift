@@ -150,10 +150,12 @@ class MapController: UIViewController {
     }
     
     @objc func tappedDoneButton() {
-        if let createJobController = self.navigationController?.viewControllers.first(where: { $0 is CustomerCreateTaskController }) as? CustomerCreateTaskController {
-            createJobController.jobDateTimeView.addressLabel.text = self.addressLabel.text
+        if self.addressLabel.text != "Select Location", let location = self.previousLocation, let text = self.addressLabel.text {
+            if let createJobController = self.navigationController?.viewControllers.first(where: { $0 is CustomerCreateTaskController }) as? CustomerCreateTaskController {
+                createJobController.didSelectLocation(address: text, location: location)
+            }
+            self.navigationController?.popViewController(animated: true)
         }
-        self.navigationController?.popViewController(animated: true)
     }
 }
 

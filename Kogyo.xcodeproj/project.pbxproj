@@ -38,7 +38,7 @@
 		FF6045752C417F060063176A /* TaskRequiredEquipmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045742C417F060063176A /* TaskRequiredEquipmentView.swift */; };
 		FF6045772C4184F20063176A /* HelperTaskInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6045762C4184F20063176A /* HelperTaskInfoController.swift */; };
 		FF6527832C1424460077E630 /* JobHoursView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527822C1424460077E630 /* JobHoursView.swift */; };
-		FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */; };
+		FF6527852C1429FD0077E630 /* AddMaterialsFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6527842C1429FD0077E630 /* AddMaterialsFormView.swift */; };
 		FF68638F2C65E8D000289F5F /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = FF68638E2C65E8D000289F5F /* Stripe */; };
 		FF6863912C65E8D000289F5F /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = FF6863902C65E8D000289F5F /* StripePaymentSheet */; };
 		FF6863932C65E8D000289F5F /* StripePayments in Frameworks */ = {isa = PBXBuildFile; productRef = FF6863922C65E8D000289F5F /* StripePayments */; };
@@ -136,7 +136,7 @@
 		FF6045742C417F060063176A /* TaskRequiredEquipmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRequiredEquipmentView.swift; sourceTree = "<group>"; };
 		FF6045762C4184F20063176A /* HelperTaskInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperTaskInfoController.swift; sourceTree = "<group>"; };
 		FF6527822C1424460077E630 /* JobHoursView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHoursView.swift; sourceTree = "<group>"; };
-		FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEquipmentFormView.swift; sourceTree = "<group>"; };
+		FF6527842C1429FD0077E630 /* AddMaterialsFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMaterialsFormView.swift; sourceTree = "<group>"; };
 		FF6882062C1C787200288618 /* FirestoreHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreHandler.swift; sourceTree = "<group>"; };
 		FF6882082C1C790600288618 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		FF76C2AC2C5C974300F35DD1 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
@@ -272,7 +272,7 @@
 				D0C5CED52C12F3AF002582D4 /* DescriptionFormView.swift */,
 				FFC07FDB2C141B190040EF03 /* JobDateTimeView.swift */,
 				FF6527822C1424460077E630 /* JobHoursView.swift */,
-				FF6527842C1429FD0077E630 /* AddEquipmentFormView.swift */,
+				FF6527842C1429FD0077E630 /* AddMaterialsFormView.swift */,
 				FF05FD5F2C1444E30083B839 /* JobPaymentView.swift */,
 				FF89D9AA2C68121500FBD1C6 /* MaterialsCell.swift */,
 				FF89D9AC2C682CC300FBD1C6 /* AdditionalMaterialsCell.swift */,
@@ -638,7 +638,7 @@
 				FF879A552C1BB5E900922513 /* SupportController.swift in Sources */,
 				FFF372D52C16C60000F8D362 /* CustomAuthTextField.swift in Sources */,
 				FFF372D92C16C78900F8D362 /* RegisterController.swift in Sources */,
-				FF6527852C1429FD0077E630 /* AddEquipmentFormView.swift in Sources */,
+				FF6527852C1429FD0077E630 /* AddMaterialsFormView.swift in Sources */,
 				FF879A512C1BB50500922513 /* NotificationSettingsController.swift in Sources */,
 				D09C5ED72C0F564D002C6F89 /* TaskCategoryBtnView.swift in Sources */,
 				FFF372F82C16F2B800F8D362 /* CategoriesTableCell.swift in Sources */,
