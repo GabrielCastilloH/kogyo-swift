@@ -11,7 +11,7 @@ protocol EquipmentViewDelegate {
     func didTapAdditionalMaterialsBtn()
 }
 
-class AddEquipmentFormView: UIView {
+class AddMaterialsFormView: UIView {
     // MARK: - Variables
     let cf = CustomFunctions()
     var delegate: EquipmentViewDelegate?
@@ -50,7 +50,7 @@ class AddEquipmentFormView: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        let addEquipmentLabel = cf.createFormLabel(for: "Additional Equipment: ")
+        let addEquipmentLabel = cf.createFormLabel(for: "Additional Materials: ")
         
         self.addSubview(addEquipmentLabel)
         addEquipmentLabel.translatesAutoresizingMaskIntoConstraints = false
