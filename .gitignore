@@ -2,11 +2,12 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
-GoogleService-Info.plist
-
 
 ## User settings
 xcuserdata/
+
+**/GoogleService-Info.plist
+**/Supporting/GoogleService-Info.plist
 
 ## Obj-C/Swift specific
 *.hmap
