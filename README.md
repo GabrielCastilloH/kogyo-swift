@@ -8,7 +8,6 @@
   [![Website](https://img.shields.io/badge/Website-kogyo.co-blue)](https://www.kogyo.co/)
   [![Platform](https://img.shields.io/badge/Platform-iOS-lightgrey)]()
   [![Swift](https://img.shields.io/badge/Swift-5.0+-orange)]()
-  [![License](https://img.shields.io/badge/License-Proprietary-red)]()
 </div>
 
 ## 📖 About Kogyo
